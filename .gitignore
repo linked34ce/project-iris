@@ -1,0 +1,8 @@
+*.cs.meta
+/Assets/*
+!Scripts
+/Build/
+/Library/
+/Logs/
+/ProjectSettings/
+/Temp/
