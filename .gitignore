@@ -1,4 +1,5 @@
 *.cs.meta
+Assembly-CSharp.csproj
 /Assets/*
 !Scripts
 /Build/
@@ -6,3 +7,4 @@
 /Logs/
 /ProjectSettings/
 /Temp/
+/UserSettings/
