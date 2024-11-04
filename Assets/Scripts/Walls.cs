@@ -1,34 +1,15 @@
 public class Walls
 {
-    private readonly int east;
-    private readonly int south;
-    private readonly int west;
-    private readonly int north;
+    public int East { get; }
+    public int South { get; }
+    public int West { get; }
+    public int North { get; }
 
     public Walls(int east, int south, int west, int north)
     {
-        this.east = east;
-        this.south = south;
-        this.west = west;
-        this.north = north;
-    }
-
-    public int GetEast()
-    {
-        return east;
-    }
-
-    public int GetSouth()
-    {
-        return south;
-    }
-
-    public int GetWest()
-    {
-        return west;
-    }
-    public int GetNorth()
-    {
-        return north;
+        East = east;
+        South = south;
+        West = west;
+        North = north;
     }
 }

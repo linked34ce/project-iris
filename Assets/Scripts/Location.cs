@@ -1,41 +1,19 @@
 public class Location
 {
-    private int x;
-    private int y;
+    public int X { get; set; }
+    public int Y { get; set; }
 
     public Location(int x, int y)
     {
-        this.x = x;
-        this.y = y;
+        X = x;
+        Y = y;
     }
 
-    public int GetX()
-    {
-        return x;
-    }
+    public void IncrementX() => X++;
 
-    public int GetY()
-    {
-        return y;
-    }
+    public void IncrementY() => Y++;
 
-    public void IncrementX()
-    {
-        x++;
-    }
+    public void DecrementX() => X--;
 
-    public void IncrementY()
-    {
-        y++;
-    }
-
-    public void DecrementX()
-    {
-        x--;
-    }
-
-    public void DecrementY()
-    {
-        y--;
-    }
+    public void DecrementY() => Y--;
 }

@@ -1,6 +1,6 @@
 public class Dungeon
 {
-    private Walls[][] map =  {
+    public Walls[][] Map { get; set; } =  {
         // 1
         new Walls[] {
             new(0, 1, 1, 0), new(0, 1, 0, 1), new(0, 1, 0, 1), new(0, 1, 0, 1), new(0, 1, 0, 0),
@@ -53,30 +53,10 @@ public class Dungeon
         },
     };
 
-    private float encountRate;
+    public float EncountRate { get; set; }
 
     public Dungeon(float encountRate)
     {
-        this.encountRate = encountRate;
-    }
-
-    public Walls[][] GetMap()
-    {
-        return map;
-    }
-
-    public void SetMap(Walls[][] map)
-    {
-        this.map = map;
-    }
-
-    public float GetEncountRate()
-    {
-        return encountRate;
-    }
-
-    public void SetEncountRate(float encountRate)
-    {
-        this.encountRate = encountRate;
+        EncountRate = encountRate;
     }
 }

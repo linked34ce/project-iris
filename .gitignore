@@ -1,4 +1,5 @@
 *.cs.meta
+*.sln
 Assembly-CSharp.csproj
 /Assets/*
 !Scripts

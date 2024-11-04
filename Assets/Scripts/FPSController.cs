@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class FPSController : MonoBehaviour
@@ -46,18 +45,18 @@ public class FPSController : MonoBehaviour
 
     }
 
-    private void ForwardPressed()
+    public void ForwardPressed()
     {
-        Walls walls = dungeon.GetMap()[location.GetY()][location.GetX()];
+        Walls walls = dungeon.Map[location.Y][location.X];
 
         if (direction == Direction.east)
         {
-            if (walls.GetEast() == 0)
+            if (walls.East == 0)
             {
                 location.IncrementX();
                 StepForward();
             }
-            else if (walls.GetEast() == 2)
+            else if (walls.East == 2)
             {
                 GoUpstairs();
             }
@@ -65,12 +64,12 @@ public class FPSController : MonoBehaviour
 
         if (direction == Direction.south)
         {
-            if (walls.GetSouth() == 0)
+            if (walls.South == 0)
             {
                 location.DecrementY();
                 StepForward();
             }
-            else if (walls.GetSouth() == 2)
+            else if (walls.South == 2)
             {
                 GoUpstairs();
             }
@@ -78,12 +77,12 @@ public class FPSController : MonoBehaviour
 
         if (direction == Direction.west)
         {
-            if (walls.GetWest() == 0)
+            if (walls.West == 0)
             {
                 location.DecrementX();
                 StepForward();
             }
-            else if (walls.GetWest() == 2)
+            else if (walls.West == 2)
             {
                 GoUpstairs();
             }
@@ -91,12 +90,12 @@ public class FPSController : MonoBehaviour
 
         if (direction == Direction.north)
         {
-            if (walls.GetNorth() == 0)
+            if (walls.North == 0)
             {
                 location.IncrementY();
                 StepForward();
             }
-            else if (walls.GetNorth() == 2)
+            else if (walls.North == 2)
             {
                 GoUpstairs();
             }
@@ -108,7 +107,7 @@ public class FPSController : MonoBehaviour
         GetComponent<Footsteps>().PlayStairs();
 
         string ordinal = ConvertNumberFromCardinalToOrdinal(++Status.floor);
-        Initiate.Fade($"Scenes/Dungeons/Nijigasaki Old School Building/{ordinal} Floor", Color.black, 0.4f);
+        Initiate.Fade($"Scenes/Dungeons/To-o Gakuen Old Building/{ordinal} Floor", Color.black, 0.4f);
     }
 
     public void StepForward()
@@ -125,28 +124,21 @@ public class FPSController : MonoBehaviour
     public void Encount()
     {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
-        if (stepsAfterEncount >= MIN_STEPS_AFTER_ENCOUNT && UnityEngine.Random.value < dungeon.GetEncountRate())
+        if (stepsAfterEncount >= MIN_STEPS_AFTER_ENCOUNT && UnityEngine.Random.value < dungeon.EncountRate)
         {
             GetComponent<BattleManager>().enabled = true;
             ResetStepsAfterEncount();
         }
-        // Debug.Log("(" + location.GetX() + ", " + location.GetY() + ")");
-        // Debug.Log("(" + walls.GetEast() + ", " + walls.GetSouth() + ", " + walls.GetWest() + ", " + walls.GetNorth() + ")");
+        // Debug.Log("(" + location.X + ", " + location.Y + ")");
+        // Debug.Log("(" + walls.East + ", " + walls.South + ", " + walls.West + ", " + walls.North + ")");
         Debug.Log(stepsAfterEncount);
     }
 
-    public void IncrementStepsAfterEncount()
-    {
-        stepsAfterEncount++;
-    }
+    public void IncrementStepsAfterEncount() => stepsAfterEncount++;
 
-    public void ResetStepsAfterEncount()
-    {
-        stepsAfterEncount = 0;
-    }
+    public void ResetStepsAfterEncount() => stepsAfterEncount = 0;
 
-
-    private void TurnAround()
+    public void TurnAround()
     {
         Footsteps footsteps = GetComponent<Footsteps>();
 
@@ -172,7 +164,7 @@ public class FPSController : MonoBehaviour
         }
     }
 
-    private void TurnLeft()
+    public void TurnLeft()
     {
         Footsteps footsteps = GetComponent<Footsteps>();
 
@@ -198,7 +190,7 @@ public class FPSController : MonoBehaviour
         }
     }
 
-    private void TurnRight()
+    public void TurnRight()
     {
         Footsteps footsteps = GetComponent<Footsteps>();
 

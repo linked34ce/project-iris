@@ -13,10 +13,10 @@ public class BattleManager : MonoBehaviour
             Battle();
         }
 
-        if (enemy.GetHp() <= 0)
+        if (enemy.Hp <= 0)
         {
             enabled = false;
-            enemy.SetHp(10);
+            enemy.Hp = 10;
         }
     }
 
@@ -36,7 +36,7 @@ public class BattleManager : MonoBehaviour
 
     public void Battle()
     {
-        enemy.SetHp(enemy.GetHp() - 5);
-        Debug.Log("Enemy's HP: " + enemy.GetHp());
+        enemy.Hp -= 5;
+        Debug.Log("Enemy's HP: " + enemy.Hp);
     }
 }

@@ -11,26 +11,7 @@ public class Select : MonoBehaviour
     [SerializeField] GameObject select1;
     [SerializeField] GameObject select2;
 
-    private bool isSelect1 = true;
-
-    public void ChangeOpcaity(GameObject select, float opacity)
-    {
-        Image selectBackground = select.transform.Find("Background").GetComponent<Image>();
-        Color oldColor = selectBackground.color;
-        Color newColor = new Color(oldColor.r, oldColor.g, oldColor.b, opacity);
-        selectBackground.color = newColor;
-    }
-
-    public bool GetIsSelect1()
-    {
-        return isSelect1;
-    }
-
-    public void SetIsSelect1(bool isSelect1)
-    {
-        this.isSelect1 = isSelect1;
-    }
-
+    public bool IsSelect1 { get; set; } = true;
 
     // Start is called before the first frame update
     void Start()
@@ -43,38 +24,44 @@ public class Select : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (GetIsSelect1())
-                Initiate.Fade("Scenes/Dungeons/Nijigasaki Old School Building/1st Floor", Color.black, 1f);
+            if (IsSelect1)
+                Initiate.Fade("Scenes/Dungeons/To-o Gakuen Old Building/1st Floor", Color.black, 1f);
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (GetIsSelect1())
+            if (IsSelect1)
             {
-                SetIsSelect1(false);
                 ChangeOpcaity(select2, 1);
                 ChangeOpcaity(select1, 0);
             }
             else
             {
-                SetIsSelect1(true);
                 ChangeOpcaity(select1, 1);
                 ChangeOpcaity(select2, 0);
             }
+            IsSelect1 = !IsSelect1;
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (GetIsSelect1())
+            if (IsSelect1)
             {
-                SetIsSelect1(false);
                 ChangeOpcaity(select2, 1);
                 ChangeOpcaity(select1, 0);
             }
             else
             {
-                SetIsSelect1(true);
                 ChangeOpcaity(select1, 1);
                 ChangeOpcaity(select2, 0);
             }
+            IsSelect1 = !IsSelect1;
         }
+    }
+
+    public void ChangeOpcaity(GameObject select, float opacity)
+    {
+        Image selectBackground = select.transform.Find("Background").GetComponent<Image>();
+        Color oldColor = selectBackground.color;
+        Color newColor = new(oldColor.r, oldColor.g, oldColor.b, opacity);
+        selectBackground.color = newColor;
     }
 }
