@@ -1,15 +1,28 @@
+using TMPro;
 using UnityEngine;
 
 public class Enemy : Character
 {
     override public int HpBarWidth { get; } = 1240;
 
-    public Enemy(string name, int hp) : base(name, hp) { }
+    public Enemy(string name, int level, int hp) : base(name, level, hp) { }
 
     override public void Attack(Character target)
     {
         target.Hp -= 3;
+        target.RenderHpBar();
+
+        if (target is Player)
+        {
+            (target as Player).ShowHp();
+        }
     }
+
+    override public void ShowLevel()
+    {
+        GameObject.Find("/Battle UI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    }
+
 
     override public void RenderHpBar()
     {

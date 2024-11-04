@@ -4,9 +4,15 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] GameObject dungeonUi;
     [SerializeField] GameObject battleUi;
-    private readonly Enemy enemy = new("ツチノコ", 10);
-    private readonly Player player = new("歩夢", 21, 12);
+    private readonly Enemy enemy = new("ツチノコ", 2, 10);
+    private readonly Player player = new("歩夢", 1, 21, 12);
     public bool IsPlayerTurn { get; set; } = true;
+
+    void Awake()
+    {
+        enemy.ShowLevel();
+        player.ShowAllStatus();
+    }
 
     void Update()
     {
@@ -15,12 +21,10 @@ public class BattleManager : MonoBehaviour
             if (IsPlayerTurn)
             {
                 player.Attack(enemy);
-                enemy.RenderHpBar();
             }
             else
             {
                 enemy.Attack(player);
-                player.RenderHpBar();
             }
             IsPlayerTurn = !IsPlayerTurn;
         }
