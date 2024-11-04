@@ -4,19 +4,44 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] GameObject dungeonUi;
     [SerializeField] GameObject battleUi;
-    private readonly Enemy enemy = new(10);
+    private readonly Enemy enemy = new("ツチノコ", 10);
+    private readonly Player player = new("歩夢", 21, 12);
+    public bool IsPlayerTurn { get; set; } = true;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            Battle();
+            if (IsPlayerTurn)
+            {
+                player.Attack(enemy);
+                enemy.RenderHpBar();
+            }
+            else
+            {
+                enemy.Attack(player);
+                player.RenderHpBar();
+            }
+            IsPlayerTurn = !IsPlayerTurn;
         }
 
         if (enemy.Hp <= 0)
         {
-            enabled = false;
             enemy.Hp = 10;
+            enemy.ResetHpBar();
+            IsPlayerTurn = true;
+            enabled = false;
+        }
+
+        if (player.Hp <= 0)
+        {
+            enemy.Hp = 10;
+            player.Hp = 10;
+            enemy.ResetHpBar();
+            player.ResetHpBar();
+            IsPlayerTurn = true;
+            enabled = false;
+            Initiate.Fade("Scenes/Menu/Game Over", Color.black, 0.4f);
         }
     }
 
@@ -32,11 +57,5 @@ public class BattleManager : MonoBehaviour
         GetComponent<FPSController>().enabled = true;
         dungeonUi.SetActive(true);
         battleUi.SetActive(false);
-    }
-
-    public void Battle()
-    {
-        enemy.Hp -= 5;
-        Debug.Log("Enemy's HP: " + enemy.Hp);
     }
 }

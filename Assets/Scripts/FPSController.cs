@@ -10,17 +10,11 @@ public class FPSController : MonoBehaviour
     private Direction direction = Direction.north;
     private readonly Dungeon dungeon = new(0.1f);
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     void Awake()
     {
         GetComponent<BattleManager>().enabled = false;
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
