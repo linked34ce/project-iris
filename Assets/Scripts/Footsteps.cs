@@ -5,7 +5,6 @@ using UnityEngine;
 public class Footsteps : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSource;
-
     [SerializeField] private AudioClip footStep1;
     [SerializeField] private AudioClip footStep2;
     [SerializeField] private AudioClip footStep3;

@@ -212,17 +212,12 @@ public class FPSController : MonoBehaviour
 
     public string ConvertNumberFromCardinalToOrdinal(int num)
     {
-        int onesPlace = num % 10;
-        switch (onesPlace)
+        return (num % 10) switch
         {
-            case 1:
-                return $"{num}st";
-            case 2:
-                return $"{num}nd";
-            case 3:
-                return $"{num}rd";
-            default:
-                return $"{num}th";
-        }
+            1 => $"{num}st",
+            2 => $"{num}nd",
+            3 => $"{num}rd",
+            _ => $"{num}th",
+        };
     }
 }
