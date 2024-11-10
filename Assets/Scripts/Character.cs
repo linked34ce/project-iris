@@ -2,7 +2,18 @@ public abstract class Character
 {
     public string Name { get; set; }
     public int Level { get; set; }
-    public int Hp { get; set; }
+    private int _hp;
+    public int Hp
+    {
+        get
+        {
+            return _hp;
+        }
+        set
+        {
+            _hp = value >= 0 ? value : 0;
+        }
+    }
     public int MaxHp { get; set; }
     abstract public int HpBarWidth { get; }
 
@@ -15,6 +26,8 @@ public abstract class Character
     }
 
     public abstract void Attack(Character character);
+    public abstract void ShowAllStatus();
+    public abstract void ShowName();
     public abstract void ShowLevel();
     public abstract void RenderHpBar();
     public abstract void ResetHpBar();

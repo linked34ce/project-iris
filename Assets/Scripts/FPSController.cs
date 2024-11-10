@@ -123,9 +123,6 @@ public class FPSController : MonoBehaviour
             GetComponent<BattleManager>().enabled = true;
             ResetStepsAfterEncount();
         }
-        // Debug.Log("(" + location.X + ", " + location.Y + ")");
-        // Debug.Log("(" + walls.East + ", " + walls.South + ", " + walls.West + ", " + walls.North + ")");
-        Debug.Log(stepsAfterEncount);
     }
 
     public void IncrementStepsAfterEncount() => stepsAfterEncount++;
