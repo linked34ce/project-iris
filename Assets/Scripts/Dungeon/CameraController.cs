@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class FPSController : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     const float STEP = 10f;
     const int MIN_STEPS_AFTER_ENCOUNT = 5;

@@ -65,7 +65,7 @@ public class BattleManager : MonoBehaviour
 
     void OnEnable()
     {
-        GetComponent<FPSController>().enabled = false;
+        GetComponent<CameraController>().enabled = false;
         dungeonUi.SetActive(false);
         battleUi.SetActive(true);
         initialExp = player.Exp;
@@ -73,7 +73,7 @@ public class BattleManager : MonoBehaviour
 
     void OnDisable()
     {
-        GetComponent<FPSController>().enabled = true;
+        GetComponent<CameraController>().enabled = true;
         if (dungeonUi && battleUi)
         {
             dungeonUi.SetActive(true);
