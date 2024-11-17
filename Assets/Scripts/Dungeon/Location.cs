@@ -1,12 +1,13 @@
 public class Location
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    public int X { get; private set; }
+    public int Y { get; private set; }
 
-    public Location(int x, int y)
+    public Location()
     {
-        X = x;
-        Y = y;
+        int[] initialPosition = Dungeons.InitialPositions[Status.DungeonName][Status.Floor - 1];
+        X = initialPosition[0];
+        Y = initialPosition[1];
     }
 
     public void IncrementX() => X++;
@@ -16,4 +17,11 @@ public class Location
     public void DecrementX() => X--;
 
     public void DecrementY() => Y--;
+
+    public void ResetPosition()
+    {
+        int[] initialPosition = Dungeons.InitialPositions[Status.DungeonName][Status.Floor - 1];
+        X = initialPosition[0];
+        Y = initialPosition[1];
+    }
 }

@@ -2,33 +2,33 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] GameObject dungeonUi;
-    [SerializeField] GameObject battleUi;
-    private readonly Enemy enemy = new("コモン・テラン", "tsuchinoko", 10, 2, 10);
-    private readonly Player player = new("歩夢", "healer", 0, 1, 21, 12);
+    [SerializeField] private GameObject dungeonUi;
+    [SerializeField] private GameObject battleUi;
+    public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10);
+    public Player Player { get; } = new("歩夢", "healer", 0, 1, 21, 12);
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
-    public int initialExp;
-    private BasicCommand selectedCommand = BasicCommand.attack;
+    public BasicCommand SelectedCommand { get; private set; } = BasicCommand.attack;
+    public int InitialExp { get; private set; }
 
     void Awake()
     {
-        enemy.ShowAllStatus();
-        player.ShowAllStatus();
+        Enemy.ShowAllStatus();
+        Player.ShowAllStatus();
     }
 
     void Update()
     {
         if (IsOver)
         {
-            if (player.Hp > 0)
+            if (Player.Hp > 0)
             {
                 ShowResult();
             }
         }
         else
         {
-            if (enemy.Hp <= 0)
+            if (Enemy.Hp <= 0)
             {
                 IsOver = true;
             }
@@ -36,7 +36,7 @@ public class BattleManager : MonoBehaviour
             GameObject turnIcon = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Basic/Turn");
             GameObject commandWindow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands");
 
-            if (player.Hp <= 0)
+            if (Player.Hp <= 0)
             {
                 IsOver = true;
                 Initiate.Fade("Scenes/Menu/Game Over", Color.black, 0.4f);
@@ -52,7 +52,7 @@ public class BattleManager : MonoBehaviour
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        enemy.Attack(player);
+                        Enemy.Attack(Player);
                         IsPlayerTurn = !IsPlayerTurn;
                     }
                 }
@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
         GetComponent<CameraController>().enabled = false;
         dungeonUi.SetActive(false);
         battleUi.SetActive(true);
-        initialExp = player.Exp;
+        InitialExp = Player.Exp;
     }
 
     void OnDisable()
@@ -89,26 +89,26 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            selectedCommand = selectedCommand == BasicCommand.attack ? BasicCommand.items : selectedCommand - 1;
+            SelectedCommand = SelectedCommand == BasicCommand.attack ? BasicCommand.items : SelectedCommand - 1;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            selectedCommand = selectedCommand == BasicCommand.items ? BasicCommand.attack : selectedCommand + 1;
+            SelectedCommand = SelectedCommand == BasicCommand.items ? BasicCommand.attack : SelectedCommand + 1;
         }
 
-        attackArrow.SetActive(selectedCommand == BasicCommand.attack);
-        skillsArrow.SetActive(selectedCommand == BasicCommand.skills);
-        itemsArrow.SetActive(selectedCommand == BasicCommand.items);
+        attackArrow.SetActive(SelectedCommand == BasicCommand.attack);
+        skillsArrow.SetActive(SelectedCommand == BasicCommand.skills);
+        itemsArrow.SetActive(SelectedCommand == BasicCommand.items);
     }
 
     public void ExecuteBasicCommand()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            switch (selectedCommand)
+            switch (SelectedCommand)
             {
                 case BasicCommand.attack:
-                    player.Attack(enemy);
+                    Player.Attack(Enemy);
                     IsPlayerTurn = !IsPlayerTurn;
                     break;
                 case BasicCommand.skills:
@@ -121,18 +121,18 @@ public class BattleManager : MonoBehaviour
 
     public void ShowResult()
     {
-        enemy.HideImage();
+        Enemy.HideImage();
 
-        if (initialExp == player.Exp)
+        if (InitialExp == Player.Exp)
         {
-            player.Exp += enemy.DropExp;
+            Player.Exp += Enemy.DropExp;
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            enemy.Hp = enemy.MaxHp;
-            enemy.ShowImage();
-            enemy.ResetHpBar();
+            Enemy.Hp = Enemy.MaxHp;
+            Enemy.ShowImage();
+            Enemy.ResetHpBar();
             IsPlayerTurn = true;
             IsOver = false;
             enabled = false;

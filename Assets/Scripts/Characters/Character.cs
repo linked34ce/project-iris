@@ -1,6 +1,6 @@
 public abstract class Character
 {
-    public string Name { get; set; }
+    public string Name { get; private set; }
     public int Level { get; set; }
     private int _hp;
     public int Hp

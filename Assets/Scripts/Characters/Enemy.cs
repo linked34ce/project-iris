@@ -47,7 +47,7 @@ public class Enemy : Character
     {
         if (target is Player)
         {
-            target.Hp -= 10;
+            target.Hp -= 5;
             target.RenderHpBar();
             (target as Player).ShowHp();
         }

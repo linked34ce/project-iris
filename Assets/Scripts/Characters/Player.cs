@@ -22,8 +22,8 @@ public class Player : Character
             }
         }
     }
-    public int Sp { get; set; }
-    public int MaxSp { get; set; }
+    public int Sp { get; private set; }
+    public int MaxSp { get; private set; }
     override public int HpBarWidth { get; } = 300;
     // this property should be refined
     private readonly int[] expList = {

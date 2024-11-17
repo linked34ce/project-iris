@@ -1,13 +1,19 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Select : MonoBehaviour
 {
 
-    [SerializeField] GameObject select1;
-    [SerializeField] GameObject select2;
+    [SerializeField] private GameObject select1;
+    [SerializeField] private GameObject select2;
+    public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
+    public bool IsSelect1 { get; private set; } = true;
 
-    public bool IsSelect1 { get; set; } = true;
+    void Awake()
+    {
+        GameObject.Find("/UI/Select Box/Select 1/Text").GetComponent<TMP_Text>().SetText($"{DungeonName}を探索する");
+    }
 
     void Update()
     {

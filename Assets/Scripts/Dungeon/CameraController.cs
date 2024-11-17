@@ -1,18 +1,20 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     const float STEP = 10f;
     const int MIN_STEPS_AFTER_ENCOUNT = 5;
-    private int stepsAfterEncount = 3;
-    private readonly Location location = new(9, 0);
-    private Direction direction = Direction.north;
-    private readonly Dungeon dungeon = new(0.1f);
+    public int StepsAfterEncount { get; private set; } = 3;
+    public Direction Direction { get; private set; } = Direction.north;
+    public Location Location { get; } = new();
+    public Dungeon Dungeon { get; } = new();
 
     void Awake()
     {
         GetComponent<BattleManager>().enabled = false;
+        GameObject.Find("/Dungeon UI/Location Name/Text").GetComponent<TMP_Text>().SetText($"{Dungeon.Name} {Status.Floor}F");
     }
 
     void Update()
@@ -41,13 +43,13 @@ public class CameraController : MonoBehaviour
 
     public void ForwardPressed()
     {
-        Walls walls = dungeon.Map[location.Y][location.X];
+        Walls walls = Dungeon.Map[Location.Y][Location.X];
 
-        if (direction == Direction.east)
+        if (Direction == Direction.east)
         {
             if (walls.East == 0)
             {
-                location.IncrementX();
+                Location.IncrementX();
                 StepForward();
             }
             else if (walls.East == 2)
@@ -56,11 +58,11 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (direction == Direction.south)
+        if (Direction == Direction.south)
         {
             if (walls.South == 0)
             {
-                location.DecrementY();
+                Location.DecrementY();
                 StepForward();
             }
             else if (walls.South == 2)
@@ -69,11 +71,11 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (direction == Direction.west)
+        if (Direction == Direction.west)
         {
             if (walls.West == 0)
             {
-                location.DecrementX();
+                Location.DecrementX();
                 StepForward();
             }
             else if (walls.West == 2)
@@ -82,11 +84,11 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (direction == Direction.north)
+        if (Direction == Direction.north)
         {
             if (walls.North == 0)
             {
-                location.IncrementY();
+                Location.IncrementY();
                 StepForward();
             }
             else if (walls.North == 2)
@@ -100,7 +102,8 @@ public class CameraController : MonoBehaviour
     {
         GetComponent<Footsteps>().PlayStairs();
 
-        string ordinal = ConvertNumberFromCardinalToOrdinal(++Status.floor);
+        Status.IncrementFloor();
+        string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
         Initiate.Fade($"Scenes/Dungeons/To-o Gakuen Old Building/{ordinal} Floor", Color.black, 0.4f);
     }
 
@@ -118,16 +121,16 @@ public class CameraController : MonoBehaviour
     public void Encount()
     {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
-        if (stepsAfterEncount >= MIN_STEPS_AFTER_ENCOUNT && UnityEngine.Random.value < dungeon.EncountRate)
+        if (StepsAfterEncount >= MIN_STEPS_AFTER_ENCOUNT && UnityEngine.Random.value < Dungeon.EncountRate)
         {
             GetComponent<BattleManager>().enabled = true;
             ResetStepsAfterEncount();
         }
     }
 
-    public void IncrementStepsAfterEncount() => stepsAfterEncount++;
+    public void IncrementStepsAfterEncount() => StepsAfterEncount++;
 
-    public void ResetStepsAfterEncount() => stepsAfterEncount = 0;
+    public void ResetStepsAfterEncount() => StepsAfterEncount = 0;
 
     public void TurnAround()
     {
@@ -137,20 +140,20 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
         transform.Translate(0f, 0f, -STEP);
 
-        switch (direction)
+        switch (Direction)
         {
 
             case Direction.east:
-                direction = Direction.west;
+                Direction = Direction.west;
                 break;
             case Direction.south:
-                direction = Direction.north;
+                Direction = Direction.north;
                 break;
             case Direction.west:
-                direction = Direction.east;
+                Direction = Direction.east;
                 break;
             case Direction.north:
-                direction = Direction.south;
+                Direction = Direction.south;
                 break;
         }
     }
@@ -163,19 +166,19 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, -90f, 0f);
         transform.Translate(STEP / 2, 0f, -STEP / 2);
 
-        switch (direction)
+        switch (Direction)
         {
             case Direction.east:
-                direction = Direction.north;
+                Direction = Direction.north;
                 break;
             case Direction.south:
-                direction = Direction.east;
+                Direction = Direction.east;
                 break;
             case Direction.west:
-                direction = Direction.south;
+                Direction = Direction.south;
                 break;
             case Direction.north:
-                direction = Direction.west;
+                Direction = Direction.west;
                 break;
 
         }
@@ -189,19 +192,19 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, 90f, 0f);
         transform.Translate(-STEP / 2, 0f, -STEP / 2);
 
-        switch (direction)
+        switch (Direction)
         {
             case Direction.east:
-                direction = Direction.south;
+                Direction = Direction.south;
                 break;
             case Direction.south:
-                direction = Direction.west;
+                Direction = Direction.west;
                 break;
             case Direction.west:
-                direction = Direction.north;
+                Direction = Direction.north;
                 break;
             case Direction.north:
-                direction = Direction.east;
+                Direction = Direction.east;
                 break;
 
         }
