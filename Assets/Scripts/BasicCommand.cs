@@ -1,4 +1,4 @@
-enum BasicCommand
+public enum BasicCommand
 {
     attack,
     skills,

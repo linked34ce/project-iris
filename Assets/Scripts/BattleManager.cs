@@ -23,22 +23,7 @@ public class BattleManager : MonoBehaviour
         {
             if (player.Hp > 0)
             {
-                enemy.HideImage();
-
-                if (initialExp == player.Exp)
-                {
-                    player.Exp += enemy.DropExp;
-                }
-
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    enemy.Hp = enemy.MaxHp;
-                    enemy.ShowImage();
-                    enemy.ResetHpBar();
-                    IsPlayerTurn = true;
-                    IsOver = false;
-                    enabled = false;
-                }
+                ShowResult();
             }
         }
         else
@@ -56,104 +41,24 @@ public class BattleManager : MonoBehaviour
                 IsOver = true;
                 Initiate.Fade("Scenes/Menu/Game Over", Color.black, 0.4f);
             }
-            else if (IsPlayerTurn)
+            else
             {
-                GameObject attackArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Attack/Arrow");
-                GameObject skillsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Skills/Arrow");
-                GameObject itemsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Items/Arrow");
-
-                if (!turnIcon.activeSelf)
+                if (IsPlayerTurn)
                 {
-                    turnIcon.SetActive(true);
-                    commandWindow.SetActive(true);
+                    SelectBasicCommand();
+                    ExecuteBasicCommand();
                 }
-
-                if (Input.GetKeyDown(KeyCode.W))
+                else
                 {
-                    switch (selectedCommand)
-                    {
-                        case BasicCommand.attack:
-                            selectedCommand = BasicCommand.items;
-                            break;
-                        case BasicCommand.skills:
-                            selectedCommand = BasicCommand.attack;
-                            break;
-                        case BasicCommand.items:
-                            selectedCommand = BasicCommand.skills;
-                            break;
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.S))
-                {
-                    switch (selectedCommand)
-                    {
-                        case BasicCommand.attack:
-                            selectedCommand = BasicCommand.skills;
-                            break;
-                        case BasicCommand.skills:
-                            selectedCommand = BasicCommand.items;
-                            break;
-                        case BasicCommand.items:
-                            selectedCommand = BasicCommand.attack;
-                            break;
-                    }
-                }
-
-                if (selectedCommand == BasicCommand.attack)
-                {
-                    if (!attackArrow.activeSelf)
-                    {
-                        attackArrow.SetActive(true);
-                        skillsArrow.SetActive(false);
-                        itemsArrow.SetActive(false);
-                    }
-
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        player.Attack(enemy);
+                        enemy.Attack(player);
                         IsPlayerTurn = !IsPlayerTurn;
                     }
                 }
-                else if (selectedCommand == BasicCommand.skills)
-                {
-                    if (!skillsArrow.activeSelf)
-                    {
-                        attackArrow.SetActive(false);
-                        skillsArrow.SetActive(true);
-                        itemsArrow.SetActive(false);
-                    }
 
-                    if (Input.GetKeyDown(KeyCode.Return))
-                    {
-                    }
-                }
-                else if (selectedCommand == BasicCommand.items)
-                {
-                    if (!itemsArrow.activeSelf)
-                    {
-                        attackArrow.SetActive(false);
-                        skillsArrow.SetActive(false);
-                        itemsArrow.SetActive(true);
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.Return))
-                    {
-                    }
-                }
-            }
-            else
-            {
-                if (turnIcon.activeSelf)
-                {
-                    turnIcon.SetActive(false);
-                    commandWindow.SetActive(false);
-                }
-
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    enemy.Attack(player);
-                    IsPlayerTurn = !IsPlayerTurn;
-                }
+                turnIcon.SetActive(IsPlayerTurn);
+                commandWindow.SetActive(IsPlayerTurn);
             }
         }
     }
@@ -173,6 +78,64 @@ public class BattleManager : MonoBehaviour
         {
             dungeonUi.SetActive(true);
             battleUi.SetActive(false);
+        }
+    }
+
+    public void SelectBasicCommand()
+    {
+        GameObject attackArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Attack/Arrow");
+        GameObject skillsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Skills/Arrow");
+        GameObject itemsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Items/Arrow");
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            selectedCommand = selectedCommand == BasicCommand.attack ? BasicCommand.items : selectedCommand - 1;
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            selectedCommand = selectedCommand == BasicCommand.items ? BasicCommand.attack : selectedCommand + 1;
+        }
+
+        attackArrow.SetActive(selectedCommand == BasicCommand.attack);
+        skillsArrow.SetActive(selectedCommand == BasicCommand.skills);
+        itemsArrow.SetActive(selectedCommand == BasicCommand.items);
+    }
+
+    public void ExecuteBasicCommand()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            switch (selectedCommand)
+            {
+                case BasicCommand.attack:
+                    player.Attack(enemy);
+                    IsPlayerTurn = !IsPlayerTurn;
+                    break;
+                case BasicCommand.skills:
+                    break;
+                case BasicCommand.items:
+                    break;
+            }
+        }
+    }
+
+    public void ShowResult()
+    {
+        enemy.HideImage();
+
+        if (initialExp == player.Exp)
+        {
+            player.Exp += enemy.DropExp;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            enemy.Hp = enemy.MaxHp;
+            enemy.ShowImage();
+            enemy.ResetHpBar();
+            IsPlayerTurn = true;
+            IsOver = false;
+            enabled = false;
         }
     }
 }
