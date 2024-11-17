@@ -15,14 +15,31 @@ public abstract class Character
         }
     }
     public int MaxHp { get; set; }
+    public int Atk { get; set; }
+    public int Mag { get; set; }
+    public int Def { get; set; }
+    public int Res { get; set; }
+    public int Agi { get; set; }
+    public int Luk { get; set; }
     abstract public int HpBarWidth { get; }
 
-    public Character(string name, int level, int hp)
+    public Character(string name, int level)
     {
         Name = name;
         Level = level;
+    }
+
+    public Character(string name, int level, int hp, int atk, int mag, int def,
+                    int res, int agi, int luk) : this(name, level)
+    {
         Hp = hp;
         MaxHp = hp;
+        Atk = atk;
+        Mag = mag;
+        Def = def;
+        Res = res;
+        Agi = agi;
+        Luk = luk;
     }
 
     public abstract void Attack(Character character);

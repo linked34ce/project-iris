@@ -9,7 +9,9 @@ public class Enemy : Character
     public int DropExp { get; }
     override public int HpBarWidth { get; } = 1240;
 
-    public Enemy(string name, string imageFileName, int dropExp, int level, int hp) : base(name, level, hp)
+    public Enemy(string name, string imageFileName, int dropExp, int level,
+                int hp, int atk, int mag, int def, int res, int agi, int luk)
+                : base(name, level, hp, atk, mag, def, res, agi, luk)
     {
         ImageFileName = imageFileName;
         DropExp = dropExp;
@@ -24,23 +26,15 @@ public class Enemy : Character
         }
 
         Color32 color = Image.color;
-
-        if (color.a == 0)
-        {
-            color.a = 255;
-            Image.color = color;
-        }
+        color.a = 255;
+        Image.color = color;
     }
 
     public void HideImage()
     {
         Color32 color = Image.color;
-
-        if (color.a != 0)
-        {
-            color.a = 0;
-            Image.color = color;
-        }
+        color.a = 0;
+        Image.color = color;
     }
 
     override public void Attack(Character target)
@@ -59,6 +53,7 @@ public class Enemy : Character
 
     override public void ShowAllStatus()
     {
+        ResetHpBar();
         ShowImage();
         ShowName();
         ShowLevel();

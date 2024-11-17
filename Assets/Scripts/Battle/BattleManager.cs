@@ -4,18 +4,12 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] private GameObject dungeonUi;
     [SerializeField] private GameObject battleUi;
-    public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10);
-    public Player Player { get; } = new("歩夢", "healer", 0, 1, 21, 12);
+    public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
+    public Player Player { get; } = new("歩夢", "healer", 0, 1);
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
     public BasicCommand SelectedCommand { get; private set; } = BasicCommand.attack;
     public int InitialExp { get; private set; }
-
-    void Awake()
-    {
-        Enemy.ShowAllStatus();
-        Player.ShowAllStatus();
-    }
 
     void Update()
     {
@@ -33,8 +27,8 @@ public class BattleManager : MonoBehaviour
                 IsOver = true;
             }
 
-            GameObject turnIcon = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Basic/Turn");
-            GameObject commandWindow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands");
+            GameObject turnIcon = GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Turn");
+            GameObject commandWindow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands");
 
             if (Player.Hp <= 0)
             {
@@ -69,6 +63,8 @@ public class BattleManager : MonoBehaviour
         dungeonUi.SetActive(false);
         battleUi.SetActive(true);
         InitialExp = Player.Exp;
+        Enemy.ShowAllStatus();
+        Player.ShowAllStatus();
     }
 
     void OnDisable()
@@ -83,9 +79,9 @@ public class BattleManager : MonoBehaviour
 
     public void SelectBasicCommand()
     {
-        GameObject attackArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Attack/Arrow");
-        GameObject skillsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Skills/Arrow");
-        GameObject itemsArrow = GameObject.Find("/Battle UI/Panel/Status/Attacker 1/Commands/Items/Arrow");
+        GameObject attackArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Attack/Arrow");
+        GameObject skillsArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Skills/Arrow");
+        GameObject itemsArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Items/Arrow");
 
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -121,18 +117,17 @@ public class BattleManager : MonoBehaviour
 
     public void ShowResult()
     {
-        Enemy.HideImage();
-
         if (InitialExp == Player.Exp)
         {
             Player.Exp += Enemy.DropExp;
         }
 
+        Enemy.HideImage();
+        Player.ShowResult();
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
             Enemy.Hp = Enemy.MaxHp;
-            Enemy.ShowImage();
-            Enemy.ResetHpBar();
             IsPlayerTurn = true;
             IsOver = false;
             enabled = false;
