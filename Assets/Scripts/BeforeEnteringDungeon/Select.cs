@@ -6,7 +6,11 @@ public class Select : MonoBehaviour
 {
 
     [SerializeField] private GameObject select1;
+    public GameObject Select1 => select1;
+
     [SerializeField] private GameObject select2;
+    public GameObject Select2 => select2;
+
     public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
     public bool IsSelect1 { get; private set; } = true;
 
@@ -26,13 +30,13 @@ public class Select : MonoBehaviour
         {
             if (IsSelect1)
             {
-                ChangeOpcaity(select2, 1);
-                ChangeOpcaity(select1, 0);
+                ChangeOpcaity(Select2, 1);
+                ChangeOpcaity(Select1, 0);
             }
             else
             {
-                ChangeOpcaity(select1, 1);
-                ChangeOpcaity(select2, 0);
+                ChangeOpcaity(Select1, 1);
+                ChangeOpcaity(Select2, 0);
             }
             IsSelect1 = !IsSelect1;
         }
@@ -40,13 +44,13 @@ public class Select : MonoBehaviour
         {
             if (IsSelect1)
             {
-                ChangeOpcaity(select2, 1);
-                ChangeOpcaity(select1, 0);
+                ChangeOpcaity(Select2, 1);
+                ChangeOpcaity(Select1, 0);
             }
             else
             {
-                ChangeOpcaity(select1, 1);
-                ChangeOpcaity(select2, 0);
+                ChangeOpcaity(Select1, 1);
+                ChangeOpcaity(Select2, 0);
             }
             IsSelect1 = !IsSelect1;
         }

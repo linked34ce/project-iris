@@ -3,7 +3,11 @@ using UnityEngine;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] private GameObject dungeonUi;
+    public GameObject DungeonUi => dungeonUi;
+
     [SerializeField] private GameObject battleUi;
+    public GameObject BattleUi => battleUi;
+
     public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
     public Player Player { get; } = new("歩夢", "healer", 0, 1);
     public bool IsPlayerTurn { get; private set; } = true;
@@ -60,8 +64,8 @@ public class BattleManager : MonoBehaviour
     void OnEnable()
     {
         GetComponent<CameraController>().enabled = false;
-        dungeonUi.SetActive(false);
-        battleUi.SetActive(true);
+        DungeonUi.SetActive(false);
+        BattleUi.SetActive(true);
         InitialExp = Player.Exp;
         Enemy.ShowAllStatus();
         Player.ShowAllStatus();
@@ -70,10 +74,10 @@ public class BattleManager : MonoBehaviour
     void OnDisable()
     {
         GetComponent<CameraController>().enabled = true;
-        if (dungeonUi && battleUi)
+        if (DungeonUi && BattleUi)
         {
-            dungeonUi.SetActive(true);
-            battleUi.SetActive(false);
+            DungeonUi.SetActive(true);
+            BattleUi.SetActive(false);
         }
     }
 

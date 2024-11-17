@@ -7,13 +7,11 @@ public class Player : Character
 {
     // this property should be deleted when class for each role is made
     public string Role { get; }
+
     private int _exp;
     public int Exp
     {
-        get
-        {
-            return _exp;
-        }
+        get => _exp;
         set
         {
             _exp = value;
@@ -23,24 +21,22 @@ public class Player : Character
             }
         }
     }
+
     private int _sp;
     public int Sp
     {
-        get
-        {
-            return _sp;
-        }
-        set
-        {
-            _sp = value >= 0 ? value : 0;
-        }
+        get => _sp;
+        set => _sp = Mathf.Clamp(value, 0, MaxSp);
     }
+
     public int MaxSp { get; private set; }
     override public int HpBarWidth { get; } = 300;
+
     // this property should be refined
     public int[] ExpList { get; } = {
         10, 30, 60, 100, 150, 210, 280, 360, 450, 550,
     };
+
     // properties below should be deleted when class for each character is made
     public Dictionary<int, int> HpList { get; } = new(){
         {1, 21},
@@ -54,6 +50,7 @@ public class Player : Character
         {9, 40},
         {10, 44},
     };
+
     public Dictionary<int, int> SpList { get; } = new(){
         {1, 12},
         {2, 13},

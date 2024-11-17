@@ -1,19 +1,17 @@
+using UnityEngine;
+
 public abstract class Character
 {
     public string Name { get; private set; }
     public int Level { get; set; }
+
     private int _hp;
     public int Hp
     {
-        get
-        {
-            return _hp;
-        }
-        set
-        {
-            _hp = value >= 0 ? value : 0;
-        }
+        get => _hp;
+        set => _hp = Mathf.Clamp(value, 0, MaxHp);
     }
+
     public int MaxHp { get; set; }
     public int Atk { get; set; }
     public int Mag { get; set; }
