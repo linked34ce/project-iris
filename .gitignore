@@ -1,6 +1,7 @@
 *.cs.meta
 *.sln
 Assembly-CSharp.csproj
+Database.meta
 /Assets/*
 !Scripts
 /Build/
