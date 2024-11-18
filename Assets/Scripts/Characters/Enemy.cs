@@ -59,15 +59,9 @@ public class Enemy : Character
         ShowLevel();
     }
 
-    override public void ShowName()
-    {
-        GameObject.Find("/Battle UI/Enemy/Status/Name").GetComponent<TMP_Text>().SetText(Name);
-    }
+    override public void ShowName() => GameObject.Find("/Battle UI/Enemy/Status/Name").GetComponent<TMP_Text>().SetText(Name);
 
-    override public void ShowLevel()
-    {
-        GameObject.Find("/Battle UI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
-    }
+    override public void ShowLevel() => GameObject.Find("/Battle UI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
 
     override public void RenderHpBar()
     {

@@ -30,8 +30,8 @@ public abstract class Character
     public Character(string name, int level, int hp, int atk, int mag, int def,
                     int res, int agi, int luk) : this(name, level)
     {
-        Hp = hp;
         MaxHp = hp;
+        Hp = hp;
         Atk = atk;
         Mag = mag;
         Def = def;

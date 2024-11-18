@@ -4,7 +4,6 @@ public class Dungeon
     public float EncountRate { get; }
     public Walls[][] Map { get; }
 
-
     public Dungeon()
     {
         Name = Dungeons.DisplayNames[Status.DungeonName];

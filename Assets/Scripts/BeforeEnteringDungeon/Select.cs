@@ -13,6 +13,7 @@ public class Select : MonoBehaviour
 
     public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
     public bool IsSelect1 { get; private set; } = true;
+    public bool Entered { get; private set; } = false;
 
     void Awake()
     {
@@ -23,9 +24,13 @@ public class Select : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (IsSelect1)
+            if (IsSelect1 && !Entered)
+            {
+                Entered = false;
                 Initiate.Fade("Scenes/Dungeons/To-o Gakuen Old Building/1st Floor", Color.black, 1f);
+            }
         }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             if (IsSelect1)
@@ -40,6 +45,7 @@ public class Select : MonoBehaviour
             }
             IsSelect1 = !IsSelect1;
         }
+
         if (Input.GetKeyDown(KeyCode.S))
         {
             if (IsSelect1)

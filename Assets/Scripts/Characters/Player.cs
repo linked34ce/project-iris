@@ -190,25 +190,13 @@ public class Player : Character
         roleIcon.color = GetColorCodeForRole(Role);
     }
 
-    public void ShowHp()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Status/HP/Value/Current").GetComponent<TMP_Text>().SetText($"{Hp}");
-    }
+    public void ShowHp() => GameObject.Find("/Battle UI/Panel/Attacker 1/Status/HP/Value/Current").GetComponent<TMP_Text>().SetText($"{Hp}");
 
-    public void ShowMaxHp()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Status/HP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxHp}");
-    }
+    public void ShowMaxHp() => GameObject.Find("/Battle UI/Panel/Attacker 1/Status/HP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxHp}");
 
-    public void ShowSp()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Status/SP/Value/Current").GetComponent<TMP_Text>().SetText($"{Sp}");
-    }
+    public void ShowSp() => GameObject.Find("/Battle UI/Panel/Attacker 1/Status/SP/Value/Current").GetComponent<TMP_Text>().SetText($"{Sp}");
 
-    public void ShowMaxSp()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Status/SP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxSp}");
-    }
+    public void ShowMaxSp() => GameObject.Find("/Battle UI/Panel/Attacker 1/Status/SP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxSp}");
 
     public void RenderSpBar()
     {
@@ -243,16 +231,13 @@ public class Player : Character
     }
 
     // this method should be deleted when class for each role is made 
-    public Color32 GetColorCodeForRole(string role)
+    public Color32 GetColorCodeForRole(string role) => role switch
     {
-        return role switch
-        {
-            "attacker" => new(255, 73, 73, 255),
-            "tank" => new(45, 241, 255, 255),
-            "healer" => new(0, 255, 75, 255),
-            _ => new(0, 0, 0, 255),
-        };
-    }
+        "attacker" => new(255, 73, 73, 255),
+        "tank" => new(45, 241, 255, 255),
+        "healer" => new(0, 255, 75, 255),
+        _ => new(0, 0, 0, 255),
+    };
 
     override public void Attack(Character target)
     {
@@ -281,15 +266,9 @@ public class Player : Character
         ShowMaxSp();
     }
 
-    override public void ShowName()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Name").GetComponent<TMP_Text>().SetText(Name);
-    }
+    override public void ShowName() => GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Name").GetComponent<TMP_Text>().SetText(Name);
 
-    override public void ShowLevel()
-    {
-        GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
-    }
+    override public void ShowLevel() => GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
 
     override public void RenderHpBar()
     {
