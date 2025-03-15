@@ -9,7 +9,7 @@ public class BattleManager : MonoBehaviour
     public GameObject BattleUi => battleUi;
 
     public GameObject CommandWindow { get; private set; }
-    public GameObject TurnIcon { get; private set; }
+    public GameObject TurnBackground { get; private set; }
     public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
     public Player Player { get; } = new("歩夢", "healer", 0, 1);
     public bool IsPlayerTurn { get; private set; } = true;
@@ -20,7 +20,7 @@ public class BattleManager : MonoBehaviour
     void Awake()
     {
         CommandWindow = GameObject.Find("/BattleUI/Attacker1Commands");
-        TurnIcon = GameObject.Find("/BattleUI/Panel/Attacker1/Basic/Turn");
+        TurnBackground = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Turn");
     }
 
     void Update()
@@ -62,7 +62,7 @@ public class BattleManager : MonoBehaviour
                     }
                 }
                 CommandWindow.SetActive(IsPlayerTurn);
-                TurnIcon.SetActive(IsPlayerTurn);
+                TurnBackground.SetActive(IsPlayerTurn);
             }
         }
     }

@@ -65,15 +65,18 @@ public class Enemy : Character
 
     override public void RenderHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth * (float)Hp / MaxHp;
-        GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        float width = GameObject.Find("/BattleUI/Enemy/Status/HP/Background").GetComponent<RectTransform>().sizeDelta.x;
+        GameObject fill = GameObject.Find("/BattleUI/Enemy/Status/HP/Mask/Fill");
+        Vector2 anchoredPosition = fill.GetComponent<RectTransform>().anchoredPosition;
+        anchoredPosition.x = -width * (MaxHp - Hp) / MaxHp;
+        fill.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
     }
 
     override public void ResetHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth;
-        GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        GameObject fill = GameObject.Find("/BattleUI/Enemy/Status/HP/Mask/Fill");
+        Vector2 anchoredPosition = fill.GetComponent<RectTransform>().anchoredPosition;
+        anchoredPosition.x = 0;
+        fill.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
     }
 }

@@ -178,59 +178,46 @@ public class Player : Character
         Sp = MaxSp;
 
         ShowLevel();
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result/LevelUp").SetActive(true);
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(true);
 
         // Debug.Log($"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}");
     }
 
     public void ShowRole()
     {
-        Image roleIcon = GameObject.Find("/BattleUI/Panel/Attacker1/Basic/Role").GetComponent<Image>();
+        Image roleIcon = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Role/Icon").GetComponent<Image>();
         roleIcon.sprite = Resources.Load<Sprite>($"Icons/{Role}");
         roleIcon.color = GetColorCodeForRole(Role);
     }
 
-    public void ShowHp() => GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Value/Current").GetComponent<TMP_Text>().SetText($"{Hp}");
+    public void ShowHp() => GameObject.Find("/BattleUI/Attackers/Attacker1/HP/Value").GetComponent<TMP_Text>().SetText($"{Hp}/{MaxHp}");
 
-    public void ShowMaxHp() => GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxHp}");
-
-    public void ShowSp() => GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Value/Current").GetComponent<TMP_Text>().SetText($"{Sp}");
-
-    public void ShowMaxSp() => GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Value/Max").GetComponent<TMP_Text>().SetText($"{MaxSp}");
+    public void ShowSp() => GameObject.Find("/BattleUI/Attackers/Attacker1/SP/Value").GetComponent<TMP_Text>().SetText($"{Sp}/{MaxSp}");
 
     public void RenderSpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth * (float)Sp / MaxSp;
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/SP").GetComponent<Slider>();
+        slider.value = (float)Sp / MaxSp;
     }
 
     public void ResetSpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth;
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status/SP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/SP").GetComponent<Slider>();
+        slider.value = 1;
     }
 
     public void ShowStatus()
     {
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status").SetActive(true);
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result").SetActive(false);
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result/LevelUp").SetActive(false);
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(false);
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(false);
     }
 
     public void ShowResult()
     {
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status").SetActive(false);
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result").SetActive(true);
-
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result/EXP/Value").GetComponent<TMP_Text>().SetText($"{Exp}");
-
-        int expToNextLevel = ExpList[Level - 1] - Exp;
-        GameObject.Find("/BattleUI/Panel/Attacker1/Result/NextLevel/Value").GetComponent<TMP_Text>().SetText($"{expToNextLevel}");
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(true);
+        int nextExp = ExpList[Level - 1] - Exp;
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/NextEXP/Value").GetComponent<TMP_Text>().SetText($"{nextExp}");
     }
-
-    // this method should be deleted when class for each role is made 
     public Color32 GetColorCodeForRole(string role) => role switch
     {
         "attacker" => new(255, 73, 73, 255),
@@ -261,26 +248,22 @@ public class Player : Character
         ShowName();
         ShowLevel();
         ShowHp();
-        ShowMaxHp();
         ShowSp();
-        ShowMaxSp();
     }
 
-    override public void ShowName() => GameObject.Find("/BattleUI/Panel/Attacker1/Basic/Name").GetComponent<TMP_Text>().SetText(Name);
+    override public void ShowName() => GameObject.Find("/BattleUI/Attackers/Attacker1/Name").GetComponent<TMP_Text>().SetText(Name);
 
-    override public void ShowLevel() => GameObject.Find("/BattleUI/Panel/Attacker1/Basic/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    override public void ShowLevel() => GameObject.Find("/BattleUI/Attackers/Attacker1/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
 
     override public void RenderHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth * (float)Hp / MaxHp;
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/HP").GetComponent<Slider>();
+        slider.value = (float)Hp / MaxHp;
     }
 
     override public void ResetHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
-        sizeDelta.x = HpBarWidth;
-        GameObject.Find("/BattleUI/Panel/Attacker1/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/HP").GetComponent<Slider>();
+        slider.value = 1;
     }
 }
