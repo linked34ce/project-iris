@@ -17,7 +17,7 @@ public class Select : MonoBehaviour
 
     void Awake()
     {
-        GameObject.Find("/UI/Select Box/Select 1/Text").GetComponent<TMP_Text>().SetText($"{DungeonName}を探索する");
+        GameObject.Find("/UI/SelectBox/Select1/Text").GetComponent<TMP_Text>().SetText($"{DungeonName}を探索する");
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class Select : MonoBehaviour
             if (IsSelect1 && !Entered)
             {
                 Entered = false;
-                Initiate.Fade("Scenes/Dungeons/To-o Gakuen Old Building/1st Floor", Color.black, 1f);
+                Initiate.Fade("Scenes/Dungeons/ToOhGakuenOldBuilding/1stFloor", Color.black, 1f);
             }
         }
 

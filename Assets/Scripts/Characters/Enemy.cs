@@ -21,7 +21,7 @@ public class Enemy : Character
     {
         if (!Image)
         {
-            Image = GameObject.Find("/Battle UI/Enemy/Image").GetComponent<RawImage>();
+            Image = GameObject.Find("/BattleUI/EnemyImage").GetComponent<RawImage>();
             Image.texture = Resources.Load<Texture2D>($"Enemies/{ImageFileName}");
         }
 
@@ -59,21 +59,21 @@ public class Enemy : Character
         ShowLevel();
     }
 
-    override public void ShowName() => GameObject.Find("/Battle UI/Enemy/Status/Name").GetComponent<TMP_Text>().SetText(Name);
+    override public void ShowName() => GameObject.Find("/BattleUI/Enemy/Status/Name").GetComponent<TMP_Text>().SetText(Name);
 
-    override public void ShowLevel() => GameObject.Find("/Battle UI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    override public void ShowLevel() => GameObject.Find("/BattleUI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
 
     override public void RenderHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/Battle UI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
+        Vector2 sizeDelta = GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
         sizeDelta.x = HpBarWidth * (float)Hp / MaxHp;
-        GameObject.Find("/Battle UI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
     }
 
     override public void ResetHpBar()
     {
-        Vector2 sizeDelta = GameObject.Find("/Battle UI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
+        Vector2 sizeDelta = GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta;
         sizeDelta.x = HpBarWidth;
-        GameObject.Find("/Battle UI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
+        GameObject.Find("/BattleUI/Enemy/Status/HP/Bar/Current").GetComponent<RectTransform>().sizeDelta = sizeDelta;
     }
 }

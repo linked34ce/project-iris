@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     void Awake()
     {
         GetComponent<BattleManager>().enabled = false;
-        GameObject.Find("/Dungeon UI/Location Name/Text").GetComponent<TMP_Text>().SetText($"{Dungeon.Name} {Status.Floor}F");
+        GameObject.Find("/DungeonUI/LocationName/Text").GetComponent<TMP_Text>().SetText($"{Dungeon.Name} {Status.Floor}F");
     }
 
     void Update()
@@ -39,63 +39,62 @@ public class CameraController : MonoBehaviour
         {
             TurnRight();
         }
-
     }
 
     public void ForwardPressed()
     {
         Walls walls = Dungeon.Map[Location.Y][Location.X];
 
-        if (Direction == Direction.east)
+        switch (Direction)
         {
-            if (walls.East == 0)
-            {
-                Location.IncrementX();
-                StepForward();
-            }
-            else if (walls.East == 2)
-            {
-                GoUpstairs();
-            }
-        }
-
-        if (Direction == Direction.south)
-        {
-            if (walls.South == 0)
-            {
-                Location.DecrementY();
-                StepForward();
-            }
-            else if (walls.South == 2)
-            {
-                GoUpstairs();
-            }
-        }
-
-        if (Direction == Direction.west)
-        {
-            if (walls.West == 0)
-            {
-                Location.DecrementX();
-                StepForward();
-            }
-            else if (walls.West == 2)
-            {
-                GoUpstairs();
-            }
-        }
-
-        if (Direction == Direction.north)
-        {
-            if (walls.North == 0)
-            {
-                Location.IncrementY();
-                StepForward();
-            }
-            else if (walls.North == 2)
-            {
-                GoUpstairs();
-            }
+            case Direction.east:
+                switch (walls.East)
+                {
+                    case Wall.air:
+                        Location.IncrementX();
+                        StepForward();
+                        break;
+                    case Wall.stairs:
+                        GoUpstairs();
+                        break;
+                }
+                break;
+            case Direction.south:
+                switch (walls.South)
+                {
+                    case Wall.air:
+                        Location.DecrementY();
+                        StepForward();
+                        break;
+                    case Wall.stairs:
+                        GoUpstairs();
+                        break;
+                }
+                break;
+            case Direction.west:
+                switch (walls.West)
+                {
+                    case Wall.air:
+                        Location.DecrementX();
+                        StepForward();
+                        break;
+                    case Wall.stairs:
+                        GoUpstairs();
+                        break;
+                }
+                break;
+            case Direction.north:
+                switch (walls.North)
+                {
+                    case Wall.air:
+                        Location.IncrementY();
+                        StepForward();
+                        break;
+                    case Wall.stairs:
+                        GoUpstairs();
+                        break;
+                }
+                break;
         }
     }
 
@@ -109,7 +108,7 @@ public class CameraController : MonoBehaviour
 
             Status.IncrementFloor();
             string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
-            Initiate.Fade($"Scenes/Dungeons/To-o Gakuen Old Building/{ordinal} Floor", Color.black, 0.4f);
+            Initiate.Fade($"Scenes/Dungeons/ToOhGakuenOldBuilding/{ordinal}Floor", Color.black, 0.4f);
         }
     }
 
@@ -145,22 +144,14 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
         transform.Translate(0f, 0f, -STEP);
 
-        switch (Direction)
+        Direction = Direction switch
         {
-
-            case Direction.east:
-                Direction = Direction.west;
-                break;
-            case Direction.south:
-                Direction = Direction.north;
-                break;
-            case Direction.west:
-                Direction = Direction.east;
-                break;
-            case Direction.north:
-                Direction = Direction.south;
-                break;
-        }
+            Direction.east => Direction.west,
+            Direction.south => Direction.north,
+            Direction.west => Direction.east,
+            Direction.north => Direction.south,
+            _ => Direction,
+        };
     }
 
     public void TurnLeft()
@@ -170,21 +161,14 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, -90f, 0f);
         transform.Translate(STEP / 2, 0f, -STEP / 2);
 
-        switch (Direction)
+        Direction = Direction switch
         {
-            case Direction.east:
-                Direction = Direction.north;
-                break;
-            case Direction.south:
-                Direction = Direction.east;
-                break;
-            case Direction.west:
-                Direction = Direction.south;
-                break;
-            case Direction.north:
-                Direction = Direction.west;
-                break;
-        }
+            Direction.east => Direction.north,
+            Direction.south => Direction.east,
+            Direction.west => Direction.south,
+            Direction.north => Direction.west,
+            _ => Direction,
+        };
     }
 
     public void TurnRight()
@@ -194,21 +178,14 @@ public class CameraController : MonoBehaviour
         transform.Rotate(0f, 90f, 0f);
         transform.Translate(-STEP / 2, 0f, -STEP / 2);
 
-        switch (Direction)
+        Direction = Direction switch
         {
-            case Direction.east:
-                Direction = Direction.south;
-                break;
-            case Direction.south:
-                Direction = Direction.west;
-                break;
-            case Direction.west:
-                Direction = Direction.north;
-                break;
-            case Direction.north:
-                Direction = Direction.east;
-                break;
-        }
+            Direction.east => Direction.south,
+            Direction.south => Direction.west,
+            Direction.west => Direction.north,
+            Direction.north => Direction.east,
+            _ => Direction,
+        };
     }
 
     public string ConvertNumberFromCardinalToOrdinal(int num) => (num % 10) switch

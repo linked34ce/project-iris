@@ -6,14 +6,11 @@ public class GameOver : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && !Restarted)
         {
-            if (!Restarted)
-            {
-                Initiate.DoneFading();
-                Initiate.Fade("Scenes/Menu/Before Entering Dungeon", Color.black, 1f);
-                Restarted = true;
-            }
+            Restarted = true;
+            Initiate.DoneFading();
+            Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, 1f);
         }
     }
 }

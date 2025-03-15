@@ -22,8 +22,12 @@ public class FootstepsSound : MonoBehaviour
 
     private IEnumerator DelayMethod(float waitTime, Action action)
     {
-        yield return new WaitForSeconds(waitTime);
-        action();
+        WaitForSeconds cachedWait = new(waitTime);
+        while (true)
+        {
+            yield return cachedWait;
+            action();
+        }
     }
 
     public void PlayStairs()

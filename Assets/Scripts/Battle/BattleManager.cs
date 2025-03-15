@@ -8,12 +8,20 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject battleUi;
     public GameObject BattleUi => battleUi;
 
+    public GameObject CommandWindow { get; private set; }
+    public GameObject TurnIcon { get; private set; }
     public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
     public Player Player { get; } = new("歩夢", "healer", 0, 1);
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
     public BasicCommand SelectedCommand { get; private set; } = BasicCommand.attack;
     public int InitialExp { get; private set; }
+
+    void Awake()
+    {
+        CommandWindow = GameObject.Find("/BattleUI/Attacker1Commands");
+        TurnIcon = GameObject.Find("/BattleUI/Panel/Attacker1/Basic/Turn");
+    }
 
     void Update()
     {
@@ -31,32 +39,30 @@ public class BattleManager : MonoBehaviour
                 IsOver = true;
             }
 
-            GameObject turnIcon = GameObject.Find("/Battle UI/Panel/Attacker 1/Basic/Turn");
-            GameObject commandWindow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands");
-
             if (Player.Hp <= 0)
             {
                 IsOver = true;
-                Initiate.Fade("Scenes/Menu/Game Over", Color.black, 0.4f);
+                Initiate.Fade("Scenes/Menu/GameOver", Color.black, 0.4f);
             }
             else
             {
                 if (IsPlayerTurn)
                 {
+                    CommandWindow.SetActive(IsPlayerTurn);
                     SelectBasicCommand();
                     ExecuteBasicCommand();
                 }
                 else
                 {
+
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
                         Enemy.Attack(Player);
                         IsPlayerTurn = !IsPlayerTurn;
                     }
                 }
-
-                turnIcon.SetActive(IsPlayerTurn);
-                commandWindow.SetActive(IsPlayerTurn);
+                CommandWindow.SetActive(IsPlayerTurn);
+                TurnIcon.SetActive(IsPlayerTurn);
             }
         }
     }
@@ -83,9 +89,9 @@ public class BattleManager : MonoBehaviour
 
     public void SelectBasicCommand()
     {
-        GameObject attackArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Attack/Arrow");
-        GameObject skillsArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Skills/Arrow");
-        GameObject itemsArrow = GameObject.Find("/Battle UI/Panel/Attacker 1/Commands/Items/Arrow");
+        GameObject attackArrow = GameObject.Find("/BattleUI/Attacker1Commands/Attack/Arrow");
+        GameObject skillsArrow = GameObject.Find("/BattleUI/Attacker1Commands/Skills/Arrow");
+        GameObject itemsArrow = GameObject.Find("/BattleUI/Attacker1Commands/Items/Arrow");
 
         if (Input.GetKeyDown(KeyCode.W))
         {
