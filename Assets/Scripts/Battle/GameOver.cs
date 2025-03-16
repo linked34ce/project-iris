@@ -13,6 +13,10 @@ public class GameOver : MonoBehaviour
 
     void Awake()
     {
+        Button1.onClick.AddListener(() =>
+            Debug.Log("Button1 is selected")
+        );
+
         Button2.onClick.AddListener(() =>
             Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, 1f)
         );

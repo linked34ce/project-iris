@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
@@ -18,10 +18,12 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Button itemButton;
     public Button ItemButton => itemButton;
 
+    public GameObject SelectedButton { get; set; }
     public GameObject CommandWindow { get; private set; }
     public GameObject TurnBackground { get; private set; }
     public Enemy Enemy { get; private set; }
     public Player Player { get; private set; }
+    public Coroutine CurrentCoroutine { get; private set; }
     public bool IsFirstEnabled { get; set; } = true;
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
@@ -32,13 +34,27 @@ public class BattleManager : MonoBehaviour
         Player = new("歩夢", "healer", 0, 1);
         CommandWindow = GameObject.Find("/BattleUI/Attacker1Commands");
         TurnBackground = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Turn");
+        SelectedButton = EventSystem.current.currentSelectedGameObject;
+
         AttackButton.onClick.AddListener(() =>
         {
+            CommandWindow.SetActive(false);
+            TurnBackground.SetActive(false);
             Player.Attack(Enemy);
             if (Enemy.Hp > 0)
             {
                 IsPlayerTurn = false;
             }
+        });
+
+        SkillButton.onClick.AddListener(() =>
+        {
+            Debug.Log("SkillButton is selected");
+        });
+
+        ItemButton.onClick.AddListener(() =>
+        {
+            Debug.Log("SkillButton is selected");
         });
     }
 
@@ -73,17 +89,16 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
+                PlayButtonSelect();
+
                 if (IsPlayerTurn && !CommandWindow.activeSelf)
                 {
                     CommandWindow.SetActive(true);
                     TurnBackground.SetActive(true);
                 }
-
-                else if (!IsPlayerTurn && CommandWindow.activeSelf)
+                else if (!IsPlayerTurn && !GameObject.Find("/BattleUI/EnemyImage").GetComponent<Animator>().GetBool("isAttacked") && CurrentCoroutine == null)
                 {
-                    CommandWindow.SetActive(false);
-                    TurnBackground.SetActive(false);
-                    StartCoroutine(EnemyTurn());
+                    CurrentCoroutine = StartCoroutine(EnemyTurn());
                 }
             }
         }
@@ -118,11 +133,21 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void PlayButtonSelect()
+    {
+        if (SelectedButton != EventSystem.current.currentSelectedGameObject)
+        {
+            SelectedButton = EventSystem.current.currentSelectedGameObject;
+            GetComponent<BattleUISounds>().PlayButtonSelect();
+        }
+    }
+
     private IEnumerator EnemyTurn()
     {
         yield return new WaitForSeconds(1.0f);
         IsPlayerTurn = true;
         Enemy.Attack(Player);
+        CurrentCoroutine = null;
     }
 
     public void ShowResult()

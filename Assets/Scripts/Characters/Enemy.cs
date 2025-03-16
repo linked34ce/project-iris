@@ -6,6 +6,7 @@ public class Enemy : Character
 {
     public string ImageFileName { get; }
     public RawImage Image { get; private set; }
+    public Vector2 DefaultPosition { get; private set; }
     public int DropExp { get; }
 
     public Enemy(string name, string imageFileName, int dropExp, int level,
@@ -16,17 +17,21 @@ public class Enemy : Character
         DropExp = dropExp;
     }
 
+    private void ResetImagePosition() => Image.GetComponent<RectTransform>().anchoredPosition = DefaultPosition;
+
     public void ShowImage()
     {
         if (!Image)
         {
             Image = GameObject.Find("/BattleUI/EnemyImage").GetComponent<RawImage>();
             Image.texture = Resources.Load<Texture2D>($"Enemies/{ImageFileName}");
+            DefaultPosition = Image.GetComponent<RectTransform>().anchoredPosition;
         }
 
         Color32 color = Image.color;
         color.a = 255;
         Image.color = color;
+        ResetImagePosition();
     }
 
     public void HideImage()

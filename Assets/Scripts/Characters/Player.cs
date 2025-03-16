@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -217,6 +218,8 @@ public class Player : Character
     {
         if (target is Enemy)
         {
+            GameObject.Find("/BattleUI/EnemyImage").GetComponent<Animator>().SetBool("isAttacked", true);
+            GameObject.Find("/Player").GetComponent<BattleSounds>().PlayAttack();
             target.Hp -= 4;
         }
         else

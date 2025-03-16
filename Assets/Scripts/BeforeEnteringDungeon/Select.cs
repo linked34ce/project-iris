@@ -15,8 +15,13 @@ public class Select : MonoBehaviour
     void Awake()
     {
         GameObject.Find("/UI/SelectBox/Button1/Text").GetComponent<TMP_Text>().SetText($"{DungeonName}を探索する");
+
         Button1.onClick.AddListener(() =>
             Initiate.Fade("Scenes/Dungeons/ToOhGakuenOldBuilding/1stFloor", Color.black, 1f)
+        );
+
+        Button2.onClick.AddListener(() =>
+            Debug.Log("Button2 is selected")
         );
     }
 }

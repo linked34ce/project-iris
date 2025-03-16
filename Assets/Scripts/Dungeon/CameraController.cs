@@ -104,7 +104,7 @@ public class CameraController : MonoBehaviour
         {
             GoneUpstairs = true;
 
-            GetComponent<FootstepsSound>().PlayStairs();
+            GetComponent<DungeonSounds>().PlayStairs();
 
             Status.IncrementFloor();
             string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
@@ -117,7 +117,7 @@ public class CameraController : MonoBehaviour
         transform.Translate(0f, 0f, STEP);
         transform.position = new Vector3((float)Math.Round(transform.position.x), transform.position.y, (float)Math.Round(transform.position.z));
 
-        GetComponent<FootstepsSound>().PlayWalk();
+        GetComponent<DungeonSounds>().PlayWalk();
 
         IncrementStepsAfterEncount();
         Encount();
@@ -139,7 +139,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnAround()
     {
-        GetComponent<FootstepsSound>().PlayTurn();
+        GetComponent<DungeonSounds>().PlayTurn();
 
         transform.Rotate(0f, 180f, 0f);
         transform.Translate(0f, 0f, -STEP);
@@ -156,7 +156,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnLeft()
     {
-        GetComponent<FootstepsSound>().PlayTurn();
+        GetComponent<DungeonSounds>().PlayTurn();
 
         transform.Rotate(0f, -90f, 0f);
         transform.Translate(STEP / 2, 0f, -STEP / 2);
@@ -173,7 +173,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnRight()
     {
-        GetComponent<FootstepsSound>().PlayTurn();
+        GetComponent<DungeonSounds>().PlayTurn();
 
         transform.Rotate(0f, 90f, 0f);
         transform.Translate(-STEP / 2, 0f, -STEP / 2);
