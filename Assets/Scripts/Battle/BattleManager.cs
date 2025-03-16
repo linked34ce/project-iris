@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -8,28 +11,51 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject battleUi;
     public GameObject BattleUi => battleUi;
 
+    [SerializeField] private Button attackButton;
+    public Button AttackButton => attackButton;
+    [SerializeField] private Button skillButton;
+    public Button SkillButton => skillButton;
+    [SerializeField] private Button itemButton;
+    public Button ItemButton => itemButton;
+
     public GameObject CommandWindow { get; private set; }
     public GameObject TurnBackground { get; private set; }
-    public Enemy Enemy { get; } = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
-    public Player Player { get; } = new("歩夢", "healer", 0, 1);
+    public Enemy Enemy { get; private set; }
+    public Player Player { get; private set; }
+    public bool IsFirstEnabled { get; set; } = true;
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
-    public BasicCommand SelectedCommand { get; private set; } = BasicCommand.attack;
     public int InitialExp { get; private set; }
 
     void Awake()
     {
+        Player = new("歩夢", "healer", 0, 1);
         CommandWindow = GameObject.Find("/BattleUI/Attacker1Commands");
         TurnBackground = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Turn");
+        AttackButton.onClick.AddListener(() =>
+        {
+            Player.Attack(Enemy);
+            if (Enemy.Hp > 0)
+            {
+                IsPlayerTurn = false;
+            }
+        });
     }
 
     void Update()
+
     {
+        if (Enemy == null)
+        {
+            return;
+        }
+
         if (IsOver)
         {
             if (Player.Hp > 0)
             {
                 ShowResult();
+                CommandWindow.SetActive(false);
             }
         }
         else
@@ -37,6 +63,7 @@ public class BattleManager : MonoBehaviour
             if (Enemy.Hp <= 0)
             {
                 IsOver = true;
+                return;
             }
 
             if (Player.Hp <= 0)
@@ -46,39 +73,43 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
-                if (IsPlayerTurn)
+                if (IsPlayerTurn && !CommandWindow.activeSelf)
                 {
-                    CommandWindow.SetActive(IsPlayerTurn);
-                    SelectBasicCommand();
-                    ExecuteBasicCommand();
+                    CommandWindow.SetActive(true);
+                    TurnBackground.SetActive(true);
                 }
-                else
-                {
 
-                    if (Input.GetKeyDown(KeyCode.Return))
-                    {
-                        Enemy.Attack(Player);
-                        IsPlayerTurn = !IsPlayerTurn;
-                    }
+                else if (!IsPlayerTurn && CommandWindow.activeSelf)
+                {
+                    CommandWindow.SetActive(false);
+                    TurnBackground.SetActive(false);
+                    StartCoroutine(EnemyTurn());
                 }
-                CommandWindow.SetActive(IsPlayerTurn);
-                TurnBackground.SetActive(IsPlayerTurn);
             }
         }
     }
 
     void OnEnable()
     {
-        GetComponent<CameraController>().enabled = false;
         DungeonUi.SetActive(false);
         BattleUi.SetActive(true);
-        InitialExp = Player.Exp;
-        Enemy.ShowAllStatus();
+        GetComponent<CameraController>().enabled = false;
+        if (IsFirstEnabled)
+        {
+            IsFirstEnabled = false;
+        }
+        else
+        {
+            Enemy = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
+            Enemy.ShowAllStatus();
+        }
         Player.ShowAllStatus();
+        InitialExp = Player.Exp;
     }
 
     void OnDisable()
     {
+        Enemy = null;
         GetComponent<CameraController>().enabled = true;
         if (DungeonUi && BattleUi)
         {
@@ -87,42 +118,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void SelectBasicCommand()
+    private IEnumerator EnemyTurn()
     {
-        GameObject attackArrow = GameObject.Find("/BattleUI/Attacker1Commands/Attack/Arrow");
-        GameObject skillsArrow = GameObject.Find("/BattleUI/Attacker1Commands/Skills/Arrow");
-        GameObject itemsArrow = GameObject.Find("/BattleUI/Attacker1Commands/Items/Arrow");
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            SelectedCommand = SelectedCommand == BasicCommand.attack ? BasicCommand.items : SelectedCommand - 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            SelectedCommand = SelectedCommand == BasicCommand.items ? BasicCommand.attack : SelectedCommand + 1;
-        }
-
-        attackArrow.SetActive(SelectedCommand == BasicCommand.attack);
-        skillsArrow.SetActive(SelectedCommand == BasicCommand.skills);
-        itemsArrow.SetActive(SelectedCommand == BasicCommand.items);
-    }
-
-    public void ExecuteBasicCommand()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            switch (SelectedCommand)
-            {
-                case BasicCommand.attack:
-                    Player.Attack(Enemy);
-                    IsPlayerTurn = !IsPlayerTurn;
-                    break;
-                case BasicCommand.skills:
-                    break;
-                case BasicCommand.items:
-                    break;
-            }
-        }
+        yield return new WaitForSeconds(1.0f);
+        IsPlayerTurn = true;
+        Enemy.Attack(Player);
     }
 
     public void ShowResult()

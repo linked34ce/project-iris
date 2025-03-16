@@ -26,11 +26,14 @@ public class Player : Character
     public int Sp
     {
         get => _sp;
-        set => _sp = Mathf.Clamp(value, 0, MaxSp);
+        set
+        {
+            _sp = Mathf.Clamp(value, 0, MaxSp);
+            ShowSp();
+        }
     }
 
     public int MaxSp { get; private set; }
-    override public int HpBarWidth { get; } = 300;
 
     // this property should be refined
     public int[] ExpList { get; } = {
@@ -179,7 +182,6 @@ public class Player : Character
 
         ShowLevel();
         GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(true);
-
         // Debug.Log($"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}");
     }
 
@@ -190,26 +192,11 @@ public class Player : Character
         roleIcon.color = GetColorCodeForRole(Role);
     }
 
-    public void ShowHp() => GameObject.Find("/BattleUI/Attackers/Attacker1/HP/Value").GetComponent<TMP_Text>().SetText($"{Hp}/{MaxHp}");
-
-    public void ShowSp() => GameObject.Find("/BattleUI/Attackers/Attacker1/SP/Value").GetComponent<TMP_Text>().SetText($"{Sp}/{MaxSp}");
-
-    public void RenderSpBar()
+    public void ShowSp()
     {
         Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/SP").GetComponent<Slider>();
         slider.value = (float)Sp / MaxSp;
-    }
-
-    public void ResetSpBar()
-    {
-        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/SP").GetComponent<Slider>();
-        slider.value = 1;
-    }
-
-    public void ShowStatus()
-    {
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(false);
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(false);
+        GameObject.Find("/BattleUI/Attackers/Attacker1/SP/Value").GetComponent<TMP_Text>().SetText($"{Sp}/{MaxSp}");
     }
 
     public void ShowResult()
@@ -226,12 +213,11 @@ public class Player : Character
         _ => new(0, 0, 0, 255),
     };
 
-    override public void Attack(Character target)
+    public override void Attack(Character target)
     {
         if (target is Enemy)
         {
             target.Hp -= 4;
-            target.RenderHpBar();
         }
         else
         {
@@ -239,31 +225,23 @@ public class Player : Character
         }
     }
 
-    override public void ShowAllStatus()
+    public override void ShowAllStatus()
     {
-        ShowStatus();
-        RenderHpBar();
-        RenderSpBar();
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(false);
+        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(false);
+        base.ShowAllStatus();
         ShowRole();
-        ShowName();
-        ShowLevel();
-        ShowHp();
         ShowSp();
     }
 
-    override public void ShowName() => GameObject.Find("/BattleUI/Attackers/Attacker1/Name").GetComponent<TMP_Text>().SetText(Name);
+    public override void ShowName() => GameObject.Find("/BattleUI/Attackers/Attacker1/Name").GetComponent<TMP_Text>().SetText(Name);
 
-    override public void ShowLevel() => GameObject.Find("/BattleUI/Attackers/Attacker1/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    public override void ShowLevel() => GameObject.Find("/BattleUI/Attackers/Attacker1/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
 
-    override public void RenderHpBar()
+    public override void ShowHp()
     {
         Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/HP").GetComponent<Slider>();
         slider.value = (float)Hp / MaxHp;
-    }
-
-    override public void ResetHpBar()
-    {
-        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/HP").GetComponent<Slider>();
-        slider.value = 1;
+        GameObject.Find("/BattleUI/Attackers/Attacker1/HP/Value").GetComponent<TMP_Text>().SetText($"{Hp}/{MaxHp}");
     }
 }
