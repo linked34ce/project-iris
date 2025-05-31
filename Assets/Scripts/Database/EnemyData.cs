@@ -3,66 +3,66 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/Data/Status")]
 public class EnemyData : Data
 {
-    [SerializeField] private int level;
+    [SerializeField] private int _level;
     public int Level
     {
-        get => level;
-        set => level = value;
+        get => _level;
+        set => _level = value;
     }
 
-    [SerializeField] private int maxHp;
+    [SerializeField] private int _maxHp;
     public int MaxHp
     {
-        get => maxHp;
-        set => maxHp = value;
+        get => _maxHp;
+        set => _maxHp = value;
     }
 
-    [SerializeField] private int hp;
+    [SerializeField] private int _hp;
     public int Hp
     {
-        get => hp;
-        set => hp = Mathf.Clamp(value, 0, MaxHp);
+        get => _hp;
+        set => _hp = Mathf.Clamp(value, 0, MaxHp);
     }
 
-    [SerializeField] private int atk;
+    [SerializeField] private int _atk;
     public int Atk
     {
-        get => atk;
-        set => atk = value;
+        get => _atk;
+        set => _atk = value;
     }
 
-    [SerializeField] private int mag;
+    [SerializeField] private int _mag;
     public int Mag
     {
-        get => mag;
-        set => mag = value;
+        get => _mag;
+        set => _mag = value;
     }
 
-    [SerializeField] private int def;
+    [SerializeField] private int _def;
     public int Def
     {
-        get => def;
-        set => def = value;
+        get => _def;
+        set => _def = value;
     }
 
-    [SerializeField] private int res;
+    [SerializeField] private int _res;
     public int Res
     {
-        get => res;
-        set => res = value;
+        get => _res;
+        set => _res = value;
     }
 
-    [SerializeField] private int agi;
+    [SerializeField] private int _agi;
     public int Agi
     {
-        get => agi;
-        set => agi = value;
+        get => _agi;
+        set => _agi = value;
     }
 
-    [SerializeField] private int luk;
+    [SerializeField] private int _luk;
     public int Luk
     {
-        get => luk;
-        set => luk = value;
+        get => _luk;
+        set => _luk = value;
     }
 }

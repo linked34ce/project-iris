@@ -1,11 +1,22 @@
 using UnityEngine;
 
-public abstract class Character
+public abstract class Character : MonoBehaviour
 {
-    public string Name { get; private set; }
-    public int Level { get; set; }
+    [SerializeField] private string _name;
+    public string Name
+    {
+        get => _name;
+        protected set => _name = value;
+    }
 
-    private int _hp;
+    [SerializeField] private int _level;
+    public int Level
+    {
+        get => _level;
+        protected set => _level = value;
+    }
+
+    [SerializeField] private int _hp;
     public virtual int Hp
     {
         get => _hp;
@@ -16,31 +27,53 @@ public abstract class Character
         }
     }
 
-    public int MaxHp { get; set; }
-    public int Atk { get; set; }
-    public int Mag { get; set; }
-    public int Def { get; set; }
-    public int Res { get; set; }
-    public int Agi { get; set; }
-    public int Luk { get; set; }
+    public int MaxHp { get; protected set; }
 
-    public Character(string name, int level)
+    [SerializeField] private int _atk;
+    public int Atk
     {
-        Name = name;
-        Level = level;
+        get => _atk;
+        protected set => _atk = value;
     }
 
-    public Character(string name, int level, int hp, int atk, int mag, int def,
-                    int res, int agi, int luk) : this(name, level)
+    [SerializeField] private int _mag;
+    public int Mag
     {
-        MaxHp = hp;
-        Hp = hp;
-        Atk = atk;
-        Mag = mag;
-        Def = def;
-        Res = res;
-        Agi = agi;
-        Luk = luk;
+        get => _mag;
+        protected set => _mag = value;
+    }
+
+    [SerializeField] private int _def;
+    public int Def
+    {
+        get => _def;
+        protected set => _def = value;
+    }
+
+    [SerializeField] private int _res;
+    public int Res
+    {
+        get => _res;
+        protected set => _res = value;
+    }
+
+    [SerializeField] private int _agi;
+    public int Agi
+    {
+        get => _agi;
+        protected set => _agi = value;
+    }
+
+    [SerializeField] private int _luk;
+    public int Luk
+    {
+        get => _luk;
+        protected set => _luk = value;
+    }
+
+    protected virtual void Awake()
+    {
+        MaxHp = Hp;
     }
 
     public abstract void Attack(Character character);

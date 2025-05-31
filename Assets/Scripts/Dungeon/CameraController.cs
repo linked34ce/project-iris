@@ -4,18 +4,44 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    const float STEP = 10f;
-    const int MIN_STEPS_AFTER_ENCOUNT = 5;
+    [SerializeField] private UIStateManager _uiStateManager;
+    public UIStateManager UIStateManager => _uiStateManager;
+    [SerializeField] private DungeonSounds _dungeonSounds;
+    public DungeonSounds DungeonSounds => _dungeonSounds;
+
     public int StepsAfterEncount { get; private set; } = 3;
     public Direction Direction { get; private set; } = Direction.north;
     public Location Location { get; } = new();
     public Dungeon Dungeon { get; } = new();
-    public bool GoneUpstairs { get; private set; } = false;
+    public bool HasGoneUpstairs { get; private set; } = false;
 
-    void Awake()
+    private const float ZERO_TRANSLATION = 0f;
+    private const float STEP = 10f;
+    private const float HALF_STEP = 5f;
+    private const float ZERO_ROTATION = 0f;
+    private const float QUAURTER_ROTATION = 90f;
+    private const float HALF_ROTATION = 180f;
+    private const int MIN_STEPS_AFTER_ENCOUNT = 5;
+    private const int DEFAULT_STEPS = 0;
+    private const int DECIMAL_BASE = 10;
+    private const float FADE_DURATION = 0.4f;
+
+    private static CameraController instance;
+
+    public static CameraController Instance
     {
-        GetComponent<BattleManager>().enabled = false;
-        GameObject.Find("/DungeonUI/LocationName/Text").GetComponent<TMP_Text>().SetText($"{Dungeon.Name} {Status.Floor}F");
+        get
+        {
+            if (null == instance)
+            {
+                instance = (CameraController)FindAnyObjectByType(typeof(CameraController));
+                if (null == instance)
+                {
+                    Debug.Log("CameraController Instance Error");
+                }
+            }
+            return instance;
+        }
     }
 
     void Update()
@@ -100,24 +126,24 @@ public class CameraController : MonoBehaviour
 
     public void GoUpstairs()
     {
-        if (!GoneUpstairs)
+        if (!HasGoneUpstairs)
         {
-            GoneUpstairs = true;
+            HasGoneUpstairs = true;
 
-            GetComponent<DungeonSounds>().PlayStairs();
+            DungeonSounds.PlayStairs();
 
             Status.IncrementFloor();
             string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
-            Initiate.Fade($"Scenes/Dungeons/ToOhGakuenOldBuilding/{ordinal}Floor", Color.black, 0.4f);
+            Initiate.Fade($"Scenes/Dungeons/ToOhGakuenOldBuilding/{ordinal}Floor", Color.black, FADE_DURATION);
         }
     }
 
     public void StepForward()
     {
-        transform.Translate(0f, 0f, STEP);
+        transform.Translate(ZERO_TRANSLATION, ZERO_TRANSLATION, STEP);
         transform.position = new Vector3((float)Math.Round(transform.position.x), transform.position.y, (float)Math.Round(transform.position.z));
 
-        GetComponent<DungeonSounds>().PlayWalk();
+        DungeonSounds.PlayWalk();
 
         IncrementStepsAfterEncount();
         Encount();
@@ -128,21 +154,21 @@ public class CameraController : MonoBehaviour
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
         if (StepsAfterEncount >= MIN_STEPS_AFTER_ENCOUNT && UnityEngine.Random.value < Dungeon.EncountRate)
         {
-            GetComponent<BattleManager>().enabled = true;
+            UIStateManager.UIState = UIState.Battle;
             ResetStepsAfterEncount();
         }
     }
 
     public void IncrementStepsAfterEncount() => StepsAfterEncount++;
 
-    public void ResetStepsAfterEncount() => StepsAfterEncount = 0;
+    public void ResetStepsAfterEncount() => StepsAfterEncount = DEFAULT_STEPS;
 
     public void TurnAround()
     {
-        GetComponent<DungeonSounds>().PlayTurn();
+        DungeonSounds.PlayTurn();
 
-        transform.Rotate(0f, 180f, 0f);
-        transform.Translate(0f, 0f, -STEP);
+        transform.Rotate(ZERO_ROTATION, HALF_ROTATION, ZERO_ROTATION);
+        transform.Translate(ZERO_TRANSLATION, ZERO_TRANSLATION, -STEP);
 
         Direction = Direction switch
         {
@@ -156,10 +182,10 @@ public class CameraController : MonoBehaviour
 
     public void TurnLeft()
     {
-        GetComponent<DungeonSounds>().PlayTurn();
+        DungeonSounds.PlayTurn();
 
-        transform.Rotate(0f, -90f, 0f);
-        transform.Translate(STEP / 2, 0f, -STEP / 2);
+        transform.Rotate(ZERO_ROTATION, -QUAURTER_ROTATION, ZERO_ROTATION);
+        transform.Translate(HALF_STEP, ZERO_TRANSLATION, -HALF_STEP);
 
         Direction = Direction switch
         {
@@ -173,10 +199,10 @@ public class CameraController : MonoBehaviour
 
     public void TurnRight()
     {
-        GetComponent<DungeonSounds>().PlayTurn();
+        DungeonSounds.PlayTurn();
 
-        transform.Rotate(0f, 90f, 0f);
-        transform.Translate(-STEP / 2, 0f, -STEP / 2);
+        transform.Rotate(ZERO_ROTATION, QUAURTER_ROTATION, ZERO_ROTATION);
+        transform.Translate(-HALF_STEP, ZERO_ROTATION, -HALF_STEP);
 
         Direction = Direction switch
         {
@@ -188,7 +214,7 @@ public class CameraController : MonoBehaviour
         };
     }
 
-    public string ConvertNumberFromCardinalToOrdinal(int num) => (num % 10) switch
+    public string ConvertNumberFromCardinalToOrdinal(int num) => (num % DECIMAL_BASE) switch
     {
         1 => $"{num}st",
         2 => $"{num}nd",

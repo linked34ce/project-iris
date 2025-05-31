@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,9 +6,11 @@ using UnityEngine.UI;
 public class Player : Character
 {
     // this property should be deleted when class for each role is made
-    public string Role { get; }
+    [SerializeField] private string _role;
+    public string Role => _role;
 
-    private int _exp;
+    [SerializeField] private int _exp;
+
     public int Exp
     {
         get => _exp;
@@ -23,7 +24,7 @@ public class Player : Character
         }
     }
 
-    private int _sp;
+    [SerializeField] private int _sp;
     public int Sp
     {
         get => _sp;
@@ -35,6 +36,39 @@ public class Player : Character
     }
 
     public int MaxSp { get; private set; }
+
+    [SerializeField] private Image _roleIcon;
+    public Image RoleIcon => _roleIcon;
+    [SerializeField] private TMP_Text _nameText;
+    public TMP_Text NameText => _nameText;
+    [SerializeField] private TMP_Text _levelText;
+    public TMP_Text LevelText => _levelText;
+    [SerializeField] private Slider _hpBar;
+    public Slider HpBar => _hpBar;
+    [SerializeField] private TMP_Text _hpText;
+    public TMP_Text HpText => _hpText;
+    [SerializeField] private Slider _spBar;
+    public Slider SpBar => _spBar;
+    [SerializeField] private TMP_Text _spText;
+    public TMP_Text SpText => _spText;
+
+    [SerializeField] private BattleResult _battleResult;
+    public BattleResult BattleResult => _battleResult;
+
+    [SerializeField] private TMP_Text _nextExpText;
+    public TMP_Text NextExpText => _nextExpText;
+    [SerializeField] private TMP_Text _levelUpText;
+    public TMP_Text LevelUpText => _levelUpText;
+
+    [SerializeField] private RawImage enemyImage;
+    public RawImage EnemyImage => enemyImage;
+    [SerializeField] private Animator _enemyImageAnimator;
+    public Animator EnemyImageAnimator => _enemyImageAnimator;
+
+    [SerializeField] private Canvas battleUI;
+    public Canvas BattleUI => battleUI;
+    [SerializeField] private BattleSounds _battleSounds;
+    public BattleSounds BattleSounds => _battleSounds;
 
     // this property should be refined
     public int[] ExpList { get; } = {
@@ -146,10 +180,9 @@ public class Player : Character
         {10, 9},
     };
 
-    public Player(string name, string role, int exp, int level) : base(name, level)
+    protected override void Awake()
     {
-        Role = role;
-        Exp = exp;
+        base.Awake();
         MaxHp = HpList[Level];
         MaxSp = SpList[Level];
         Hp = MaxHp;
@@ -182,31 +215,28 @@ public class Player : Character
         Sp = MaxSp;
 
         ShowLevel();
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(true);
+        BattleResult.ShowLevelUp();
         // Debug.Log($"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}");
     }
 
-    public void ShowRole()
+    private void ShowRole()
     {
-        Image roleIcon = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Role/Icon").GetComponent<Image>();
-        roleIcon.sprite = Resources.Load<Sprite>($"Icons/{Role}");
-        roleIcon.color = GetColorCodeForRole(Role);
+        RoleIcon.sprite = Resources.Load<Sprite>($"Icons/{Role}");
+        RoleIcon.color = GetColorCodeForRole(Role);
     }
 
     public void ShowSp()
     {
-        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/SP").GetComponent<Slider>();
-        slider.value = (float)Sp / MaxSp;
-        GameObject.Find("/BattleUI/Attackers/Attacker1/SP/Value").GetComponent<TMP_Text>().SetText($"{Sp}/{MaxSp}");
+        SpBar.value = (float)Sp / MaxSp;
+        SpText.SetText($"{Sp}/{MaxSp}");
     }
 
     public void ShowResult()
     {
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(true);
         int nextExp = ExpList[Level - 1] - Exp;
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/NextEXP/Value").GetComponent<TMP_Text>().SetText($"{nextExp}");
+        BattleResult.Show(nextExp);
     }
-    public Color32 GetColorCodeForRole(string role) => role switch
+    private Color32 GetColorCodeForRole(string role) => role switch
     {
         "attacker" => new(255, 73, 73, 255),
         "tank" => new(45, 241, 255, 255),
@@ -218,8 +248,8 @@ public class Player : Character
     {
         if (target is Enemy)
         {
-            GameObject.Find("/BattleUI/EnemyImage").GetComponent<Animator>().SetBool("isAttacked", true);
-            GameObject.Find("/Player").GetComponent<BattleSounds>().PlayAttack();
+            EnemyImageAnimator.SetBool("isAttacked", true);
+            BattleSounds.PlayAttack();
             target.Hp -= 4;
         }
         else
@@ -230,21 +260,19 @@ public class Player : Character
 
     public override void ShowAllStatus()
     {
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result").SetActive(false);
-        GameObject.Find("/BattleUI/Attackers/Attacker1/Result/LevelUp").SetActive(false);
+        BattleResult.Hide();
         base.ShowAllStatus();
         ShowRole();
         ShowSp();
     }
 
-    public override void ShowName() => GameObject.Find("/BattleUI/Attackers/Attacker1/Name").GetComponent<TMP_Text>().SetText(Name);
+    public override void ShowName() => NameText.SetText(Name);
 
-    public override void ShowLevel() => GameObject.Find("/BattleUI/Attackers/Attacker1/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    public override void ShowLevel() => LevelText.SetText($"Lv.{Level}");
 
     public override void ShowHp()
     {
-        Slider slider = GameObject.Find("/BattleUI/Attackers/Attacker1/HP").GetComponent<Slider>();
-        slider.value = (float)Hp / MaxHp;
-        GameObject.Find("/BattleUI/Attackers/Attacker1/HP/Value").GetComponent<TMP_Text>().SetText($"{Hp}/{MaxHp}");
+        HpBar.value = (float)Hp / MaxHp;
+        HpText.SetText($"{Hp}/{MaxHp}");
     }
 }

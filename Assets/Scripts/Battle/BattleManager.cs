@@ -5,61 +5,51 @@ using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] private GameObject dungeonUi;
-    public GameObject DungeonUi => dungeonUi;
+    public CommandWindow CommandWindow => _commandWindow;
+    [SerializeField] private CommandWindow _commandWindow;
+    [SerializeField] private Image _turnBackground;
+    public Image TurnBackground => _turnBackground;
+    [SerializeField] private RawImage _enemyImage;
+    public RawImage EnemyImage => _enemyImage;
+    [SerializeField] private Animator _enemyImageAnimator;
+    public Animator EnemyImageAnimator => _enemyImageAnimator;
 
-    [SerializeField] private GameObject battleUi;
-    public GameObject BattleUi => battleUi;
+    [SerializeField] private UIStateManager _uiStateManager;
+    public UIStateManager UIStateManager => _uiStateManager;
 
-    [SerializeField] private Button attackButton;
-    public Button AttackButton => attackButton;
-    [SerializeField] private Button skillButton;
-    public Button SkillButton => skillButton;
-    [SerializeField] private Button itemButton;
-    public Button ItemButton => itemButton;
+    [SerializeField] private Player _player;
+    public Player Player => _player;
+    [SerializeField] private Enemy _enemy;
+    public Enemy Enemy => _enemy;
 
-    public GameObject SelectedButton { get; set; }
-    public GameObject CommandWindow { get; private set; }
-    public GameObject TurnBackground { get; private set; }
-    public Enemy Enemy { get; private set; }
-    public Player Player { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
-    public bool IsFirstEnabled { get; set; } = true;
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
     public int InitialExp { get; private set; }
 
-    void Awake()
+    private const float FADE_DURATION = 0.4f;
+
+    private static BattleManager instance;
+
+    public static BattleManager Instance
     {
-        Player = new("歩夢", "healer", 0, 1);
-        CommandWindow = GameObject.Find("/BattleUI/Attacker1Commands");
-        TurnBackground = GameObject.Find("/BattleUI/Attackers/Attacker1/Portrait/Turn");
-        SelectedButton = EventSystem.current.currentSelectedGameObject;
-
-        AttackButton.onClick.AddListener(() =>
+        get
         {
-            CommandWindow.SetActive(false);
-            TurnBackground.SetActive(false);
-            Player.Attack(Enemy);
-            if (Enemy.Hp > 0)
+            if (null == instance)
             {
-                IsPlayerTurn = false;
+                instance = (BattleManager)FindAnyObjectByType(typeof(BattleManager));
+                if (null == instance)
+                {
+                    Debug.Log("BattleManager Instance Error");
+                }
             }
-        });
-
-        SkillButton.onClick.AddListener(() =>
-        {
-            Debug.Log("SkillButton is selected");
-        });
-
-        ItemButton.onClick.AddListener(() =>
-        {
-            Debug.Log("SkillButton is selected");
-        });
+            return instance;
+        }
     }
 
-    void Update()
+    void Awake() => SetEvents();
 
+    void Update()
     {
         if (Enemy == null)
         {
@@ -71,7 +61,7 @@ public class BattleManager : MonoBehaviour
             if (Player.Hp > 0)
             {
                 ShowResult();
-                CommandWindow.SetActive(false);
+                CommandWindow.Hide();
             }
         }
         else
@@ -85,18 +75,18 @@ public class BattleManager : MonoBehaviour
             if (Player.Hp <= 0)
             {
                 IsOver = true;
-                Initiate.Fade("Scenes/Menu/GameOver", Color.black, 0.4f);
+                Initiate.Fade("Scenes/Menu/GameOver", Color.black, FADE_DURATION);
             }
             else
             {
-                PlayButtonSelect();
+                CommandWindow.PlayButtonSelect();
 
-                if (IsPlayerTurn && !CommandWindow.activeSelf)
+                if (IsPlayerTurn && !CommandWindow.IsVisible)
                 {
-                    CommandWindow.SetActive(true);
-                    TurnBackground.SetActive(true);
+                    CommandWindow.Show();
+                    TurnBackground.enabled = true;
                 }
-                else if (!IsPlayerTurn && !GameObject.Find("/BattleUI/EnemyImage").GetComponent<Animator>().GetBool("isAttacked") && CurrentCoroutine == null)
+                else if (!IsPlayerTurn && !EnemyImageAnimator.GetBool("isAttacked") && CurrentCoroutine is null)
                 {
                     CurrentCoroutine = StartCoroutine(EnemyTurn());
                 }
@@ -106,40 +96,31 @@ public class BattleManager : MonoBehaviour
 
     void OnEnable()
     {
-        DungeonUi.SetActive(false);
-        BattleUi.SetActive(true);
-        GetComponent<CameraController>().enabled = false;
-        if (IsFirstEnabled)
-        {
-            IsFirstEnabled = false;
-        }
-        else
-        {
-            Enemy = new("コモン・テラン", "tsuchinoko", 10, 2, 10, 3, 1, 2, 1, 1, 3);
-            Enemy.ShowAllStatus();
-        }
+        Enemy.ResetStatus();
         Player.ShowAllStatus();
         InitialExp = Player.Exp;
     }
 
-    void OnDisable()
+    private void SetEvents()
     {
-        Enemy = null;
-        GetComponent<CameraController>().enabled = true;
-        if (DungeonUi && BattleUi)
-        {
-            DungeonUi.SetActive(true);
-            BattleUi.SetActive(false);
-        }
-    }
+        CommandWindow.Commands[Command.Attack].SetEvent(() =>
+       {
+           CommandWindow.Hide();
+           TurnBackground.enabled = false;
+           Player.Attack(Enemy);
+           if (Enemy.Hp > 0)
+           {
+               IsPlayerTurn = false;
+           }
+       });
 
-    private void PlayButtonSelect()
-    {
-        if (SelectedButton != EventSystem.current.currentSelectedGameObject)
-        {
-            SelectedButton = EventSystem.current.currentSelectedGameObject;
-            GetComponent<BattleUISounds>().PlayButtonSelect();
-        }
+        CommandWindow.Commands[Command.Skill].SetEvent(() =>
+            Debug.Log("SkillButton is selected")
+        );
+
+        CommandWindow.Commands[Command.Item].SetEvent(() =>
+            Debug.Log("ItemButton is selected")
+        );
     }
 
     private IEnumerator EnemyTurn()
@@ -162,10 +143,9 @@ public class BattleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            Enemy.Hp = Enemy.MaxHp;
             IsPlayerTurn = true;
             IsOver = false;
-            enabled = false;
+            UIStateManager.UIState = UIState.Dungeon;
         }
     }
 }

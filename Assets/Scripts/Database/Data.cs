@@ -2,14 +2,14 @@ using UnityEngine;
 
 public abstract class Data : ScriptableObject
 {
-    [SerializeField] private new string name;
+    [SerializeField] private string _name;
     public string Name
     {
-        get => name;
-        set => name = value;
+        get => _name;
+        set => _name = value;
     }
 
-    [SerializeField] private int id;
+    [SerializeField] private int _id;
 
-    public int Id => id;
+    public int Id => _id;
 }

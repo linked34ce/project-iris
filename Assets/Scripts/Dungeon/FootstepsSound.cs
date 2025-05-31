@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class DungeonSounds : MonoBehaviour
 {
-    [SerializeField] private AudioSource audioSource;
-    public AudioSource AudioSource => audioSource;
+    [SerializeField] private AudioSource _audioSource;
+    public AudioSource AudioSource => _audioSource;
 
-    [SerializeField] private AudioClip[] footsteps;
-    public AudioClip[] Footsteps => footsteps;
+    [SerializeField] private AudioClip[] _footsteps;
+    public AudioClip[] Footsteps => _footsteps;
 
-    [SerializeField] private AudioClip[] turns;
-    public AudioClip[] Turns => turns;
+    [SerializeField] private AudioClip[] _turns;
+    public AudioClip[] Turns => _turns;
 
-    [SerializeField] private AudioClip[] stairs;
-    public AudioClip[] Stairs => stairs;
+    [SerializeField] private AudioClip[] _stairs;
+    public AudioClip[] Stairs => _stairs;
 
     public void PlayWalk() => AudioSource.PlayOneShot(Footsteps[UnityEngine.Random.Range(0, Footsteps.Length)]);
 

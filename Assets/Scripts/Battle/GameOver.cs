@@ -3,13 +3,15 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField] private Button button1;
-    public Button Button1 => button1;
+    [SerializeField] private Button _button1;
+    public Button Button1 => _button1;
 
-    [SerializeField] private Button button2;
-    public Button Button2 => button2;
+    [SerializeField] private Button _button2;
+    public Button Button2 => _button2;
 
     public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
+
+    private const float FADE_DURATION = 1f;
 
     void Awake()
     {
@@ -18,7 +20,7 @@ public class GameOver : MonoBehaviour
         );
 
         Button2.onClick.AddListener(() =>
-            Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, 1f)
+            Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, FADE_DURATION)
         );
     }
 }

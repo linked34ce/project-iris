@@ -1,8 +1,8 @@
 public class Dungeon
 {
-    public string Name { get; }
-    public float EncountRate { get; }
-    public Walls[][] Map { get; }
+    public string Name { get; private set; }
+    public float EncountRate { get; private set; }
+    public Walls[][] Map { get; private set; }
 
     public Dungeon()
     {

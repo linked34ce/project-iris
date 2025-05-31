@@ -4,42 +4,65 @@ using UnityEngine.UI;
 
 public class Enemy : Character
 {
-    public string ImageFileName { get; }
-    public RawImage Image { get; private set; }
-    public Vector2 DefaultPosition { get; private set; }
-    public int DropExp { get; }
+    [SerializeField] private int _dropExp;
+    public int DropExp => _dropExp;
+    [SerializeField] private string _imageFileName;
+    public string ImageFileName => _imageFileName;
 
-    public Enemy(string name, string imageFileName, int dropExp, int level,
-                int hp, int atk, int mag, int def, int res, int agi, int luk)
-                : base(name, level, hp, atk, mag, def, res, agi, luk)
+    [SerializeField] private RectTransform _hpBarBackground;
+    public RectTransform HpBarBackground => _hpBarBackground;
+    [SerializeField] private RectTransform _hpBarFill;
+    public RectTransform HpBarFill => _hpBarFill;
+    [SerializeField] private RawImage _enemyImage;
+    public RawImage EnemyImage => _enemyImage;
+    [SerializeField] private RectTransform _enemyImageRectTransform;
+    public RectTransform EnemyImageRectTransform => _enemyImageRectTransform;
+
+    [SerializeField] private TMP_Text _nameText;
+    public TMP_Text NameText => _nameText;
+    [SerializeField] private TMP_Text _levelText;
+    public TMP_Text LevelText => _levelText;
+
+    public Vector2 DefaultPosition { get; private set; }
+
+    private const int MAX_OPACITY = 255;
+    private const int MIN_OPACITY = 0;
+
+    protected override void Awake()
     {
-        ImageFileName = imageFileName;
-        DropExp = dropExp;
+        base.Awake();
+        LoadImage();
+        ResetStatus();
     }
 
-    private void ResetImagePosition() => Image.GetComponent<RectTransform>().anchoredPosition = DefaultPosition;
-
-    public void ShowImage()
+    public void ResetStatus()
     {
-        if (!Image)
-        {
-            Image = GameObject.Find("/BattleUI/EnemyImage").GetComponent<RawImage>();
-            Image.texture = Resources.Load<Texture2D>($"Enemies/{ImageFileName}");
-            DefaultPosition = Image.GetComponent<RectTransform>().anchoredPosition;
-        }
+        Hp = MaxHp;
+        ShowAllStatus();
+    }
 
-        Color32 color = Image.color;
-        color.a = 255;
-        Image.color = color;
-        ResetImagePosition();
+    private void LoadImage()
+    {
+        EnemyImage.texture = Resources.Load<Texture2D>($"Enemies/{ImageFileName}");
+        DefaultPosition = EnemyImageRectTransform.anchoredPosition;
+    }
+
+    private void ShowImage()
+    {
+        Color32 color = EnemyImage.color;
+        color.a = MAX_OPACITY;
+        EnemyImage.color = color;
     }
 
     public void HideImage()
     {
-        Color32 color = Image.color;
-        color.a = 0;
-        Image.color = color;
+        Color32 color = EnemyImage.color;
+        color.a = MIN_OPACITY;
+        EnemyImage.color = color;
+        ResetEnemyImagePosition();
     }
+
+    private void ResetEnemyImagePosition() => EnemyImageRectTransform.anchoredPosition = DefaultPosition;
 
     public override void Attack(Character target)
     {
@@ -59,16 +82,15 @@ public class Enemy : Character
         ShowImage();
     }
 
-    public override void ShowName() => GameObject.Find("/BattleUI/Enemy/Status/Name").GetComponent<TMP_Text>().SetText(Name);
+    public override void ShowName() => NameText.SetText(Name);
 
-    public override void ShowLevel() => GameObject.Find("/BattleUI/Enemy/Status/Level").GetComponent<TMP_Text>().SetText($"Lv.{Level}");
+    public override void ShowLevel() => LevelText.SetText($"Lv.{Level}");
 
     public override void ShowHp()
     {
-        float width = GameObject.Find("/BattleUI/Enemy/Status/HP/Background").GetComponent<RectTransform>().sizeDelta.x;
-        GameObject fill = GameObject.Find("/BattleUI/Enemy/Status/HP/Mask/Fill");
-        Vector2 anchoredPosition = fill.GetComponent<RectTransform>().anchoredPosition;
+        float width = HpBarBackground.sizeDelta.x;
+        Vector2 anchoredPosition = HpBarFill.anchoredPosition;
         anchoredPosition.x = -width * (MaxHp - Hp) / MaxHp;
-        fill.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
+        HpBarFill.anchoredPosition = anchoredPosition;
     }
 }

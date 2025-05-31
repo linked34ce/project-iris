@@ -4,7 +4,7 @@ public class Dungeons
 {
     public static Dictionary<string, Walls[][][]> Maps { get; } = new(){
        {
-            "ToOhGakuen",
+            "TohoGakuen",
             new Walls[][][]{
                 // 1F
                 new Walls[][] {
@@ -117,12 +117,12 @@ public class Dungeons
     };
 
     public static Dictionary<string, float> EncountRates { get; } = new(){
-        {"ToOhGakuen", 0.1f},
+        {"TohoGakuen", 0.1f},
     };
 
     public static Dictionary<string, int[][]> InitialPositions { get; } = new(){
         {
-            "ToOhGakuen",
+            "TohoGakuen",
             new int[][]{
                 new int[]{9, 0}, new int[]{9, 0},
             }
@@ -130,6 +130,6 @@ public class Dungeons
     };
 
     public static Dictionary<string, string> DisplayNames { get; } = new() {
-        {"ToOhGakuen", "桃鳳学園 旧校舎"},
+        {"TohoGakuen", "桃鳳学園 旧校舎"},
     };
 }
