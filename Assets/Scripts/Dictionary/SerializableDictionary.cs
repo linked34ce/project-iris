@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 [Serializable]
@@ -10,16 +11,16 @@ public class SerializableDictionary<TKey, TValue> :
     [Serializable]
     public class Pair
     {
-        public TKey key = default;
-        public TValue value = default;
+        public TKey Key = default;
+        public TValue Value = default;
 
         /// <summary>
         /// Pair
         /// </summary>
         public Pair(TKey key, TValue value)
         {
-            this.key = key;
-            this.value = value;
+            Key = key;
+            Value = value;
         }
     }
 
@@ -34,11 +35,11 @@ public class SerializableDictionary<TKey, TValue> :
         Clear();
         foreach (var pair in _list)
         {
-            if (ContainsKey(pair.key))
+            if (ContainsKey(pair.Key))
             {
                 continue;
             }
-            Add(pair.key, pair.value);
+            Add(pair.Key, pair.Value);
         }
     }
 

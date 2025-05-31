@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,13 +62,13 @@ public class Player : Character
     [SerializeField] private TMP_Text _levelUpText;
     public TMP_Text LevelUpText => _levelUpText;
 
-    [SerializeField] private RawImage enemyImage;
-    public RawImage EnemyImage => enemyImage;
+    [SerializeField] private RawImage _enemyImage;
+    public RawImage EnemyImage => _enemyImage;
     [SerializeField] private Animator _enemyImageAnimator;
     public Animator EnemyImageAnimator => _enemyImageAnimator;
 
-    [SerializeField] private Canvas battleUI;
-    public Canvas BattleUI => battleUI;
+    [SerializeField] private Canvas _battleUI;
+    public Canvas BattleUI => _battleUI;
     [SerializeField] private BattleSounds _battleSounds;
     public BattleSounds BattleSounds => _battleSounds;
 

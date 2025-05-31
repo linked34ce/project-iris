@@ -1,4 +1,5 @@
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,8 +26,8 @@ public class Enemy : Character
 
     public Vector2 DefaultPosition { get; private set; }
 
-    private const int MAX_OPACITY = 255;
-    private const int MIN_OPACITY = 0;
+    private const int MaxOpacity = 255;
+    private const int MinOpacity = 0;
 
     protected override void Awake()
     {
@@ -50,14 +51,14 @@ public class Enemy : Character
     private void ShowImage()
     {
         Color32 color = EnemyImage.color;
-        color.a = MAX_OPACITY;
+        color.a = MaxOpacity;
         EnemyImage.color = color;
     }
 
     public void HideImage()
     {
         Color32 color = EnemyImage.color;
-        color.a = MIN_OPACITY;
+        color.a = MinOpacity;
         EnemyImage.color = color;
         ResetEnemyImagePosition();
     }

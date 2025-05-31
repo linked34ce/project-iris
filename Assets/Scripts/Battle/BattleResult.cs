@@ -1,4 +1,5 @@
 using TMPro;
+
 using UnityEngine;
 
 public class BattleResult : MonoBehaviour
@@ -10,21 +11,21 @@ public class BattleResult : MonoBehaviour
     [SerializeField] private TMP_Text _levelUp;
     public TMP_Text LevelUp => _levelUp;
 
-    private static BattleResult instance;
+    private static BattleResult s_instance;
 
     public static BattleResult Instance
     {
         get
         {
-            if (null == instance)
+            if (null == s_instance)
             {
-                instance = (BattleResult)FindAnyObjectByType(typeof(BattleResult));
-                if (null == instance)
+                s_instance = (BattleResult)FindAnyObjectByType(typeof(BattleResult));
+                if (null == s_instance)
                 {
                     Debug.Log("BattleResult Instance Error");
                 }
             }
-            return instance;
+            return s_instance;
         }
     }
 

@@ -1,6 +1,6 @@
 using System.Collections;
+
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
@@ -27,23 +27,23 @@ public class BattleManager : MonoBehaviour
     public bool IsOver { get; private set; } = false;
     public int InitialExp { get; private set; }
 
-    private const float FADE_DURATION = 0.4f;
+    private const float FadeDuration = 0.4f;
 
-    private static BattleManager instance;
+    private static BattleManager s_instance;
 
     public static BattleManager Instance
     {
         get
         {
-            if (null == instance)
+            if (null == s_instance)
             {
-                instance = (BattleManager)FindAnyObjectByType(typeof(BattleManager));
-                if (null == instance)
+                s_instance = (BattleManager)FindAnyObjectByType(typeof(BattleManager));
+                if (null == s_instance)
                 {
                     Debug.Log("BattleManager Instance Error");
                 }
             }
-            return instance;
+            return s_instance;
         }
     }
 
@@ -75,7 +75,7 @@ public class BattleManager : MonoBehaviour
             if (Player.Hp <= 0)
             {
                 IsOver = true;
-                Initiate.Fade("Scenes/Menu/GameOver", Color.black, FADE_DURATION);
+                Initiate.Fade("Scenes/Menu/GameOver", Color.black, FadeDuration);
             }
             else
             {

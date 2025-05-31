@@ -36,21 +36,21 @@ public class UIStateManager : MonoBehaviour
         }
     }
 
-    private static UIStateManager instance;
+    private static UIStateManager s_instance;
 
     public static UIStateManager Instance
     {
         get
         {
-            if (null == instance)
+            if (null == s_instance)
             {
-                instance = (UIStateManager)FindAnyObjectByType(typeof(UIStateManager));
-                if (null == instance)
+                s_instance = (UIStateManager)FindAnyObjectByType(typeof(UIStateManager));
+                if (null == s_instance)
                 {
                     Debug.Log("UIStateManager Instance Error");
                 }
             }
-            return instance;
+            return s_instance;
         }
     }
 

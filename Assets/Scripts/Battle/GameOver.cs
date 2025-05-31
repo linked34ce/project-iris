@@ -11,7 +11,7 @@ public class GameOver : MonoBehaviour
 
     public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
 
-    private const float FADE_DURATION = 1f;
+    private const float FadeDuration = 1f;
 
     void Awake()
     {
@@ -20,7 +20,7 @@ public class GameOver : MonoBehaviour
         );
 
         Button2.onClick.AddListener(() =>
-            Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, FADE_DURATION)
+            Initiate.Fade("Scenes/Menu/BeforeEnteringDungeon", Color.black, FadeDuration)
         );
     }
 }

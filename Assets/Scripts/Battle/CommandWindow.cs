@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,21 +20,21 @@ public class CommandWindow : MonoBehaviour
     public GameObject SelectedButton { get; private set; }
     public bool IsVisible { get; set; } = false;
 
-    private static CommandWindow instance;
+    private static CommandWindow s_instance;
 
     public static CommandWindow Instance
     {
         get
         {
-            if (null == instance)
+            if (null == s_instance)
             {
-                instance = (CommandWindow)FindAnyObjectByType(typeof(CommandWindow));
-                if (null == instance)
+                s_instance = (CommandWindow)FindAnyObjectByType(typeof(CommandWindow));
+                if (null == s_instance)
                 {
                     Debug.Log("CommandWindow Instance Error");
                 }
             }
-            return instance;
+            return s_instance;
         }
     }
 
