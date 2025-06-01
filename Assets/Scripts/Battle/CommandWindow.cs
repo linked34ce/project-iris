@@ -21,7 +21,6 @@ public class CommandWindow : MonoBehaviour
     public bool IsVisible { get; set; } = false;
 
     private static CommandWindow s_instance;
-
     public static CommandWindow Instance
     {
         get

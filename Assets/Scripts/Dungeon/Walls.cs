@@ -23,7 +23,9 @@ public class Walls
         North = north;
     }
 
-    private Wall ConvertIntToWall(int x) => Enum.IsDefined(typeof(Wall), x) ? (Wall)x : Wall.undefined;
+    private Wall ConvertIntToWall(int x) => Enum.IsDefined(typeof(Wall), x)
+                                            ? (Wall)x
+                                            : Wall.undefined;
 
     public Wall GetWall(Direction direction) => direction switch
     {

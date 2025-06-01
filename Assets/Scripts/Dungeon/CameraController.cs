@@ -25,9 +25,10 @@ public class CameraController : MonoBehaviour
     private const int DefaultSteps = 0;
     private const int DecimalBase = 10;
     private const float FadeDuration = 0.4f;
+    private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
+    private const string NextFloorSceneSuffix = "Floor";
 
     private static CameraController s_instance;
-
     public static CameraController Instance
     {
         get
@@ -129,20 +130,26 @@ public class CameraController : MonoBehaviour
         if (!HasGoneUpstairs)
         {
             HasGoneUpstairs = true;
-
             DungeonSounds.PlayStairs();
-
             Status.IncrementFloor();
+
             string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
-            Initiate.Fade($"Scenes/Dungeons/ToOhGakuenOldBuilding/{ordinal}Floor", Color.black, FadeDuration);
+            Initiate.Fade(
+                $"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}",
+                Color.black,
+                FadeDuration
+            );
         }
     }
 
     public void StepForward()
     {
         transform.Translate(ZeroTranslation, ZeroTranslation, Step);
-        transform.position = new Vector3((float)Math.Round(transform.position.x), transform.position.y, (float)Math.Round(transform.position.z));
-
+        transform.position = new Vector3(
+            (float)Math.Round(transform.position.x),
+            transform.position.y,
+            (float)Math.Round(transform.position.z)
+        );
         DungeonSounds.PlayWalk();
 
         IncrementStepsAfterEncount();
@@ -152,7 +159,10 @@ public class CameraController : MonoBehaviour
     public void Encount()
     {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
-        if (StepsAfterEncount >= MinStepsAfterEncount && UnityEngine.Random.value < Dungeon.EncountRate)
+        if (
+            StepsAfterEncount >= MinStepsAfterEncount
+            && UnityEngine.Random.value < Dungeon.EncountRate
+        )
         {
             UIStateManager.UIState = UIState.Battle;
             ResetStepsAfterEncount();

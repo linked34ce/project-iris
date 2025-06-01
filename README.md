@@ -1,5 +1,7 @@
 # Project Iris
 
-This is a project for a (probably) first fan-made RPG of Nijigasaki High School Idol Club.
+This is a project for the fan-made RPG of Nijigasaki High School Idol Club.
 
-Radical change of the original stories and character profiles would be included.
+The story of the game is not related to the original one.
+
+It would include a radical change of character profiles and might have original characters.

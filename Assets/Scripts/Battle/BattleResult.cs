@@ -12,7 +12,6 @@ public class BattleResult : MonoBehaviour
     public TMP_Text LevelUp => _levelUp;
 
     private static BattleResult s_instance;
-
     public static BattleResult Instance
     {
         get

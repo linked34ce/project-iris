@@ -16,14 +16,15 @@ public class Select : MonoBehaviour
 
     public string DungeonName => Dungeons.DisplayNames[Status.DungeonName];
 
-    private const float FADE_DURATION = 1f;
+    private const float FadeDuration = 1f;
+    private const string DungeonScene = "Scenes/Dungeons/TohoGakuenOldBuilding/2ndFloor";
 
     void Awake()
     {
         Button1Text.SetText($"{DungeonName}を探索する");
 
         Button1.onClick.AddListener(() =>
-            Initiate.Fade("Scenes/Dungeons/TohoGakuenOldBuilding/1stFloor", Color.black, FADE_DURATION)
+            Initiate.Fade(DungeonScene, Color.black, FadeDuration)
         );
 
         Button2.onClick.AddListener(() =>

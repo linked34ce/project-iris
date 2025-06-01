@@ -1,69 +1,37 @@
 using TMPro;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Enemy : Character
 {
     [SerializeField] private int _dropExp;
     public int DropExp => _dropExp;
-    [SerializeField] private string _imageFileName;
-    public string ImageFileName => _imageFileName;
+    [SerializeField] private string _imageAddress;
+    public string ImageAddress => _imageAddress;
+    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
+    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
 
     [SerializeField] private RectTransform _hpBarBackground;
     public RectTransform HpBarBackground => _hpBarBackground;
     [SerializeField] private RectTransform _hpBarFill;
     public RectTransform HpBarFill => _hpBarFill;
-    [SerializeField] private RawImage _enemyImage;
-    public RawImage EnemyImage => _enemyImage;
-    [SerializeField] private RectTransform _enemyImageRectTransform;
-    public RectTransform EnemyImageRectTransform => _enemyImageRectTransform;
 
     [SerializeField] private TMP_Text _nameText;
     public TMP_Text NameText => _nameText;
     [SerializeField] private TMP_Text _levelText;
     public TMP_Text LevelText => _levelText;
 
-    public Vector2 DefaultPosition { get; private set; }
-
-    private const int MaxOpacity = 255;
-    private const int MinOpacity = 0;
-
     protected override void Awake()
     {
         base.Awake();
-        LoadImage();
-        ResetStatus();
     }
 
-    public void ResetStatus()
-    {
-        Hp = MaxHp;
-        ShowAllStatus();
-    }
+    public void ResetStatus() => Hp = MaxHp;
 
-    private void LoadImage()
-    {
-        EnemyImage.texture = Resources.Load<Texture2D>($"Enemies/{ImageFileName}");
-        DefaultPosition = EnemyImageRectTransform.anchoredPosition;
-    }
 
-    private void ShowImage()
-    {
-        Color32 color = EnemyImage.color;
-        color.a = MaxOpacity;
-        EnemyImage.color = color;
-    }
+    private async void ShowImage() => await EnemyImagePrefabManager.LoadImagePrefab(ImageAddress);
 
-    public void HideImage()
-    {
-        Color32 color = EnemyImage.color;
-        color.a = MinOpacity;
-        EnemyImage.color = color;
-        ResetEnemyImagePosition();
-    }
-
-    private void ResetEnemyImagePosition() => EnemyImageRectTransform.anchoredPosition = DefaultPosition;
+    public void HideImage() => EnemyImagePrefabManager.DestroyImagePrefab();
 
     public override void Attack(Character target)
     {

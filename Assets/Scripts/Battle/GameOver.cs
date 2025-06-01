@@ -9,8 +9,6 @@ public class GameOver : MonoBehaviour
     [SerializeField] private Button _button2;
     public Button Button2 => _button2;
 
-    public string DungeonName { get; } = Dungeons.DisplayNames[Status.DungeonName];
-
     private const float FadeDuration = 1f;
 
     void Awake()

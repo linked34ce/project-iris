@@ -9,10 +9,6 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private CommandWindow _commandWindow;
     [SerializeField] private Image _turnBackground;
     public Image TurnBackground => _turnBackground;
-    [SerializeField] private RawImage _enemyImage;
-    public RawImage EnemyImage => _enemyImage;
-    [SerializeField] private Animator _enemyImageAnimator;
-    public Animator EnemyImageAnimator => _enemyImageAnimator;
 
     [SerializeField] private UIStateManager _uiStateManager;
     public UIStateManager UIStateManager => _uiStateManager;
@@ -22,15 +18,20 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private Enemy _enemy;
     public Enemy Enemy => _enemy;
 
+    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
+    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
+    public Animator EnemyImageAnimator { get; private set; }
+
     public Coroutine CurrentCoroutine { get; private set; }
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
+    public bool HasShownResult { get; private set; } = false;
     public int InitialExp { get; private set; }
 
     private const float FadeDuration = 0.4f;
+    private const string GameOverScene = "Scenes/Menu/GameOver";
 
     private static BattleManager s_instance;
-
     public static BattleManager Instance
     {
         get
@@ -60,8 +61,14 @@ public class BattleManager : MonoBehaviour
         {
             if (Player.Hp > 0)
             {
-                ShowResult();
-                CommandWindow.Hide();
+                if (HasShownResult)
+                {
+                    ConfirmResult();
+                }
+                else
+                {
+                    ShowResult();
+                }
             }
         }
         else
@@ -75,7 +82,7 @@ public class BattleManager : MonoBehaviour
             if (Player.Hp <= 0)
             {
                 IsOver = true;
-                Initiate.Fade("Scenes/Menu/GameOver", Color.black, FadeDuration);
+                Initiate.Fade(GameOverScene, Color.black, FadeDuration);
             }
             else
             {
@@ -86,9 +93,12 @@ public class BattleManager : MonoBehaviour
                     CommandWindow.Show();
                     TurnBackground.enabled = true;
                 }
-                else if (!IsPlayerTurn && !EnemyImageAnimator.GetBool("isAttacked") && CurrentCoroutine is null)
+                else if (
+                    !IsPlayerTurn
+                    && CurrentCoroutine is null
+                )
                 {
-                    CurrentCoroutine = StartCoroutine(EnemyTurn());
+                    WaitForEnemyTurn();
                 }
             }
         }
@@ -97,6 +107,7 @@ public class BattleManager : MonoBehaviour
     void OnEnable()
     {
         Enemy.ResetStatus();
+        Enemy.ShowAllStatus();
         Player.ShowAllStatus();
         InitialExp = Player.Exp;
     }
@@ -131,7 +142,20 @@ public class BattleManager : MonoBehaviour
         CurrentCoroutine = null;
     }
 
-    public void ShowResult()
+    private void WaitForEnemyTurn()
+    {
+        if (EnemyImageAnimator == null)
+        {
+            EnemyImageAnimator = EnemyImagePrefabManager.EnemyImageAnimator;
+        }
+
+        if (!EnemyImageAnimator.GetBool("isAttacked"))
+        {
+            CurrentCoroutine = StartCoroutine(EnemyTurn());
+        }
+    }
+
+    private void ShowResult()
     {
         if (InitialExp == Player.Exp)
         {
@@ -140,12 +164,18 @@ public class BattleManager : MonoBehaviour
 
         Enemy.HideImage();
         Player.ShowResult();
+        CommandWindow.Hide();
+        HasShownResult = true;
+    }
 
+    private void ConfirmResult()
+    {
         if (Input.GetKeyDown(KeyCode.Return))
         {
             IsPlayerTurn = true;
             IsOver = false;
             UIStateManager.UIState = UIState.Dungeon;
+            HasShownResult = false;
         }
     }
 }

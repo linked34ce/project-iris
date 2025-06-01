@@ -24,8 +24,7 @@ public class SerializableDictionary<TKey, TValue> :
         }
     }
 
-    [SerializeField]
-    private List<Pair> _list = null;
+    [SerializeField] private List<Pair> _list = null;
 
     /// <summary>
     /// OnAfterDeserialize

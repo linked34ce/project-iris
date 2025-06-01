@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 
 using UnityEngine;
@@ -17,27 +16,31 @@ public class DungeonSounds : MonoBehaviour
     [SerializeField] private AudioClip[] _stairs;
     public AudioClip[] Stairs => _stairs;
 
-    public void PlayWalk() => AudioSource.PlayOneShot(Footsteps[UnityEngine.Random.Range(0, Footsteps.Length)]);
+    private const float InitalVolumeScale = 1f;
+    private const float DecayFactor = 0.7f;
+    private const float WaitTime = 0.4f;
 
-    public void PlayTurn() => AudioSource.PlayOneShot(Turns[UnityEngine.Random.Range(0, Turns.Length)]);
+    public void PlayWalk() => AudioSource.PlayOneShot(
+        Footsteps[Random.Range(0, Footsteps.Length)]
+    );
 
-    private IEnumerator DelayMethod(float waitTime, Action action)
+    public void PlayTurn() => AudioSource.PlayOneShot(
+        Turns[Random.Range(0, Turns.Length)]
+    );
+
+    private IEnumerator DelayMethod()
     {
-        WaitForSeconds cachedWait = new(waitTime);
-        while (true)
+        float volumeScale = InitalVolumeScale;
+        for (int i = 0; i < Stairs.Length; i++)
         {
-            yield return cachedWait;
-            action();
+            if (i > 0)
+            {
+                volumeScale *= DecayFactor;
+            }
+            AudioSource.PlayOneShot(Stairs[i], volumeScale);
+            yield return new WaitForSeconds(WaitTime);
         }
     }
 
-    public void PlayStairs()
-    {
-        AudioSource.PlayOneShot(Stairs[0], 1f);
-        StartCoroutine(DelayMethod(0.4f, () => AudioSource.PlayOneShot(Stairs[1], 0.7f)));
-        StartCoroutine(DelayMethod(0.8f, () => AudioSource.PlayOneShot(Stairs[2], 0.45f)));
-        StartCoroutine(DelayMethod(1.2f, () => AudioSource.PlayOneShot(Stairs[3], 0.25f)));
-        StartCoroutine(DelayMethod(1.6f, () => AudioSource.PlayOneShot(Stairs[4], 0.15f)));
-        StartCoroutine(DelayMethod(2.0f, () => AudioSource.PlayOneShot(Stairs[5], 0.1f)));
-    }
+    public void PlayStairs() => StartCoroutine(DelayMethod());
 }

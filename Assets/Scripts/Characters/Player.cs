@@ -39,8 +39,6 @@ public class Player : Character
 
     public int MaxSp { get; private set; }
 
-    [SerializeField] private Image _roleIcon;
-    public Image RoleIcon => _roleIcon;
     [SerializeField] private TMP_Text _nameText;
     public TMP_Text NameText => _nameText;
     [SerializeField] private TMP_Text _levelText;
@@ -57,18 +55,17 @@ public class Player : Character
     [SerializeField] private BattleResult _battleResult;
     public BattleResult BattleResult => _battleResult;
 
-    [SerializeField] private TMP_Text _nextExpText;
-    public TMP_Text NextExpText => _nextExpText;
-    [SerializeField] private TMP_Text _levelUpText;
-    public TMP_Text LevelUpText => _levelUpText;
+    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
+    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
+    public Animator EnemyImageAnimator { get; private set; }
 
-    [SerializeField] private RawImage _enemyImage;
-    public RawImage EnemyImage => _enemyImage;
-    [SerializeField] private Animator _enemyImageAnimator;
-    public Animator EnemyImageAnimator => _enemyImageAnimator;
+    [SerializeField] private string _portratAddress;
+    public string PortraitAddress => _portratAddress;
 
-    [SerializeField] private Canvas _battleUI;
-    public Canvas BattleUI => _battleUI;
+    [SerializeField] private AttackerPortraitPrefabManager _attackerPortraitPrefabManager;
+    public AttackerPortraitPrefabManager AttackerPortraitPrefabManager
+                                         => _attackerPortraitPrefabManager;
+
     [SerializeField] private BattleSounds _battleSounds;
     public BattleSounds BattleSounds => _battleSounds;
 
@@ -195,6 +192,7 @@ public class Player : Character
         Res = ResList[Level];
         Agi = AgiList[Level];
         Luk = LukList[Level];
+        ShowPortrait();
     }
 
     private void LevelUp()
@@ -218,14 +216,14 @@ public class Player : Character
 
         ShowLevel();
         BattleResult.ShowLevelUp();
-        // Debug.Log($"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}");
+        // Debug.Log(
+        //     $"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, "
+        //     + $"DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}"
+        // );
     }
 
-    private void ShowRole()
-    {
-        RoleIcon.sprite = Resources.Load<Sprite>($"Icons/{Role}");
-        RoleIcon.color = GetColorCodeForRole(Role);
-    }
+    private async void ShowPortrait() => await AttackerPortraitPrefabManager
+                                                .LoadPortraitPrefab(PortraitAddress);
 
     public void ShowSp()
     {
@@ -238,18 +236,16 @@ public class Player : Character
         int nextExp = ExpList[Level - 1] - Exp;
         BattleResult.Show(nextExp);
     }
-    private Color32 GetColorCodeForRole(string role) => role switch
-    {
-        "attacker" => new(255, 73, 73, 255),
-        "tank" => new(45, 241, 255, 255),
-        "healer" => new(0, 255, 75, 255),
-        _ => new(0, 0, 0, 255),
-    };
 
     public override void Attack(Character target)
     {
         if (target is Enemy)
         {
+            if (EnemyImageAnimator == null)
+            {
+                EnemyImageAnimator = EnemyImagePrefabManager.EnemyImageAnimator;
+            }
+
             EnemyImageAnimator.SetBool("isAttacked", true);
             BattleSounds.PlayAttack();
             target.Hp -= 4;
@@ -264,7 +260,6 @@ public class Player : Character
     {
         BattleResult.Hide();
         base.ShowAllStatus();
-        ShowRole();
         ShowSp();
     }
 
