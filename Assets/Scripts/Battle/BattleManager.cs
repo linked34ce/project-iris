@@ -39,7 +39,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
         if (IsOver)
         {
-            if (Player.Hp > 0)
+            if (Player.IsAlive)
             {
                 if (HasShownResult)
                 {
@@ -53,13 +53,13 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         }
         else
         {
-            if (Enemy.Hp <= 0)
+            if (!Enemy.IsAlive)
             {
                 IsOver = true;
                 return;
             }
 
-            if (Player.Hp <= 0)
+            if (!Player.IsAlive)
             {
                 IsOver = true;
                 Initiate.Fade(GameOverScene, Color.black, FadeDuration);
@@ -98,7 +98,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
        {
            CommandWindow.Instance.Hide();
            TurnBackground.enabled = false;
-           Player.Attack(Enemy);
+           Player.Attack(Enemy, 4);
            if (Enemy.Hp > 0)
            {
                IsPlayerTurn = false;
@@ -118,7 +118,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         yield return new WaitForSeconds(1.0f);
         IsPlayerTurn = true;
-        Enemy.Attack(Player);
+        Enemy.Attack(Player, 5);
         CurrentCoroutine = null;
     }
 

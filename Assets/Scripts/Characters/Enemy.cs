@@ -26,11 +26,11 @@ public class Enemy : Character
 
     public void HideImage() => EnemyImagePrefabManager.Instance.DestroyPrefab();
 
-    public override void Attack(Character target)
+    public override void Attack(Character target, int damage)
     {
         if (target is Player)
         {
-            target.Hp -= 5;
+            target.TakeDamage(damage);
         }
         else
         {
@@ -43,6 +43,7 @@ public class Enemy : Character
         base.ShowAllStatus();
         ShowImage();
     }
+
 
     public override void ShowName() => NameText.SetText(Name);
 

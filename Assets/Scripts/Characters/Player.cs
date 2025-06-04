@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : Character
+public class Player : Character, ISpShowable
 {
     // this property should be deleted when class for each role is made
     [SerializeField] private string _role;
@@ -37,7 +37,7 @@ public class Player : Character
         }
     }
 
-    public int MaxSp { get; private set; }
+    public int MaxSp { get; set; }
 
     [SerializeField] private TMP_Text _nameText;
     public TMP_Text NameText => _nameText;
@@ -226,7 +226,7 @@ public class Player : Character
         BattleResult.Instance.Show(nextExp);
     }
 
-    public override void Attack(Character target)
+    public override void Attack(Character target, int damage)
     {
         if (target is Enemy)
         {
@@ -239,7 +239,7 @@ public class Player : Character
 
             EnemyImageAnimator.SetBool("isAttacked", true);
             BattleSounds.Instance.PlayAttack();
-            target.Hp -= 4;
+            target.TakeDamage(damage);
         }
         else
         {

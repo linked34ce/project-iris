@@ -1,23 +1,19 @@
 using UnityEngine;
 
-public abstract class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour, IFighter
 {
     [SerializeField] private string _name;
-    public string Name
-    {
-        get => _name;
-        protected set => _name = value;
-    }
+    public string Name => _name;
 
     [SerializeField] private int _level;
     public int Level
     {
         get => _level;
-        protected set => _level = value;
+        set => _level = value;
     }
 
     [SerializeField] private int _hp;
-    public virtual int Hp
+    public int Hp
     {
         get => _hp;
         set
@@ -27,48 +23,60 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    public int MaxHp { get; protected set; }
+    public int MaxHp { get; set; }
 
     [SerializeField] private int _atk;
     public int Atk
     {
         get => _atk;
-        protected set => _atk = value;
+        set => _atk = value;
     }
 
     [SerializeField] private int _mag;
     public int Mag
     {
         get => _mag;
-        protected set => _mag = value;
+        set => _mag = value;
     }
 
     [SerializeField] private int _def;
     public int Def
     {
         get => _def;
-        protected set => _def = value;
+        set => _def = value;
     }
 
     [SerializeField] private int _res;
     public int Res
     {
         get => _res;
-        protected set => _res = value;
+        set => _res = value;
     }
 
     [SerializeField] private int _agi;
     public int Agi
     {
         get => _agi;
-        protected set => _agi = value;
+        set => _agi = value;
     }
 
     [SerializeField] private int _luk;
     public int Luk
     {
         get => _luk;
-        protected set => _luk = value;
+        set => _luk = value;
+    }
+
+    public bool IsAlive
+    {
+        get => Hp > 0;
+        set
+        {
+            if (!value)
+            {
+                Hp = 0;
+            }
+        }
     }
 
     protected virtual void Awake()
@@ -76,10 +84,10 @@ public abstract class Character : MonoBehaviour
         MaxHp = Hp;
     }
 
-    public abstract void Attack(Character character);
-    public abstract void ShowName();
-    public abstract void ShowLevel();
-    public abstract void ShowHp();
+    public void TakeDamage(int damage)
+    {
+        Hp -= damage;
+    }
 
     public virtual void ShowAllStatus()
     {
@@ -87,4 +95,9 @@ public abstract class Character : MonoBehaviour
         ShowLevel();
         ShowHp();
     }
+
+    public abstract void Attack(Character character, int damage);
+    public abstract void ShowName();
+    public abstract void ShowLevel();
+    public abstract void ShowHp();
 }
