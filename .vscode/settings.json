@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "My project.sln"
+    "dotnet.defaultSolution": "Project Iris.sln",
+    "editor.formatOnSave": true
 }
