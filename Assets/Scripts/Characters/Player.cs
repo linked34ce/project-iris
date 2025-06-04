@@ -55,7 +55,7 @@ public class Player : Character, ISpShowable
     [SerializeField] private string _portraitAddress;
     public string PortraitAddress => _portraitAddress;
 
-    public Animator EnemyImageAnimator { get; private set; }
+    // public Animator EnemyImageAnimator { get; private set; }
 
     // this property should be refined
     public int[] ExpList { get; } = {
@@ -228,22 +228,15 @@ public class Player : Character, ISpShowable
 
     public override void Attack(Character target, int damage)
     {
-        if (target is Enemy)
+        if (target is Enemy enemy)
         {
-            if (EnemyImageAnimator == null)
-            {
-                EnemyImageAnimator = EnemyImagePrefabManager
-                                        .Instance
-                                        .GetComponentFromPrefab<Animator>();
-            }
-
-            EnemyImageAnimator.SetBool("isAttacked", true);
+            enemy.IsAttacked = true;
             BattleSounds.Instance.PlayAttack();
-            target.TakeDamage(damage);
+            enemy.TakeDamage(damage);
         }
         else
         {
-            throw new InvalidTargetException("Target is not Enemy");
+            Debug.LogError("Target is not Enemy.");
         }
     }
 

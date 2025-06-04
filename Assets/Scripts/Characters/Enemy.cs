@@ -1,13 +1,17 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : Character
 {
     [SerializeField] private int _dropExp;
     public int DropExp => _dropExp;
-    [SerializeField] private string _imageAddress;
-    public string ImageAddress => _imageAddress;
+
+    [SerializeField] private RawImage _image;
+    public RawImage Image => _image;
+    [SerializeField] private Animator _imageAnimator;
+    public Animator ImageAnimator => _imageAnimator;
 
     [SerializeField] private RectTransform _hpBarBackground;
     public RectTransform HpBarBackground => _hpBarBackground;
@@ -18,23 +22,30 @@ public class Enemy : Character
     [SerializeField] private TMP_Text _levelText;
     public TMP_Text LevelText => _levelText;
 
-    public void ResetStatus() => Hp = MaxHp;
+    private const int MaxOpacity = 255;
 
-    private async void ShowImage() => await EnemyImagePrefabManager
-                                            .Instance
-                                            .LoadPrefab(ImageAddress);
+    public bool IsAttacked
+    {
+        get => ImageAnimator.GetBool("isAttacked");
+        set => ImageAnimator.SetBool("isAttacked", value);
+    }
 
-    public void HideImage() => EnemyImagePrefabManager.Instance.DestroyPrefab();
+    private void ShowImage()
+    {
+        Color32 color = Image.color;
+        color.a = MaxOpacity;
+        Image.color = color;
+    }
 
     public override void Attack(Character target, int damage)
     {
-        if (target is Player)
+        if (target is Player player)
         {
-            target.TakeDamage(damage);
+            player.TakeDamage(damage);
         }
         else
         {
-            throw new InvalidTargetException("Target is not Player");
+            Debug.LogError("Target is not Player.");
         }
     }
 
@@ -43,7 +54,6 @@ public class Enemy : Character
         base.ShowAllStatus();
         ShowImage();
     }
-
 
     public override void ShowName() => NameText.SetText(Name);
 

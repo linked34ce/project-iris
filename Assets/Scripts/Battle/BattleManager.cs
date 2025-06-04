@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,15 +11,16 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     [SerializeField] private Player _player;
     public Player Player => _player;
-    [SerializeField] private Enemy _enemy;
-    public Enemy Enemy => _enemy;
+    [SerializeField] private string _imageAddress;
+    public string ImageAddress => _imageAddress;
 
-    public Animator EnemyImageAnimator { get; private set; }
+    public Enemy Enemy { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
 
     public bool IsPlayerTurn { get; private set; } = true;
-    public bool IsOver { get; private set; } = false;
+    public bool HasWon { get; private set; } = false;
     public bool HasShownResult { get; private set; } = false;
+    public bool OnBattle { get; set; }
     public int InitialExp { get; private set; }
 
     private const float FadeDuration = 0.4f;
@@ -32,12 +34,12 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void Update()
     {
-        if (Enemy == null)
+        if (!OnBattle)
         {
             return;
         }
 
-        if (IsOver)
+        if (HasWon)
         {
             if (Player.IsAlive)
             {
@@ -55,13 +57,13 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         {
             if (!Enemy.IsAlive)
             {
-                IsOver = true;
+                HasWon = true;
                 return;
             }
 
             if (!Player.IsAlive)
             {
-                IsOver = true;
+                OnBattle = false;
                 Initiate.Fade(GameOverScene, Color.black, FadeDuration);
             }
             else
@@ -84,12 +86,31 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         }
     }
 
-    void OnEnable()
+    async void OnEnable()
     {
-        Enemy.ResetStatus();
+        Enemy = await LoadEnemy();
         Enemy.ShowAllStatus();
         Player.ShowAllStatus();
         InitialExp = Player.Exp;
+        ResetBattleState();
+    }
+
+    void OnDisable()
+    {
+        OnBattle = false;
+    }
+
+    private async Task<Enemy> LoadEnemy()
+    {
+        await EnemyPrefabManager.Instance.LoadPrefab(ImageAddress);
+        return EnemyPrefabManager.Instance.GetComponentFromPrefab<Enemy>();
+    }
+
+    private void ResetBattleState()
+    {
+        OnBattle = true;
+        HasWon = false;
+        IsPlayerTurn = true;
     }
 
     private void SetEvents()
@@ -124,14 +145,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     private void WaitForEnemyTurn()
     {
-        if (EnemyImageAnimator == null)
-        {
-            EnemyImageAnimator = EnemyImagePrefabManager
-                                    .Instance
-                                    .GetComponentFromPrefab<Animator>();
-        }
-
-        if (!EnemyImageAnimator.GetBool("isAttacked"))
+        if (!Enemy.IsAttacked)
         {
             CurrentCoroutine = StartCoroutine(EnemyTurn());
         }
@@ -139,12 +153,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     private void ShowResult()
     {
-        if (InitialExp == Player.Exp)
-        {
-            Player.Exp += Enemy.DropExp;
-        }
-
-        Enemy.HideImage();
+        Player.Exp += Enemy.DropExp;
+        EnemyPrefabManager.Instance.DestroyPrefab();
         Player.ShowResult();
         CommandWindow.Instance.Hide();
         HasShownResult = true;
@@ -154,10 +164,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            IsPlayerTurn = true;
-            IsOver = false;
-            UIStateManager.Instance.UIState = UIState.Dungeon;
             HasShownResult = false;
+            UIStateManager.Instance.UIState = UIState.Dungeon;
         }
     }
 }
