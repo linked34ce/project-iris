@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOver : MonoBehaviour
+public class GameOver : SingletonMonoBehaviour<GameOver>
 {
     [SerializeField] private Button _button1;
     public Button Button1 => _button1;
@@ -11,8 +11,10 @@ public class GameOver : MonoBehaviour
 
     private const float FadeDuration = 1f;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         Button1.onClick.AddListener(() =>
             Debug.Log("Button1 is selected")
         );

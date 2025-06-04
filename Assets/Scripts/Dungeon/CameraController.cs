@@ -2,13 +2,8 @@ using System;
 
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class CameraController : SingletonMonoBehaviour<CameraController>
 {
-    [SerializeField] private UIStateManager _uiStateManager;
-    public UIStateManager UIStateManager => _uiStateManager;
-    [SerializeField] private DungeonSounds _dungeonSounds;
-    public DungeonSounds DungeonSounds => _dungeonSounds;
-
     public int StepsAfterEncount { get; private set; } = 3;
     public Direction Direction { get; private set; } = Direction.north;
     public Location Location { get; } = new();
@@ -27,23 +22,6 @@ public class CameraController : MonoBehaviour
     private const float FadeDuration = 0.4f;
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";
-
-    private static CameraController s_instance;
-    public static CameraController Instance
-    {
-        get
-        {
-            if (null == s_instance)
-            {
-                s_instance = (CameraController)FindAnyObjectByType(typeof(CameraController));
-                if (null == s_instance)
-                {
-                    Debug.Log("CameraController Instance Error");
-                }
-            }
-            return s_instance;
-        }
-    }
 
     void Update()
     {
@@ -130,7 +108,7 @@ public class CameraController : MonoBehaviour
         if (!HasGoneUpstairs)
         {
             HasGoneUpstairs = true;
-            DungeonSounds.PlayStairs();
+            DungeonSounds.Instance.PlayStairs();
             Status.IncrementFloor();
 
             string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
@@ -150,7 +128,7 @@ public class CameraController : MonoBehaviour
             transform.position.y,
             (float)Math.Round(transform.position.z)
         );
-        DungeonSounds.PlayWalk();
+        DungeonSounds.Instance.PlayWalk();
 
         IncrementStepsAfterEncount();
         Encount();
@@ -164,7 +142,7 @@ public class CameraController : MonoBehaviour
             && UnityEngine.Random.value < Dungeon.EncountRate
         )
         {
-            UIStateManager.UIState = UIState.Battle;
+            UIStateManager.Instance.UIState = UIState.Battle;
             ResetStepsAfterEncount();
         }
     }
@@ -175,7 +153,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnAround()
     {
-        DungeonSounds.PlayTurn();
+        DungeonSounds.Instance.PlayTurn();
 
         transform.Rotate(ZeroRotaion, HalfRotation, ZeroRotaion);
         transform.Translate(ZeroTranslation, ZeroTranslation, -Step);
@@ -192,7 +170,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnLeft()
     {
-        DungeonSounds.PlayTurn();
+        DungeonSounds.Instance.PlayTurn();
 
         transform.Rotate(ZeroRotaion, -QuarterRotation, ZeroRotaion);
         transform.Translate(HalfStep, ZeroTranslation, -HalfStep);
@@ -209,7 +187,7 @@ public class CameraController : MonoBehaviour
 
     public void TurnRight()
     {
-        DungeonSounds.PlayTurn();
+        DungeonSounds.Instance.PlayTurn();
 
         transform.Rotate(ZeroRotaion, QuarterRotation, ZeroRotaion);
         transform.Translate(-HalfStep, ZeroRotaion, -HalfStep);

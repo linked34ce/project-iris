@@ -2,7 +2,7 @@ using System.Collections;
 
 using UnityEngine;
 
-public class DungeonSounds : MonoBehaviour
+public class DungeonSounds : SingletonMonoBehaviour<DungeonSounds>
 {
     [SerializeField] private AudioSource _audioSource;
     public AudioSource AudioSource => _audioSource;

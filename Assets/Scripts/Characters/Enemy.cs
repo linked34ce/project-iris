@@ -8,30 +8,23 @@ public class Enemy : Character
     public int DropExp => _dropExp;
     [SerializeField] private string _imageAddress;
     public string ImageAddress => _imageAddress;
-    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
-    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
 
     [SerializeField] private RectTransform _hpBarBackground;
     public RectTransform HpBarBackground => _hpBarBackground;
     [SerializeField] private RectTransform _hpBarFill;
     public RectTransform HpBarFill => _hpBarFill;
-
     [SerializeField] private TMP_Text _nameText;
     public TMP_Text NameText => _nameText;
     [SerializeField] private TMP_Text _levelText;
     public TMP_Text LevelText => _levelText;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     public void ResetStatus() => Hp = MaxHp;
 
+    private async void ShowImage() => await EnemyImagePrefabManager
+                                            .Instance
+                                            .LoadPrefab(ImageAddress);
 
-    private async void ShowImage() => await EnemyImagePrefabManager.LoadImagePrefab(ImageAddress);
-
-    public void HideImage() => EnemyImagePrefabManager.DestroyImagePrefab();
+    public void HideImage() => EnemyImagePrefabManager.Instance.DestroyPrefab();
 
     public override void Attack(Character target)
     {

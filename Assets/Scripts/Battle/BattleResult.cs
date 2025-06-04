@@ -2,7 +2,7 @@ using TMPro;
 
 using UnityEngine;
 
-public class BattleResult : MonoBehaviour
+public class BattleResult : SingletonMonoBehaviour<BattleResult>
 {
     [SerializeField] private TMP_Text _nextExpTitle;
     public TMP_Text NextExpTitle => _nextExpTitle;
@@ -10,23 +10,6 @@ public class BattleResult : MonoBehaviour
     public TMP_Text NextExpValue => _nextExpValue;
     [SerializeField] private TMP_Text _levelUp;
     public TMP_Text LevelUp => _levelUp;
-
-    private static BattleResult s_instance;
-    public static BattleResult Instance
-    {
-        get
-        {
-            if (null == s_instance)
-            {
-                s_instance = (BattleResult)FindAnyObjectByType(typeof(BattleResult));
-                if (null == s_instance)
-                {
-                    Debug.Log("BattleResult Instance Error");
-                }
-            }
-            return s_instance;
-        }
-    }
 
     public void Show(int nextExp)
     {

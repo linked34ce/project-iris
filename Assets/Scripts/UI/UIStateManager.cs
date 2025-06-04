@@ -1,17 +1,11 @@
 using UnityEngine;
 
-public class UIStateManager : MonoBehaviour
+public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
 {
-    [SerializeField] private Canvas _dungeonUI;
-    public Canvas DungeonUI => _dungeonUI;
-    [SerializeField] private Canvas _battleUI;
-    public Canvas BattleUI => _battleUI;
-
-    [SerializeField] private BattleManager _battleManager;
-    public BattleManager BattleManager => _battleManager;
-
-    [SerializeField] private CameraController _cameraController;
-    public CameraController CameraController => _cameraController;
+    [SerializeField] private Canvas _dungeonUICanvas;
+    public Canvas DungeonUICanvas => _dungeonUICanvas;
+    [SerializeField] private Canvas _battleUICanvas;
+    public Canvas BattleUICanvas => _battleUICanvas;
 
     private UIState _uiState;
 
@@ -36,26 +30,10 @@ public class UIStateManager : MonoBehaviour
         }
     }
 
-    private static UIStateManager s_instance;
-
-    public static UIStateManager Instance
+    protected override void Awake()
     {
-        get
-        {
-            if (null == s_instance)
-            {
-                s_instance = (UIStateManager)FindAnyObjectByType(typeof(UIStateManager));
-                if (null == s_instance)
-                {
-                    Debug.Log("UIStateManager Instance Error");
-                }
-            }
-            return s_instance;
-        }
-    }
+        base.Awake();
 
-    void Awake()
-    {
         if (UIState == UIState.None)
         {
             UIState = UIState.Dungeon;
@@ -64,17 +42,17 @@ public class UIStateManager : MonoBehaviour
 
     public void EnableDungeonUI()
     {
-        BattleManager.enabled = false;
-        BattleUI.enabled = false;
-        DungeonUI.enabled = true;
-        CameraController.enabled = true;
+        BattleManager.Instance.enabled = false;
+        BattleUICanvas.enabled = false;
+        DungeonUICanvas.enabled = true;
+        CameraController.Instance.enabled = true;
     }
 
     public void EnableBattleUI()
     {
-        CameraController.enabled = false;
-        DungeonUI.enabled = false;
-        BattleUI.enabled = true;
-        BattleManager.enabled = true;
+        CameraController.Instance.enabled = false;
+        DungeonUICanvas.enabled = false;
+        BattleUICanvas.enabled = true;
+        BattleManager.Instance.enabled = true;
     }
 }

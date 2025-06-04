@@ -52,22 +52,10 @@ public class Player : Character
     [SerializeField] private TMP_Text _spText;
     public TMP_Text SpText => _spText;
 
-    [SerializeField] private BattleResult _battleResult;
-    public BattleResult BattleResult => _battleResult;
+    [SerializeField] private string _portraitAddress;
+    public string PortraitAddress => _portraitAddress;
 
-    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
-    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
     public Animator EnemyImageAnimator { get; private set; }
-
-    [SerializeField] private string _portratAddress;
-    public string PortraitAddress => _portratAddress;
-
-    [SerializeField] private AttackerPortraitPrefabManager _attackerPortraitPrefabManager;
-    public AttackerPortraitPrefabManager AttackerPortraitPrefabManager
-                                         => _attackerPortraitPrefabManager;
-
-    [SerializeField] private BattleSounds _battleSounds;
-    public BattleSounds BattleSounds => _battleSounds;
 
     // this property should be refined
     public int[] ExpList { get; } = {
@@ -215,15 +203,16 @@ public class Player : Character
         Sp = MaxSp;
 
         ShowLevel();
-        BattleResult.ShowLevelUp();
+        BattleResult.Instance.ShowLevelUp();
         // Debug.Log(
         //     $"Lv: {Level}, HP: {Hp}, SP: {Sp}, ATK: {Atk}, MAG: {Mag}, "
         //     + $"DEF: {Def}, RES: {Res}, AGI: {Agi}, LUK: {Luk}"
         // );
     }
 
-    private async void ShowPortrait() => await AttackerPortraitPrefabManager
-                                                .LoadPortraitPrefab(PortraitAddress);
+    private async void ShowPortrait() => await PlayerPortraitPrefabManager
+                                                .Instance
+                                                .LoadPrefab(PortraitAddress);
 
     public void ShowSp()
     {
@@ -234,7 +223,7 @@ public class Player : Character
     public void ShowResult()
     {
         int nextExp = ExpList[Level - 1] - Exp;
-        BattleResult.Show(nextExp);
+        BattleResult.Instance.Show(nextExp);
     }
 
     public override void Attack(Character target)
@@ -243,11 +232,13 @@ public class Player : Character
         {
             if (EnemyImageAnimator == null)
             {
-                EnemyImageAnimator = EnemyImagePrefabManager.EnemyImageAnimator;
+                EnemyImageAnimator = EnemyImagePrefabManager
+                                        .Instance
+                                        .GetComponentFromPrefab<Animator>();
             }
 
             EnemyImageAnimator.SetBool("isAttacked", true);
-            BattleSounds.PlayAttack();
+            BattleSounds.Instance.PlayAttack();
             target.Hp -= 4;
         }
         else
@@ -258,7 +249,7 @@ public class Player : Character
 
     public override void ShowAllStatus()
     {
-        BattleResult.Hide();
+        BattleResult.Instance.Hide();
         base.ShowAllStatus();
         ShowSp();
     }

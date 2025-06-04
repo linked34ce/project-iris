@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class CommandButton : MonoBehaviour
+public class CommandButton : SingletonMonoBehaviour<CommandButton>
 {
     [SerializeField] private Button _button;
     public Button Button => _button;

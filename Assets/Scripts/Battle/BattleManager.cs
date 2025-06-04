@@ -3,26 +3,19 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleManager : MonoBehaviour
+public class BattleManager : SingletonMonoBehaviour<BattleManager>
 {
-    public CommandWindow CommandWindow => _commandWindow;
-    [SerializeField] private CommandWindow _commandWindow;
     [SerializeField] private Image _turnBackground;
     public Image TurnBackground => _turnBackground;
-
-    [SerializeField] private UIStateManager _uiStateManager;
-    public UIStateManager UIStateManager => _uiStateManager;
 
     [SerializeField] private Player _player;
     public Player Player => _player;
     [SerializeField] private Enemy _enemy;
     public Enemy Enemy => _enemy;
 
-    [SerializeField] private EnemyImagePrefabManager _enemyImagePrefabManager;
-    public EnemyImagePrefabManager EnemyImagePrefabManager => _enemyImagePrefabManager;
     public Animator EnemyImageAnimator { get; private set; }
-
     public Coroutine CurrentCoroutine { get; private set; }
+
     public bool IsPlayerTurn { get; private set; } = true;
     public bool IsOver { get; private set; } = false;
     public bool HasShownResult { get; private set; } = false;
@@ -31,24 +24,11 @@ public class BattleManager : MonoBehaviour
     private const float FadeDuration = 0.4f;
     private const string GameOverScene = "Scenes/Menu/GameOver";
 
-    private static BattleManager s_instance;
-    public static BattleManager Instance
+    protected override void Awake()
     {
-        get
-        {
-            if (null == s_instance)
-            {
-                s_instance = (BattleManager)FindAnyObjectByType(typeof(BattleManager));
-                if (null == s_instance)
-                {
-                    Debug.Log("BattleManager Instance Error");
-                }
-            }
-            return s_instance;
-        }
+        base.Awake();
+        SetEvents();
     }
-
-    void Awake() => SetEvents();
 
     void Update()
     {
@@ -86,11 +66,11 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
-                CommandWindow.PlayButtonSelect();
+                CommandWindow.Instance.PlayButtonSelect();
 
-                if (IsPlayerTurn && !CommandWindow.IsVisible)
+                if (IsPlayerTurn && !CommandWindow.Instance.IsVisible)
                 {
-                    CommandWindow.Show();
+                    CommandWindow.Instance.Show();
                     TurnBackground.enabled = true;
                 }
                 else if (
@@ -114,9 +94,9 @@ public class BattleManager : MonoBehaviour
 
     private void SetEvents()
     {
-        CommandWindow.Commands[Command.Attack].SetEvent(() =>
+        CommandWindow.Instance.Commands[Command.Attack].SetEvent(() =>
        {
-           CommandWindow.Hide();
+           CommandWindow.Instance.Hide();
            TurnBackground.enabled = false;
            Player.Attack(Enemy);
            if (Enemy.Hp > 0)
@@ -125,11 +105,11 @@ public class BattleManager : MonoBehaviour
            }
        });
 
-        CommandWindow.Commands[Command.Skill].SetEvent(() =>
+        CommandWindow.Instance.Commands[Command.Skill].SetEvent(() =>
             Debug.Log("SkillButton is selected")
         );
 
-        CommandWindow.Commands[Command.Item].SetEvent(() =>
+        CommandWindow.Instance.Commands[Command.Item].SetEvent(() =>
             Debug.Log("ItemButton is selected")
         );
     }
@@ -146,7 +126,9 @@ public class BattleManager : MonoBehaviour
     {
         if (EnemyImageAnimator == null)
         {
-            EnemyImageAnimator = EnemyImagePrefabManager.EnemyImageAnimator;
+            EnemyImageAnimator = EnemyImagePrefabManager
+                                    .Instance
+                                    .GetComponentFromPrefab<Animator>();
         }
 
         if (!EnemyImageAnimator.GetBool("isAttacked"))
@@ -164,7 +146,7 @@ public class BattleManager : MonoBehaviour
 
         Enemy.HideImage();
         Player.ShowResult();
-        CommandWindow.Hide();
+        CommandWindow.Instance.Hide();
         HasShownResult = true;
     }
 
@@ -174,7 +156,7 @@ public class BattleManager : MonoBehaviour
         {
             IsPlayerTurn = true;
             IsOver = false;
-            UIStateManager.UIState = UIState.Dungeon;
+            UIStateManager.Instance.UIState = UIState.Dungeon;
             HasShownResult = false;
         }
     }

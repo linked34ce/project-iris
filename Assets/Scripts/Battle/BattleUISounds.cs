@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BattleUISounds : MonoBehaviour
+public class BattleUISounds : SingletonMonoBehaviour<BattleUISounds>
 {
     [SerializeField] private AudioSource _audioSource;
     public AudioSource AudioSource => _audioSource;
