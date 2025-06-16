@@ -23,6 +23,12 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";
 
+    protected override void Awake()
+    {
+        base.Awake();
+        UnityEngine.Random.InitState(Environment.TickCount);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
@@ -136,7 +142,6 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
 
     public void Encount()
     {
-        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
         if (
             StepsAfterEncount >= MinStepsAfterEncount
             && UnityEngine.Random.value < Dungeon.EncountRate
