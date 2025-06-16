@@ -117,7 +117,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             DungeonSounds.Instance.PlayStairs();
             Status.IncrementFloor();
 
-            string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
+            string ordinal = Converter.ToOrdinal(Status.Floor);
             Initiate.Fade(
                 $"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}",
                 Color.black,
@@ -207,11 +207,4 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
         };
     }
 
-    public string ConvertNumberFromCardinalToOrdinal(int num) => (num % DecimalBase) switch
-    {
-        1 => $"{num}st",
-        2 => $"{num}nd",
-        3 => $"{num}rd",
-        _ => $"{num}th",
-    };
 }
