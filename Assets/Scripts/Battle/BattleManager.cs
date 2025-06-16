@@ -106,6 +106,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         return EnemyPrefabManager.Instance.GetComponentFromPrefab<Enemy>();
     }
 
+    // OnBattle, HasWon and HasShownResult flags should be changed to an enum type
     private void ResetBattleState()
     {
         OnBattle = true;

@@ -18,7 +18,6 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const float HalfRotation = 180f;
     private const int MinStepsAfterEncount = 5;
     private const int DefaultSteps = 0;
-    private const int DecimalBase = 10;
     private const float FadeDuration = 0.4f;
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";

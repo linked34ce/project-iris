@@ -170,41 +170,24 @@ public class Player : Character, ISpShowable
     protected override void Awake()
     {
         base.Awake();
-        if (HpList.TryGetValue(Level, out int maxHp))
-        {
-            MaxHp = maxHp;
-        }
-        if (SpList.TryGetValue(Level, out int maxSp))
-        {
-            MaxSp = maxSp;
-        }
+        SetParametersBasedOnLevel();
+        ShowPortrait();
+    }
+
+    private void SetParametersBasedOnLevel()
+    {
+        MaxHp = HpList.GetValueOrDefault(Level);
+        MaxSp = SpList.GetValueOrDefault(Level);
+
         Hp = MaxHp;
         Sp = MaxSp;
-        if (AtkList.TryGetValue(Level, out int atk))
-        {
-            Atk = atk;
-        }
-        if (MagList.TryGetValue(Level, out int mag))
-        {
-            Mag = mag;
-        }
-        if (DefList.TryGetValue(Level, out int def))
-        {
-            Def = def;
-        }
-        if (ResList.TryGetValue(Level, out int res))
-        {
-            Res = res;
-        }
-        if (AgiList.TryGetValue(Level, out int agi))
-        {
-            Agi = agi;
-        }
-        if (LukList.TryGetValue(Level, out int luk))
-        {
-            Luk = luk;
-        }
-        ShowPortrait();
+
+        Atk = AtkList.GetValueOrDefault(Level);
+        Mag = MagList.GetValueOrDefault(Level);
+        Def = DefList.GetValueOrDefault(Level);
+        Res = ResList.GetValueOrDefault(Level);
+        Agi = AgiList.GetValueOrDefault(Level);
+        Luk = LukList.GetValueOrDefault(Level);
     }
 
     private void LevelUp()
@@ -214,42 +197,7 @@ public class Player : Character, ISpShowable
             Level++;
         }
 
-        if (HpList.TryGetValue(Level, out int hp))
-        {
-            MaxHp = hp;
-        }
-        if (SpList.TryGetValue(Level, out int sp))
-        {
-            MaxSp = sp;
-        }
-        if (AtkList.TryGetValue(Level, out int a))
-        {
-            Atk = a;
-        }
-        if (MagList.TryGetValue(Level, out int m))
-        {
-            Mag = m;
-        }
-        if (DefList.TryGetValue(Level, out int d))
-        {
-            Def = d;
-        }
-        if (ResList.TryGetValue(Level, out int r))
-        {
-            Res = r;
-        }
-        if (AgiList.TryGetValue(Level, out int ag))
-        {
-            Agi = ag;
-        }
-        if (LukList.TryGetValue(Level, out int l))
-        {
-            Luk = l;
-        }
-
-        Hp = MaxHp;
-        Sp = MaxSp;
-
+        SetParametersBasedOnLevel();
         ShowLevel();
         BattleResult.Instance.ShowLevelUp();
         // Debug.Log(
