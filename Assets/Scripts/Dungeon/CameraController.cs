@@ -13,7 +13,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const float ZeroTranslation = 0f;
     private const float Step = 10f;
     private const float HalfStep = 5f;
-    private const float ZeroRotaion = 0f;
+    private const float ZeroRotation = 0f;
     private const float QuarterRotation = 90f;
     private const float HalfRotation = 180f;
     private const int MinStepsAfterEncount = 5;
@@ -155,7 +155,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, HalfRotation, ZeroRotaion);
+        transform.Rotate(ZeroRotation, HalfRotation, ZeroRotation);
         transform.Translate(ZeroTranslation, ZeroTranslation, -Step);
 
         Direction = Direction switch
@@ -172,7 +172,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, -QuarterRotation, ZeroRotaion);
+        transform.Rotate(ZeroRotation, -QuarterRotation, ZeroRotation);
         transform.Translate(HalfStep, ZeroTranslation, -HalfStep);
 
         Direction = Direction switch
@@ -189,8 +189,8 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, QuarterRotation, ZeroRotaion);
-        transform.Translate(-HalfStep, ZeroRotaion, -HalfStep);
+        transform.Rotate(ZeroRotation, QuarterRotation, ZeroRotation);
+        transform.Translate(-HalfStep, ZeroTranslation, -HalfStep);
 
         Direction = Direction switch
         {
