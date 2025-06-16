@@ -27,6 +27,7 @@ public abstract class PrefabManager<T>
     {
         Addressables.ReleaseInstance(_prefab);
         _prefab = null;
+        _component = null;
     }
 
     public TComponent GetComponentFromPrefab<TComponent>() where TComponent : Component
