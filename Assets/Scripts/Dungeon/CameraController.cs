@@ -13,15 +13,20 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const float ZeroTranslation = 0f;
     private const float Step = 10f;
     private const float HalfStep = 5f;
-    private const float ZeroRotaion = 0f;
+    private const float ZeroRotation = 0f;
     private const float QuarterRotation = 90f;
     private const float HalfRotation = 180f;
     private const int MinStepsAfterEncount = 5;
     private const int DefaultSteps = 0;
-    private const int DecimalBase = 10;
     private const float FadeDuration = 0.4f;
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";
+
+    protected override void Awake()
+    {
+        base.Awake();
+        UnityEngine.Random.InitState(Environment.TickCount);
+    }
 
     void Update()
     {
@@ -111,7 +116,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             DungeonSounds.Instance.PlayStairs();
             Status.IncrementFloor();
 
-            string ordinal = ConvertNumberFromCardinalToOrdinal(Status.Floor);
+            string ordinal = Converter.ToOrdinal(Status.Floor);
             Initiate.Fade(
                 $"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}",
                 Color.black,
@@ -136,7 +141,6 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
 
     public void Encount()
     {
-        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
         if (
             StepsAfterEncount >= MinStepsAfterEncount
             && UnityEngine.Random.value < Dungeon.EncountRate
@@ -155,7 +159,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, HalfRotation, ZeroRotaion);
+        transform.Rotate(ZeroRotation, HalfRotation, ZeroRotation);
         transform.Translate(ZeroTranslation, ZeroTranslation, -Step);
 
         Direction = Direction switch
@@ -172,7 +176,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, -QuarterRotation, ZeroRotaion);
+        transform.Rotate(ZeroRotation, -QuarterRotation, ZeroRotation);
         transform.Translate(HalfStep, ZeroTranslation, -HalfStep);
 
         Direction = Direction switch
@@ -189,8 +193,8 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     {
         DungeonSounds.Instance.PlayTurn();
 
-        transform.Rotate(ZeroRotaion, QuarterRotation, ZeroRotaion);
-        transform.Translate(-HalfStep, ZeroRotaion, -HalfStep);
+        transform.Rotate(ZeroRotation, QuarterRotation, ZeroRotation);
+        transform.Translate(-HalfStep, ZeroTranslation, -HalfStep);
 
         Direction = Direction switch
         {
@@ -202,11 +206,4 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
         };
     }
 
-    public string ConvertNumberFromCardinalToOrdinal(int num) => (num % DecimalBase) switch
-    {
-        1 => $"{num}st",
-        2 => $"{num}nd",
-        3 => $"{num}rd",
-        _ => $"{num}th",
-    };
 }

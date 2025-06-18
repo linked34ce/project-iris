@@ -170,38 +170,34 @@ public class Player : Character, ISpShowable
     protected override void Awake()
     {
         base.Awake();
-        MaxHp = HpList[Level];
-        MaxSp = SpList[Level];
+        SetParametersBasedOnLevel();
+        ShowPortrait();
+    }
+
+    private void SetParametersBasedOnLevel()
+    {
+        MaxHp = HpList.GetValueOrDefault(Level);
+        MaxSp = SpList.GetValueOrDefault(Level);
+
         Hp = MaxHp;
         Sp = MaxSp;
-        Atk = AtkList[Level];
-        Mag = MagList[Level];
-        Def = DefList[Level];
-        Res = ResList[Level];
-        Agi = AgiList[Level];
-        Luk = LukList[Level];
-        ShowPortrait();
+
+        Atk = AtkList.GetValueOrDefault(Level);
+        Mag = MagList.GetValueOrDefault(Level);
+        Def = DefList.GetValueOrDefault(Level);
+        Res = ResList.GetValueOrDefault(Level);
+        Agi = AgiList.GetValueOrDefault(Level);
+        Luk = LukList.GetValueOrDefault(Level);
     }
 
     private void LevelUp()
     {
-        while (Exp >= ExpList[Level - 1])
+        while (Level < ExpList.Length && Exp >= ExpList[Level - 1])
         {
             Level++;
         }
 
-        MaxHp = HpList[Level];
-        MaxSp = SpList[Level];
-        Atk = AtkList[Level];
-        Mag = MagList[Level];
-        Def = DefList[Level];
-        Res = ResList[Level];
-        Agi = AgiList[Level];
-        Luk = LukList[Level];
-
-        Hp = MaxHp;
-        Sp = MaxSp;
-
+        SetParametersBasedOnLevel();
         ShowLevel();
         BattleResult.Instance.ShowLevelUp();
         // Debug.Log(
