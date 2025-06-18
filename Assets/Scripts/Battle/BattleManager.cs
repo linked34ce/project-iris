@@ -17,11 +17,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     public Enemy Enemy { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
 
-    public bool IsPlayerTurn { get; private set; } = true;
-    public bool HasWon { get; private set; } = false;
-    public bool HasShownResult { get; private set; } = false;
-    public bool OnBattle { get; set; }
-    public int InitialExp { get; private set; }
+    public BattleState BattleState { get; private set; } = BattleState.None;
+    public Turn Turn { get; private set; } = Turn.None;
 
     private const float FadeDuration = 0.4f;
     private const string GameOverScene = "Scenes/Menu/GameOver";
@@ -34,55 +31,17 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void Update()
     {
-        if (!OnBattle)
+        switch (BattleState)
         {
-            return;
-        }
-
-        if (HasWon)
-        {
-            if (Player.IsAlive)
-            {
-                if (HasShownResult)
-                {
-                    ConfirmResult();
-                }
-                else
-                {
-                    ShowResult();
-                }
-            }
-        }
-        else
-        {
-            if (!Enemy.IsAlive)
-            {
-                HasWon = true;
-                return;
-            }
-
-            if (!Player.IsAlive)
-            {
-                OnBattle = false;
-                Initiate.Fade(GameOverScene, Color.black, FadeDuration);
-            }
-            else
-            {
-                CommandWindow.Instance.PlayButtonSelect();
-
-                if (IsPlayerTurn && !CommandWindow.Instance.IsVisible)
-                {
-                    CommandWindow.Instance.Show();
-                    TurnBackground.enabled = true;
-                }
-                else if (
-                    !IsPlayerTurn
-                    && CurrentCoroutine is null
-                )
-                {
-                    WaitForEnemyTurn();
-                }
-            }
+            case BattleState.InBattle:
+                ExecuteBattlePhase();
+                break;
+            case BattleState.HasPlayerWon:
+                ShowResult();
+                break;
+            case BattleState.HasShownResult:
+                ConfirmResult();
+                break;
         }
     }
 
@@ -91,13 +50,12 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         Enemy = await LoadEnemy();
         Enemy.ShowAllStatus();
         Player.ShowAllStatus();
-        InitialExp = Player.Exp;
         ResetBattleState();
     }
 
     void OnDisable()
     {
-        OnBattle = false;
+        BattleState = BattleState.None;
     }
 
     private async Task<Enemy> LoadEnemy()
@@ -109,9 +67,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     // OnBattle, HasWon and HasShownResult flags should be changed to an enum type
     private void ResetBattleState()
     {
-        OnBattle = true;
-        HasWon = false;
-        IsPlayerTurn = true;
+        BattleState = BattleState.InBattle;
+        Turn = Turn.Player;
     }
 
     private void SetEvents()
@@ -121,9 +78,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
            CommandWindow.Instance.Hide();
            TurnBackground.enabled = false;
            Player.Attack(Enemy, 4);
-           if (Enemy.Hp > 0)
+           if (Enemy.IsAlive)
            {
-               IsPlayerTurn = false;
+               Turn = Turn.Enemy;
            }
        });
 
@@ -136,10 +93,45 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         );
     }
 
-    private IEnumerator EnemyTurn()
+    private void ExecuteBattlePhase()
+    {
+        // When the player and the enemy are defeated at the same time, it's game over.
+        if (!Player.IsAlive)
+        {
+            LoadGameOverScene();
+        }
+        else if (!Enemy.IsAlive)
+        {
+            BattleState = BattleState.HasPlayerWon;
+        }
+        else
+        {
+            OnPlayerTurn();
+        }
+    }
+
+    private void OnPlayerTurn()
+    {
+        CommandWindow.Instance.PlayButtonSelect();
+
+        if (Turn == Turn.Player && !CommandWindow.Instance.IsVisible)
+        {
+            CommandWindow.Instance.Show();
+            TurnBackground.enabled = true;
+        }
+        else if (
+            Turn == Turn.Enemy
+            && CurrentCoroutine is null
+        )
+        {
+            WaitForEnemyTurn();
+        }
+    }
+
+    private IEnumerator OnEnemyTurn()
     {
         yield return new WaitForSeconds(1.0f);
-        IsPlayerTurn = true;
+        Turn = Turn.Player;
         Enemy.Attack(Player, 5);
         CurrentCoroutine = null;
     }
@@ -148,8 +140,14 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         if (!Enemy.IsAttacked)
         {
-            CurrentCoroutine = StartCoroutine(EnemyTurn());
+            CurrentCoroutine = StartCoroutine(OnEnemyTurn());
         }
+    }
+
+    private void LoadGameOverScene()
+    {
+        BattleState = BattleState.None;
+        Initiate.Fade(GameOverScene, Color.black, FadeDuration);
     }
 
     private void ShowResult()
@@ -158,14 +156,14 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         EnemyPrefabManager.Instance.DestroyPrefab();
         Player.ShowResult();
         CommandWindow.Instance.Hide();
-        HasShownResult = true;
+        BattleState = BattleState.HasShownResult;
     }
 
     private void ConfirmResult()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            HasShownResult = false;
+            BattleState = BattleState.None;
             UIStateManager.Instance.UIState = UIState.Dungeon;
         }
     }
