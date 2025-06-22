@@ -24,7 +24,7 @@ public class SerializableDictionary<TKey, TValue> :
         }
     }
 
-    [SerializeField] private List<Pair> _list = null;
+    [SerializeField] private List<Pair> _list = new List<Pair>();
 
     /// <summary>
     /// OnAfterDeserialize
@@ -32,6 +32,11 @@ public class SerializableDictionary<TKey, TValue> :
     void ISerializationCallbackReceiver.OnAfterDeserialize()
     {
         Clear();
+        if (_list == null)
+        {
+            return;
+        }
+
         foreach (var pair in _list)
         {
             if (ContainsKey(pair.Key))

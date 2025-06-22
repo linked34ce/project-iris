@@ -19,7 +19,7 @@ public class Player : Character, ISpShowable
         set
         {
             _exp = value;
-            if (_exp >= ExpList[Level - 1])
+            if (Level < ExpList.Length && _exp >= ExpList[Level - 1])
             {
                 LevelUp();
             }
@@ -218,7 +218,9 @@ public class Player : Character, ISpShowable
 
     public void ShowResult()
     {
-        int nextExp = ExpList[Level - 1] - Exp;
+        int nextExp = Level < ExpList.Length
+            ? ExpList[Level - 1] - Exp
+            : 0;
         BattleResult.Instance.Show(nextExp);
     }
 
