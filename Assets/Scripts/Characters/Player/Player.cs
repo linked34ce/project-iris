@@ -49,15 +49,15 @@ public class Player : Character
         }
     }
 
-    public void LevelUp()
-    {
-        Data.LevelUp();
-        _view.ShowLevel(Data.Level);
-        _view.ShowLevelUp();
-    }
-
     public void ShowResult()
     {
+        if (Data.HasLeveledUp)
+        {
+            _view.ShowLevelUp();
+            _view.ShowLevel(Data.Level);
+            Data.HasLeveledUp = false;
+        }
+
         _view.ShowHp(Data.Hp, Data.MaxHp);
         _view.ShowSp(Data.Sp, Data.MaxSp);
         BattleResult.Instance.Show(Data.NextExp);

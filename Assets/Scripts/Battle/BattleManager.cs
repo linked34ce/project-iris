@@ -22,6 +22,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     protected override void Awake()
     {
         base.Awake();
+        _player.Initialize();
         SetEvents();
     }
 
@@ -44,7 +45,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     async void OnEnable()
     {
         Enemy = await LoadEnemy();
-        _player.Initialize();
+        _player.ShowAllStatus();
         Enemy.Initialize();
         ResetBattleState();
     }

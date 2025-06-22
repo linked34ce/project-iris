@@ -16,6 +16,7 @@ public class PlayerData : CharacterData
             if (Level < ExpList.Length && _exp >= ExpList[Level - 1])
             {
                 LevelUp();
+                HasLeveledUp = true;
             }
         }
     }
@@ -31,6 +32,8 @@ public class PlayerData : CharacterData
         }
     }
     public int MaxSp { get; set; }
+
+    public bool HasLeveledUp { get; set; } = false;
 
     // this property should be refined
     public int[] ExpList { get; } = {
@@ -163,13 +166,12 @@ public class PlayerData : CharacterData
         Luk = LukList.GetValueOrDefault(Level);
     }
 
-    public void LevelUp()
+    private void LevelUp()
     {
         while (Level < ExpList.Length && Exp >= ExpList[Level - 1])
         {
             Level++;
+            SetParametersBasedOnLevel();
         }
-
-        SetParametersBasedOnLevel();
     }
 }
