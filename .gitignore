@@ -4,6 +4,7 @@
 Database.meta
 /Assets/*
 !Scripts
+!Tests
 /Build/
 /Library/
 /Logs/
