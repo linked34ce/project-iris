@@ -5,28 +5,25 @@ using UnityEngine;
 public class BattleResult : SingletonMonoBehaviour<BattleResult>
 {
     [SerializeField] private TMP_Text _nextExpTitle;
-    public TMP_Text NextExpTitle => _nextExpTitle;
     [SerializeField] private TMP_Text _nextExpValue;
-    public TMP_Text NextExpValue => _nextExpValue;
     [SerializeField] private TMP_Text _levelUp;
-    public TMP_Text LevelUp => _levelUp;
 
     public void Show(int nextExp)
     {
-        NextExpValue.SetText($"{nextExp}");
-        NextExpTitle.enabled = true;
-        NextExpValue.enabled = true;
+        _nextExpValue.SetText($"{nextExp}");
+        _nextExpTitle.enabled = true;
+        _nextExpValue.enabled = true;
     }
 
     public void ShowLevelUp()
     {
-        LevelUp.enabled = true;
+        _levelUp.enabled = true;
     }
 
     public void Hide()
     {
-        NextExpTitle.enabled = false;
-        NextExpValue.enabled = false;
-        LevelUp.enabled = false;
+        _nextExpTitle.enabled = false;
+        _nextExpValue.enabled = false;
+        _levelUp.enabled = false;
     }
 }

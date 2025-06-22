@@ -1,4 +1,4 @@
-public interface IStatusShowable : INameShowable, ILevelShowable, IHpShowable
+public interface IStatusShowable
 {
     public void ShowAllStatus();
 }

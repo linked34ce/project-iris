@@ -7,7 +7,12 @@ public class Walls
     public Wall West { get; }
     public Wall North { get; }
 
-    public Walls(int east, int south, int west, int north)
+    public Walls(
+        int east,
+        int south,
+        int west,
+        int north
+    )
     {
         East = ConvertIntToWall(east);
         South = ConvertIntToWall(south);
@@ -15,7 +20,12 @@ public class Walls
         North = ConvertIntToWall(north);
     }
 
-    public Walls(Wall east, Wall south, Wall west, Wall north)
+    public Walls(
+        Wall east,
+        Wall south,
+        Wall west,
+        Wall north
+    )
     {
         East = east;
         South = south;

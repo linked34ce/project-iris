@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Data/Status")]
-public class EnemyData : Data
+public class ScriptableEnemyData : Data
 {
     [SerializeField] private int _level;
     public int Level

@@ -7,12 +7,8 @@ using UnityEngine.UI;
 public class BattleManager : SingletonMonoBehaviour<BattleManager>
 {
     [SerializeField] private Image _turnBackground;
-    public Image TurnBackground => _turnBackground;
-
     [SerializeField] private Player _player;
-    public Player Player => _player;
     [SerializeField] private string _imageAddress;
-    public string ImageAddress => _imageAddress;
 
     public Enemy Enemy { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
@@ -48,8 +44,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     async void OnEnable()
     {
         Enemy = await LoadEnemy();
-        Enemy.ShowAllStatus();
-        Player.ShowAllStatus();
+        _player.Initialize();
+        Enemy.Initialize();
         ResetBattleState();
     }
 
@@ -60,7 +56,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     private async Task<Enemy> LoadEnemy()
     {
-        await EnemyPrefabManager.Instance.LoadPrefab(ImageAddress);
+        await EnemyPrefabManager.Instance.LoadPrefab(_imageAddress);
         return EnemyPrefabManager.Instance.GetComponentFromPrefab<Enemy>();
     }
 
@@ -76,9 +72,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         CommandWindow.Instance.Commands[Command.Attack].SetEvent(() =>
        {
            CommandWindow.Instance.Hide();
-           TurnBackground.enabled = false;
-           Player.Attack(Enemy, 4);
-           if (Enemy.IsAlive)
+           _turnBackground.enabled = false;
+           _player.Attack(Enemy, 4);
+           if (Enemy.Data.IsAlive)
            {
                Turn = Turn.Enemy;
            }
@@ -96,11 +92,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     private void ExecuteBattlePhase()
     {
         // When the player and the enemy are defeated at the same time, it's game over.
-        if (!Player.IsAlive)
+        if (!_player.Data.IsAlive)
         {
             LoadGameOverScene();
         }
-        else if (!Enemy.IsAlive)
+        else if (!Enemy.Data.IsAlive)
         {
             BattleState = BattleState.HasPlayerWon;
         }
@@ -117,7 +113,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         if (Turn == Turn.Player && !CommandWindow.Instance.IsVisible)
         {
             CommandWindow.Instance.Show();
-            TurnBackground.enabled = true;
+            _turnBackground.enabled = true;
         }
         else if (
             Turn == Turn.Enemy
@@ -132,7 +128,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         yield return new WaitForSeconds(1.0f);
         Turn = Turn.Player;
-        Enemy.Attack(Player, 5);
+        Enemy.Attack(_player, 5);
         CurrentCoroutine = null;
     }
 
@@ -152,9 +148,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     private void ShowResult()
     {
-        Player.Exp += Enemy.DropExp;
+        _player.Data.Exp += Enemy.Data.DropExp;
         EnemyPrefabManager.Instance.DestroyPrefab();
-        Player.ShowResult();
+        _player.ShowResult();
         CommandWindow.Instance.Hide();
         BattleState = BattleState.HasShownResult;
     }

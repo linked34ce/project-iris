@@ -8,7 +8,7 @@ public abstract class PrefabManager<T>
     : SingletonMonoBehaviour<PrefabManager<T>> where T : MonoBehaviour
 {
     [SerializeField] private Transform _transform;
-    public Transform Transform => _transform;
+
     private AsyncOperationHandle<GameObject> _handle;
     private GameObject _prefab;
     private Component _component;
@@ -18,7 +18,7 @@ public abstract class PrefabManager<T>
         if (_prefab == null)
         {
             await Addressables.InitializeAsync().Task;
-            _handle = Addressables.InstantiateAsync(address, Transform);
+            _handle = Addressables.InstantiateAsync(address, _transform);
             _prefab = _handle.WaitForCompletion();
         }
     }

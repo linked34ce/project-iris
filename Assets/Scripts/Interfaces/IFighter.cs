@@ -1,1 +1,1 @@
-public interface IFighter : IAttacker, IDamageable, IStatusShowable, IBasicParameters { }
+public interface IFighter : IAttacker, IDamageable { }

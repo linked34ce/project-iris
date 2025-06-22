@@ -1,40 +1,56 @@
-using TMPro;
-
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Enemy : Character
 {
+    [SerializeField] private int _hp;
+    [SerializeField] private int _atk;
+    [SerializeField] private int _mag;
+    [SerializeField] private int _def;
+    [SerializeField] private int _res;
+    [SerializeField] private int _agi;
+    [SerializeField] private int _luk;
     [SerializeField] private int _dropExp;
-    public int DropExp => _dropExp;
 
-    [SerializeField] private RawImage _image;
-    public RawImage Image => _image;
     [SerializeField] private Animator _imageAnimator;
-    public Animator ImageAnimator => _imageAnimator;
+    [SerializeField] private EnemyView _view;
 
-    [SerializeField] private RectTransform _hpBarBackground;
-    public RectTransform HpBarBackground => _hpBarBackground;
-    [SerializeField] private RectTransform _hpBarFill;
-    public RectTransform HpBarFill => _hpBarFill;
-    [SerializeField] private TMP_Text _nameText;
-    public TMP_Text NameText => _nameText;
-    [SerializeField] private TMP_Text _levelText;
-    public TMP_Text LevelText => _levelText;
-
-    private const int MaxOpacity = 255;
+    public EnemyData Data { get; protected set; }
 
     public bool IsAttacked
     {
-        get => ImageAnimator.GetBool("isAttacked");
-        set => ImageAnimator.SetBool("isAttacked", value);
+        get => _imageAnimator.GetBool("isAttacked");
+        set => _imageAnimator.SetBool("isAttacked", value);
     }
 
-    private void ShowImage()
+    public override void Initialize()
     {
-        Color32 color = Image.color;
-        color.a = MaxOpacity;
-        Image.color = color;
+        Data = new EnemyData(
+            _name,
+            _level,
+            _hp,
+            _atk,
+            _mag,
+            _def,
+            _res,
+            _agi,
+            _luk,
+            _dropExp
+        );
+        ShowAllStatus();
+    }
+
+    public override void ShowAllStatus()
+    {
+        _view.ShowName(Data.Name);
+        _view.ShowLevel(Data.Level);
+        _view.ShowHp(Data.Hp, Data.MaxHp);
+        _view.ShowImage();
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        Data.TakeDamage(damage);
+        _view.ShowHp(Data.Hp, Data.MaxHp);
     }
 
     public override void Attack(Character target, int damage)
@@ -47,23 +63,5 @@ public class Enemy : Character
         {
             Debug.LogError("Target is not Player.");
         }
-    }
-
-    public override void ShowAllStatus()
-    {
-        base.ShowAllStatus();
-        ShowImage();
-    }
-
-    public override void ShowName() => NameText.SetText(Name);
-
-    public override void ShowLevel() => LevelText.SetText($"Lv.{Level}");
-
-    public override void ShowHp()
-    {
-        float width = HpBarBackground.sizeDelta.x;
-        Vector2 anchoredPosition = HpBarFill.anchoredPosition;
-        anchoredPosition.x = -width * (MaxHp - Hp) / MaxHp;
-        HpBarFill.anchoredPosition = anchoredPosition;
     }
 }
