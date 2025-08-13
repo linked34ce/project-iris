@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerData : CharacterData
 {
-    public string Role { get; set; }
-
     private int _exp;
     public int Exp
     {

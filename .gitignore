@@ -1,10 +1,10 @@
-*.cs.meta
+*.meta
 *.sln
 *.csproj
-Database.meta
 /Assets/*
-!Scripts
-!Tests
+/Assets/Tests/Coverage/
+!/Assets/Scripts/
+!/Assets/Tests/
 /Build/
 /Library/
 /Logs/
