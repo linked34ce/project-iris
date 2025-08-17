@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +7,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 {
     [SerializeField] private Image _turnBackground;
     [SerializeField] private Player _player;
-    [SerializeField] private string _imageAddress;
+    [SerializeField] private EnemyLoader _enemyLoader;
 
     public Enemy Enemy { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
@@ -44,7 +43,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     async void OnEnable()
     {
-        Enemy = await LoadEnemy();
+        Enemy = await _enemyLoader.Create();
         _player.ShowAllStatus();
         Enemy.Initialize();
         ResetBattleState();
@@ -53,12 +52,6 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     void OnDisable()
     {
         BattleState = BattleState.None;
-    }
-
-    private async Task<Enemy> LoadEnemy()
-    {
-        await EnemyPrefabManager.Instance.LoadPrefab(_imageAddress);
-        return EnemyPrefabManager.Instance.GetComponentFromPrefab<Enemy>();
     }
 
     // OnBattle, HasWon and HasShownResult flags should be changed to an enum type
@@ -150,7 +143,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     private void ShowResult()
     {
         _player.Data.Exp += Enemy.Data.DropExp;
-        EnemyPrefabManager.Instance.DestroyPrefab();
+        _enemyLoader.Destroy();
         _player.ShowResult();
         CommandWindow.Instance.Hide();
         BattleState = BattleState.HasShownResult;

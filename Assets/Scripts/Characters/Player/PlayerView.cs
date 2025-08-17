@@ -12,7 +12,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
     [SerializeField] private Slider _spBar;
     [SerializeField] private TMP_Text _spText;
 
-    [SerializeField] private string _portraitAddress;
+    [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
 
     public void ShowName(string name) => _nameText.SetText(name);
 
@@ -30,9 +30,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
         _spText.SetText($"{sp}/{maxSp}");
     }
 
-    public async void ShowPortrait() => await PlayerPortraitPrefabManager
-                                            .Instance
-                                            .LoadPrefab(_portraitAddress);
+    public async void ShowPortrait() => await _playerPortraitLoader.Create();
 
     public void ShowLevelUp()
     {

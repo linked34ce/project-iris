@@ -4,21 +4,26 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public abstract class PrefabManager<T>
-    : SingletonMonoBehaviour<PrefabManager<T>> where T : MonoBehaviour
+public class PrefabManager
 {
-    [SerializeField] private Transform _transform;
-
     private AsyncOperationHandle<GameObject> _handle;
     private GameObject _prefab;
     private Component _component;
+    private readonly string _address;
+    private readonly Transform _transform;
 
-    public async Task LoadPrefab(string address)
+    public PrefabManager(string address, Transform transform)
+    {
+        _address = address;
+        _transform = transform;
+    }
+
+    public async Task LoadPrefab()
     {
         if (_prefab == null)
         {
             await Addressables.InitializeAsync().Task;
-            _handle = Addressables.InstantiateAsync(address, _transform);
+            _handle = Addressables.InstantiateAsync(_address, _transform);
             _prefab = _handle.WaitForCompletion();
         }
     }
@@ -30,7 +35,7 @@ public abstract class PrefabManager<T>
         _component = null;
     }
 
-    public TComponent GetComponentFromPrefab<TComponent>() where TComponent : Component
+    public T GetComponentFromPrefab<T>() where T : Component
     {
         if (_prefab == null)
         {
@@ -40,9 +45,9 @@ public abstract class PrefabManager<T>
 
         if (_component == null)
         {
-            _component = _prefab.GetComponent<TComponent>();
+            _component = _prefab.GetComponent<T>();
         }
 
-        return _component as TComponent;
+        return _component as T;
     }
 }
