@@ -40,7 +40,7 @@ public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
 
     public void EnableDungeonUI()
     {
-        BattleManager.Instance.enabled = false;
+        BattleUIManager.Instance.enabled = false;
         _battleUICanvas.enabled = false;
         _dungeonUICanvas.enabled = true;
         CameraController.Instance.enabled = true;
@@ -51,6 +51,6 @@ public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
         CameraController.Instance.enabled = false;
         _dungeonUICanvas.enabled = false;
         _battleUICanvas.enabled = true;
-        BattleManager.Instance.enabled = true;
+        BattleUIManager.Instance.enabled = true;
     }
 }

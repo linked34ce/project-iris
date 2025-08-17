@@ -1,4 +1,4 @@
 public interface IAttacker
 {
-    void Attack(Character target, int damage);
+    void Attack(ICharacter target, int damage);
 }

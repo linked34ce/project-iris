@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Character
+public class Enemy : Character, IEnemy
 {
     [SerializeField] private int _hp;
     [SerializeField] private int _atk;
@@ -53,9 +53,9 @@ public class Enemy : Character
         _view.ShowHp(Data.Hp, Data.MaxHp);
     }
 
-    public override void Attack(Character target, int damage)
+    public override void Attack(ICharacter target, int damage)
     {
-        if (target is Player player)
+        if (target is IPlayer player)
         {
             player.TakeDamage(damage);
         }

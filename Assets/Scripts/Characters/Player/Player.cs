@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player : Character
+public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made
     [SerializeField] private string _role;
@@ -35,9 +35,9 @@ public class Player : Character
         _view.ShowSp(Data.Sp, Data.MaxSp);
     }
 
-    public override void Attack(Character target, int damage)
+    public override void Attack(ICharacter target, int damage)
     {
-        if (target is Enemy enemy)
+        if (target is IEnemy enemy)
         {
             enemy.IsAttacked = true;
             BattleSounds.Instance.PlayAttack();
@@ -47,6 +47,11 @@ public class Player : Character
         {
             Debug.LogError("Target is not Enemy.");
         }
+    }
+
+    public void GainExp(IEnemy enemy)
+    {
+        Data.Exp += enemy.Data.DropExp;
     }
 
     public void ShowResult()

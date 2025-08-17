@@ -3,17 +3,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleManager : SingletonMonoBehaviour<BattleManager>
+public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
 {
     [SerializeField] private Image _turnBackground;
     [SerializeField] private Player _player;
     [SerializeField] private EnemyLoader _enemyLoader;
 
-    public Enemy Enemy { get; private set; }
+    public IEnemy Enemy { get; private set; }
     public Coroutine CurrentCoroutine { get; private set; }
 
-    public BattleState BattleState { get; private set; } = BattleState.None;
-    public Turn Turn { get; private set; } = Turn.None;
+    public BattleFlowController FlowController { get; private set; }
 
     private const float FadeDuration = 0.4f;
     private const string GameOverScene = "Scenes/Menu/GameOver";
@@ -27,7 +26,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void Update()
     {
-        switch (BattleState)
+        switch (FlowController.BattleState)
         {
             case BattleState.InBattle:
                 ExecuteBattlePhase();
@@ -46,20 +45,10 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         Enemy = await _enemyLoader.Create();
         _player.ShowAllStatus();
         Enemy.Initialize();
-        ResetBattleState();
+        FlowController = new BattleFlowController(_player, Enemy);
     }
 
-    void OnDisable()
-    {
-        BattleState = BattleState.None;
-    }
-
-    // OnBattle, HasWon and HasShownResult flags should be changed to an enum type
-    private void ResetBattleState()
-    {
-        BattleState = BattleState.InBattle;
-        Turn = Turn.Player;
-    }
+    void OnDisable() => FlowController.DisposeBattleState();
 
     private void SetEvents()
     {
@@ -67,11 +56,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
        {
            CommandWindow.Instance.Hide();
            _turnBackground.enabled = false;
-           _player.Attack(Enemy, 4);
-           if (Enemy.Data.IsAlive)
-           {
-               Turn = Turn.Enemy;
-           }
+           FlowController.PlayerAttack(4);
        });
 
         CommandWindow.Instance.Commands[Command.Skill].SetEvent(() =>
@@ -92,7 +77,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         }
         else if (!Enemy.Data.IsAlive)
         {
-            BattleState = BattleState.HasPlayerWon;
+            FlowController.PlayerHasWon();
         }
         else
         {
@@ -104,13 +89,13 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         CommandWindow.Instance.PlayButtonSelect();
 
-        if (Turn == Turn.Player && !CommandWindow.Instance.IsVisible)
+        if (FlowController.Turn == Turn.Player && !CommandWindow.Instance.IsVisible)
         {
             CommandWindow.Instance.Show();
             _turnBackground.enabled = true;
         }
         else if (
-            Turn == Turn.Enemy
+            FlowController.Turn == Turn.Enemy
             && CurrentCoroutine is null
         )
         {
@@ -121,8 +106,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     private IEnumerator OnEnemyTurn()
     {
         yield return new WaitForSeconds(1.0f);
-        Turn = Turn.Player;
-        Enemy.Attack(_player, 5);
+        FlowController.EnemyAttack(5);
         CurrentCoroutine = null;
     }
 
@@ -136,24 +120,24 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     private void LoadGameOverScene()
     {
-        BattleState = BattleState.None;
+        FlowController.DisposeBattleState();
         Initiate.Fade(GameOverScene, Color.black, FadeDuration);
     }
 
     private void ShowResult()
     {
-        _player.Data.Exp += Enemy.Data.DropExp;
+        _player.GainExp(Enemy);
         _enemyLoader.Destroy();
         _player.ShowResult();
         CommandWindow.Instance.Hide();
-        BattleState = BattleState.HasShownResult;
+        FlowController.ResultHasShown();
     }
 
     private void ConfirmResult()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            BattleState = BattleState.None;
+            FlowController.DisposeBattleState();
             UIStateManager.Instance.UIState = UIState.Dungeon;
         }
     }

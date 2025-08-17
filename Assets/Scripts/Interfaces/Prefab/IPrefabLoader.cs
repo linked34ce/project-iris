@@ -1,5 +1,5 @@
 public interface IPrefabLoader<T>
 {
-    T Create();
-    void Destroy();
+    public T Create();
+    public void Destroy();
 }
