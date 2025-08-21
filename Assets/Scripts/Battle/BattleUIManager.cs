@@ -1,144 +1,139 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
 {
-    [SerializeField] private Image _turnBackground;
+    [SerializeField] private Image _turnIndicator;
+    public Image TurnIndicator
+    {
+        get => _turnIndicator;
+        set => _turnIndicator = value;
+    }
+
     [SerializeField] private Player _player;
     [SerializeField] private EnemyLoader _enemyLoader;
+    [SerializeField] private CoroutineController _coroutineController;
 
     public IEnemy Enemy { get; private set; }
-    public Coroutine CurrentCoroutine { get; private set; }
 
-    public BattleFlowController FlowController { get; private set; }
+    public BattleFlowController FlowController { get; set; }
+    private BattleResultController _resultController;
 
-    private const float FadeDuration = 0.4f;
-    private const string GameOverScene = "Scenes/Menu/GameOver";
+    private Action _onPlayerTurnBeginHandler;
+    private Action _onEnemyTurnBeginHandler;
+
+    private bool _isInitializing = false;
 
     protected override void Awake()
     {
         base.Awake();
         _player.Initialize();
-        SetEvents();
-    }
-
-    void Update()
-    {
-        switch (FlowController.BattleState)
-        {
-            case BattleState.InBattle:
-                ExecuteBattlePhase();
-                break;
-            case BattleState.HasPlayerWon:
-                ShowResult();
-                break;
-            case BattleState.HasShownResult:
-                ConfirmResult();
-                break;
-        }
     }
 
     async void OnEnable()
     {
+        if (_isInitializing)
+        {
+            return;
+        }
+
+        _isInitializing = true;
+
+        try
+        {
+            await Initialize();
+        }
+        finally
+        {
+            _isInitializing = false;
+        }
+    }
+
+    void Update()
+    {
+        if (_isInitializing)
+        {
+            return;
+        }
+
+        if (FlowController is null || Enemy is null)
+        {
+            _resultController?.ConfirmResult();
+            return;
+        }
+
+        _resultController.ShowResult();
+
+        if (FlowController?.BattleState == BattleState.InBattle)
+        {
+            FlowController.EvaluateBattleState();
+            FlowController.PlayCommandSelectSound();
+        }
+    }
+
+    private async Task Initialize()
+    {
+        _enemyLoader.Initialize();
         Enemy = await _enemyLoader.Create();
-        _player.ShowAllStatus();
         Enemy.Initialize();
-        FlowController = new BattleFlowController(_player, Enemy);
+
+        _player.ShowAllStatus();
+
+        DisposeFlowController();
+        FlowController = new BattleFlowController(_player, Enemy, _coroutineController);
+        _resultController = new BattleResultController(_player, Enemy, _enemyLoader, FlowController);
+
+        CommandWindow.Instance.ClearAllEvents();
+        SubscribeCommandActions();
+        SubscribeTurnEventHandlers();
+
+        FlowController.InitializeBattleState();
     }
 
-    void OnDisable() => FlowController.DisposeBattleState();
-
-    private void SetEvents()
+    public void DisposeFlowController()
     {
-        CommandWindow.Instance.Commands[Command.Attack].SetEvent(() =>
-       {
-           CommandWindow.Instance.Hide();
-           _turnBackground.enabled = false;
-           FlowController.PlayerAttack(4);
-       });
-
-        CommandWindow.Instance.Commands[Command.Skill].SetEvent(() =>
-            Debug.Log("SkillButton is selected")
-        );
-
-        CommandWindow.Instance.Commands[Command.Item].SetEvent(() =>
-            Debug.Log("ItemButton is selected")
-        );
+        FlowController?.Dispose();
+        FlowController = null;
     }
 
-    private void ExecuteBattlePhase()
-    {
-        // When the player and the enemy are defeated at the same time, it's game over.
-        if (!_player.Data.IsAlive)
+    private void SubscribeCommandActions() =>
+        CommandWindow.Instance.SubscribeEachEvent(new Dictionary<Command, UnityAction>
         {
-            LoadGameOverScene();
-        }
-        else if (!Enemy.Data.IsAlive)
-        {
-            FlowController.PlayerHasWon();
-        }
-        else
-        {
-            OnPlayerTurn();
-        }
-    }
+            { Command.Attack, () => FlowController.PlayerAttack(4) },
+            { Command.Skill, () => Debug.Log("SkillButton is selected") },
+            { Command.Item, () => Debug.Log("ItemButton is selected") }
+        });
 
-    private void OnPlayerTurn()
+    private void SubscribeTurnEventHandlers()
     {
-        CommandWindow.Instance.PlayButtonSelect();
+        if (_onPlayerTurnBeginHandler is not null)
+        {
+            FlowController.OnPlayerTurnBegin -= _onPlayerTurnBeginHandler;
+        }
 
-        if (FlowController.Turn == Turn.Player && !CommandWindow.Instance.IsVisible)
+        if (_onEnemyTurnBeginHandler is not null)
+        {
+            FlowController.OnEnemyTurnBegin -= _onEnemyTurnBeginHandler;
+        }
+
+        _onPlayerTurnBeginHandler = () =>
         {
             CommandWindow.Instance.Show();
-            _turnBackground.enabled = true;
-        }
-        else if (
-            FlowController.Turn == Turn.Enemy
-            && CurrentCoroutine is null
-        )
+            TurnIndicator.enabled = true;
+        };
+
+        _onEnemyTurnBeginHandler = () =>
         {
-            WaitForEnemyTurn();
-        }
-    }
+            CommandWindow.Instance.Hide();
+            TurnIndicator.enabled = false;
+        };
 
-    private IEnumerator OnEnemyTurn()
-    {
-        yield return new WaitForSeconds(1.0f);
-        FlowController.EnemyAttack(5);
-        CurrentCoroutine = null;
-    }
-
-    private void WaitForEnemyTurn()
-    {
-        if (!Enemy.IsAttacked)
-        {
-            CurrentCoroutine = StartCoroutine(OnEnemyTurn());
-        }
-    }
-
-    private void LoadGameOverScene()
-    {
-        FlowController.DisposeBattleState();
-        Initiate.Fade(GameOverScene, Color.black, FadeDuration);
-    }
-
-    private void ShowResult()
-    {
-        _player.GainExp(Enemy);
-        _enemyLoader.Destroy();
-        _player.ShowResult();
-        CommandWindow.Instance.Hide();
-        FlowController.ResultHasShown();
-    }
-
-    private void ConfirmResult()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            FlowController.DisposeBattleState();
-            UIStateManager.Instance.UIState = UIState.Dungeon;
-        }
+        FlowController.OnPlayerTurnBegin += _onPlayerTurnBeginHandler;
+        FlowController.OnEnemyTurnBegin += _onEnemyTurnBeginHandler;
     }
 }

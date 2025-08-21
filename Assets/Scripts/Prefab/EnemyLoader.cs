@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 public class EnemyLoader : PrefabLoader<Task<Enemy>>
 {
-    public override void Awake()
+    public override void Initialize()
     {
         PrefabManager = new PrefabManager(_address, _transform);
     }

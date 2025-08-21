@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CommandWindow : SingletonMonoBehaviour<CommandWindow>
+public class CommandWindow : SingletonMonoBehaviour<CommandWindow>, ICommandWindow
 {
     [SerializeField] private Image _background;
 
@@ -13,22 +14,45 @@ public class CommandWindow : SingletonMonoBehaviour<CommandWindow>
 
     [SerializeField] private EventSystem _battleEventSystem;
 
-    public GameObject SelectedButton { get; private set; }
+    private GameObject _selectedButton;
     public bool IsVisible { get; set; } = false;
 
     protected override void Awake()
     {
         base.Awake();
         _battleEventSystem.enabled = true;
-        SelectedButton = EventSystem.current.currentSelectedGameObject;
+        _selectedButton = EventSystem.current.currentSelectedGameObject;
     }
 
     public void PlayButtonSelect()
     {
-        if (SelectedButton != EventSystem.current.currentSelectedGameObject)
+        if (_selectedButton != EventSystem.current.currentSelectedGameObject)
         {
-            SelectedButton = EventSystem.current.currentSelectedGameObject;
+            _selectedButton = EventSystem.current.currentSelectedGameObject;
             BattleUISounds.Instance.PlayButtonSelect();
+        }
+    }
+
+    public void SubscribeEachEvent(Dictionary<Command, UnityAction> commandActions)
+    {
+        foreach (var command in Commands)
+        {
+            if (commandActions.TryGetValue(command.Key, out var action))
+            {
+                command.Value.SubscribeEvent(action);
+            }
+            else
+            {
+                command.Value.ClearEvent();
+            }
+        }
+    }
+
+    public void ClearAllEvents()
+    {
+        foreach (var command in Commands.Values)
+        {
+            command.ClearEvent();
         }
     }
 

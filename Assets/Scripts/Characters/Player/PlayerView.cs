@@ -14,6 +14,8 @@ public class PlayerView : MonoBehaviour, IPlayerView
 
     [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
 
+    public void Awake() => _playerPortraitLoader.Initialize();
+
     public void ShowName(string name) => _nameText.SetText(name);
 
     public void ShowLevel(int level) => _levelText.SetText($"Lv.{level}");

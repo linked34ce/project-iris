@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 public class PlayerPortraitLoader : PrefabLoader<Task>
 {
-    public override void Awake()
+    public override void Initialize()
     {
         PrefabManager = new PrefabManager(_address, _transform);
     }

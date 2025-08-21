@@ -1,29 +1,113 @@
+using System;
+using System.Collections;
+
+using UnityEngine;
+
 public class BattleFlowController
 {
     private readonly IPlayer _player;
     private readonly IEnemy _enemy;
+    private readonly ICoroutineController _coroutineController;
 
-    public BattleState BattleState { get; private set; }
-    public Turn Turn { get; private set; }
+    private Turn _turn = Turn.None;
+    public Turn Turn
+    {
+        get => _turn;
+        private set
+        {
+            if (_turn != value)
+            {
+                _turn = value;
+                if (_turn == Turn.Player)
+                {
+                    OnPlayerTurnBegin?.Invoke();
+                }
+                else if (_turn == Turn.Enemy)
+                {
+                    OnEnemyTurnBegin?.Invoke();
+                }
+            }
+        }
+    }
 
-    public BattleFlowController(IPlayer player, IEnemy enemy)
+    private BattleState _battleState = BattleState.None;
+    public BattleState BattleState
+    {
+        get => _battleState;
+        set
+        {
+            if (_battleState != value)
+            {
+                _battleState = value;
+                if (_battleState == BattleState.GameOver)
+                {
+                    LoadGameOverScene();
+                }
+            }
+        }
+    }
+
+    public Action OnPlayerTurnBegin;
+    public Action OnEnemyTurnBegin;
+
+    private const float FadeDuration = 0.4f;
+    private const string GameOverScene = "Scenes/Menu/GameOver";
+
+    public BattleFlowController(
+        IPlayer player,
+        IEnemy enemy,
+        ICoroutineController coroutineController
+    )
     {
         _player = player;
         _enemy = enemy;
-        InitializeBattleState();
+        _coroutineController = coroutineController;
     }
 
-    public void DisposeBattleState() => BattleState = BattleState.None;
+    public void Dispose()
+    {
+        _coroutineController?.Stop();
+        CommandWindow.Instance.ClearAllEvents();
 
-    public void PlayerHasWon() => BattleState = BattleState.HasPlayerWon;
+        OnPlayerTurnBegin = null;
+        OnEnemyTurnBegin = null;
 
-    public void ResultHasShown() => BattleState = BattleState.HasShownResult;
+        BattleState = BattleState.None;
+        Turn = Turn.None;
+    }
 
-    private void InitializeBattleState()
+    public void InitializeBattleState()
     {
         BattleState = BattleState.InBattle;
         Turn = Turn.Player;
     }
+
+    public void EvaluateBattleState()
+    {
+        if (_player.Data.IsAlive && _enemy.Data.IsAlive)
+        {
+            BattleState = BattleState.InBattle;
+        }
+        else if (!_player.Data.IsAlive)
+        {
+            BattleState = BattleState.GameOver;
+        }
+        else if (!_enemy.Data.IsAlive)
+        {
+            BattleState = BattleState.Victory;
+        }
+    }
+
+    public void PlayCommandSelectSound() => CommandWindow.Instance.PlayButtonSelect();
+
+    private IEnumerator OnEnemyTurn()
+    {
+        yield return new WaitForSeconds(1.0f);
+        EnemyAttack(5);
+        _coroutineController.Stop();
+    }
+
+    private void LoadGameOverScene() => Initiate.Fade(GameOverScene, Color.black, FadeDuration);
 
     public void PlayerAttack(int damage)
     {
@@ -31,10 +115,11 @@ public class BattleFlowController
         if (_enemy.Data.IsAlive)
         {
             Turn = Turn.Enemy;
+            _coroutineController.Begin(OnEnemyTurn());
         }
     }
 
-    public void EnemyAttack(int damage)
+    private void EnemyAttack(int damage)
     {
         _enemy.Attack(_player, damage);
         Turn = Turn.Player;

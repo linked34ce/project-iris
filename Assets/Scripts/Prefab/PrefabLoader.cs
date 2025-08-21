@@ -6,7 +6,7 @@ public abstract class PrefabLoader<T> : MonoBehaviour, IPrefabLoader<T>
     [SerializeField] protected string _address;
     [SerializeField] protected Transform _transform;
 
-    public abstract void Awake();
+    public abstract void Initialize();
 
     public abstract T Create();
 

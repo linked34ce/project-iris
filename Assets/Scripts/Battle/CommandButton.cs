@@ -4,16 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class CommandButton : SingletonMonoBehaviour<CommandButton>
+public class CommandButton : SingletonMonoBehaviour<CommandButton>, ICommandButton
 {
     [SerializeField] private Button _button;
     [SerializeField] private Image _image;
     [SerializeField] private TMP_Text _label;
 
-    public void SetEvent(UnityAction call)
+    public void SubscribeEvent(UnityAction call)
     {
         _button.onClick.AddListener(call);
     }
+
+    public void ClearEvent() => _button.onClick.RemoveAllListeners();
 
     public void ShowCommand()
     {
