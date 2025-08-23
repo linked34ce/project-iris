@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private UiStateManager _uiStateManager;
     [SerializeField] private SceneLoader _sceneLoader;
     [SerializeField] private DungeonSoundProvider _soundProvider;
     private int _stepsAfterEncount = 3;
@@ -141,7 +141,7 @@ public class CameraController : MonoBehaviour
         )
         {
             _stepsAfterEncount = DefaultSteps;
-            _uiStateManager.UIState = UIState.Battle;
+            _uiStateManager.UiState = UiState.Battle;
         }
     }
 

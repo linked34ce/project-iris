@@ -1,4 +1,4 @@
-public enum UIState
+public enum UiState
 {
     None,
     Dungeon,

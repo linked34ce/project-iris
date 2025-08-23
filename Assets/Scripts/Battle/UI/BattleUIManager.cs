@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BattleUIManager : MonoBehaviour
+public class BattleUiManager : MonoBehaviour
 {
     [SerializeField] private Image _turnIndicator;
     [SerializeField] private Player _player;
@@ -14,7 +14,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
     [SerializeField] private CoroutineController _coroutineController;
     [SerializeField] private CommandWindow _commandWindow;
-    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private UiStateManager _uiStateManager;
     [SerializeField] private BattleResult _battleResult;
     [SerializeField] private SceneLoader _sceneLoader;
     [SerializeField] private GameObject _attackersPanel;
@@ -98,7 +98,7 @@ public class BattleUIManager : MonoBehaviour
         {
             _battleResult.Hide();
             _turnIndicator.enabled = false;
-            _uiStateManager.UIState = UIState.Dungeon;
+            _uiStateManager.UiState = UiState.Dungeon;
         };
 
         _commandWindow.ClearAllEvents();

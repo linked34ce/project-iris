@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class UIStateManager : MonoBehaviour
+public class UiStateManager : MonoBehaviour
 {
-    [SerializeField] private Canvas _dungeonUICanvas;
-    [SerializeField] private Canvas _battleUICanvas;
-    [SerializeField] private BattleUIManager _battleUIManager;
+    [SerializeField] private Canvas _dungeonUiCanvas;
+    [SerializeField] private Canvas _battleUiCanvas;
+    [SerializeField] private BattleUiManager _battleUiManager;
     [SerializeField] private CameraController _cameraController;
 
-    private UIState _uiState;
+    private UiState _uiState;
 
-    public UIState UIState
+    public UiState UiState
     {
         get => _uiState;
         set
@@ -17,40 +17,40 @@ public class UIStateManager : MonoBehaviour
             _uiState = value;
             switch (_uiState)
             {
-                case UIState.None:
+                case UiState.None:
                     break;
-                case UIState.Dungeon:
-                    EnableDungeonUI();
+                case UiState.Dungeon:
+                    EnableDungeonUi();
                     break;
-                case UIState.Battle:
-                    EnableBattleUI();
+                case UiState.Battle:
+                    EnableBattleUi();
                     break;
             }
-            Debug.Log($"UIState: {_uiState}");
+            Debug.Log($"UiState: {_uiState}");
         }
     }
 
     void Awake()
     {
-        if (UIState == UIState.None)
+        if (UiState == UiState.None)
         {
-            UIState = UIState.Dungeon;
+            UiState = UiState.Dungeon;
         }
     }
 
-    public void EnableDungeonUI()
+    private void EnableDungeonUi()
     {
-        _battleUIManager.enabled = false;
-        _battleUICanvas.enabled = false;
-        _dungeonUICanvas.enabled = true;
+        _battleUiManager.enabled = false;
+        _battleUiCanvas.enabled = false;
+        _dungeonUiCanvas.enabled = true;
         _cameraController.enabled = true;
     }
 
-    public void EnableBattleUI()
+    private void EnableBattleUi()
     {
         _cameraController.enabled = false;
-        _dungeonUICanvas.enabled = false;
-        _battleUICanvas.enabled = true;
-        _battleUIManager.enabled = true;
+        _dungeonUiCanvas.enabled = false;
+        _battleUiCanvas.enabled = true;
+        _battleUiManager.enabled = true;
     }
 }

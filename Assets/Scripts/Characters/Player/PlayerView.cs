@@ -12,7 +12,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
     [SerializeField] private Slider _spBar;
     [SerializeField] private TMP_Text _spText;
 
-    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private UiStateManager _uiStateManager;
     [SerializeField] private BattleResult _battleResult;
 
     public void ShowName(string name) => _nameText.SetText(name);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BattleUISoundProvider : MonoBehaviour, IBattleUISoundProvider
+public class BattleUiSoundProvider : MonoBehaviour, IBattleUiSoundProvider
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _buttonSelect;

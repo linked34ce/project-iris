@@ -1,4 +1,4 @@
-public interface IBattleUISoundProvider
+public interface IBattleUiSoundProvider
 {
     void PlayButtonSelect();
 }

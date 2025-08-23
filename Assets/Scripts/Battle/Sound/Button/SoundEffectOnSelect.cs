@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class SoundEffectOnSelect : MonoBehaviour, ISelectHandler
 {
-    [SerializeField] private BattleUISoundProvider _soundProvider;
+    [SerializeField] private BattleUiSoundProvider _soundProvider;
     [SerializeField] private bool _isFirstCommand;
 
     private bool _isFirstCall = true;
