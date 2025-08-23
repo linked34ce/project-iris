@@ -1,4 +1,4 @@
 public interface IInitializable
 {
-    public void Initialize();
+    void Initialize();
 }

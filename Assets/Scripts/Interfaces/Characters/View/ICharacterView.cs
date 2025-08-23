@@ -1,6 +1,6 @@
 public interface ICharacterView
 {
-    public void ShowName(string name);
-    public void ShowLevel(int level);
-    public void ShowHp(int hp, int maxHp);
+    void ShowName(string name);
+    void ShowLevel(int level);
+    void ShowHp(int hp, int maxHp);
 }

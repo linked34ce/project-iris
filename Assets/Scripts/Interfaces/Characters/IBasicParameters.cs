@@ -1,9 +1,9 @@
 public interface IBasicParameters
 {
-    public int Atk { get; set; }
-    public int Mag { get; set; }
-    public int Def { get; set; }
-    public int Res { get; set; }
-    public int Agi { get; set; }
-    public int Luk { get; set; }
+    int Atk { get; set; }
+    int Mag { get; set; }
+    int Def { get; set; }
+    int Res { get; set; }
+    int Agi { get; set; }
+    int Luk { get; set; }
 }

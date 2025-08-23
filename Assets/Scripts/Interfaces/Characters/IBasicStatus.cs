@@ -1,8 +1,8 @@
 public interface IBasicStatus : IBasicParameters
 {
-    public string Name { get; set; }
-    public int Level { get; set; }
-    public int Hp { get; set; }
-    public int MaxHp { get; set; }
-    public bool IsAlive { get; set; }
+    string Name { get; set; }
+    int Level { get; set; }
+    int Hp { get; set; }
+    int MaxHp { get; set; }
+    bool IsAlive { get; set; }
 }
