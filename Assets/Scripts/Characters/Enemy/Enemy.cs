@@ -16,6 +16,7 @@ public class Enemy : Character, IEnemy
 
     public EnemyData Data { get; protected set; }
 
+    // should use trigger instead of bool
     public bool IsAttacked
     {
         get => _imageAnimator.GetBool("isAttacked");
