@@ -141,7 +141,7 @@ public class Dungeons
                 },
                 // 2F
                 new Walls[][] {
-                                        // 1
+                    // 1
                     new Walls[] {
                         new(0, 1, 1, 0),
                         new(0, 1, 0, 1),

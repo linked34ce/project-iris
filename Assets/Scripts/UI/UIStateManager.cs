@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
+public class UIStateManager : MonoBehaviour
 {
     [SerializeField] private Canvas _dungeonUICanvas;
     [SerializeField] private Canvas _battleUICanvas;
+    [SerializeField] private BattleUIManager _battleUIManager;
 
     private UIState _uiState;
 
@@ -28,10 +29,8 @@ public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
         }
     }
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-
         if (UIState == UIState.None)
         {
             UIState = UIState.Dungeon;
@@ -40,7 +39,7 @@ public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
 
     public void EnableDungeonUI()
     {
-        BattleUIManager.Instance.enabled = false;
+        _battleUIManager.enabled = false;
         _battleUICanvas.enabled = false;
         _dungeonUICanvas.enabled = true;
         CameraController.Instance.enabled = true;
@@ -51,6 +50,6 @@ public class UIStateManager : SingletonMonoBehaviour<UIStateManager>
         CameraController.Instance.enabled = false;
         _dungeonUICanvas.enabled = false;
         _battleUICanvas.enabled = true;
-        BattleUIManager.Instance.enabled = true;
+        _battleUIManager.enabled = true;
     }
 }

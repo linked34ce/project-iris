@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CommandWindow : SingletonMonoBehaviour<CommandWindow>, ICommandWindow
+public class CommandWindow : MonoBehaviour, ICommandWindow
 {
     [SerializeField] private Image _background;
 
@@ -14,23 +14,9 @@ public class CommandWindow : SingletonMonoBehaviour<CommandWindow>, ICommandWind
 
     [SerializeField] private EventSystem _battleEventSystem;
 
-    private GameObject _selectedButton;
-    public bool IsVisible { get; set; } = false;
-
-    protected override void Awake()
+    void OnEnable()
     {
-        base.Awake();
         _battleEventSystem.enabled = true;
-        _selectedButton = EventSystem.current.currentSelectedGameObject;
-    }
-
-    public void PlayButtonSelect()
-    {
-        if (_selectedButton != EventSystem.current.currentSelectedGameObject)
-        {
-            _selectedButton = EventSystem.current.currentSelectedGameObject;
-            BattleUISounds.Instance.PlayButtonSelect();
-        }
     }
 
     public void SubscribeEachEvent(Dictionary<Command, UnityAction> commandActions)
@@ -58,7 +44,6 @@ public class CommandWindow : SingletonMonoBehaviour<CommandWindow>, ICommandWind
 
     public void Show()
     {
-        IsVisible = true;
         _background.enabled = true;
         foreach (var command in Commands.Values)
         {
@@ -68,7 +53,6 @@ public class CommandWindow : SingletonMonoBehaviour<CommandWindow>, ICommandWind
 
     public void Hide()
     {
-        IsVisible = false;
         _background.enabled = false;
         foreach (var command in Commands.Values)
         {

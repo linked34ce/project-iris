@@ -10,13 +10,13 @@ public class Player : Character, IPlayer
     [SerializeField] private int _sp;
 
     [SerializeField] private PlayerView _view;
+    [SerializeField] private BattleSoundProvider _soundProvider;
 
     public PlayerData Data { get; protected set; }
 
     public override void Initialize()
     {
         Data = new PlayerData(_name, _level);
-        _view.ShowPortrait();
         ShowAllStatus();
     }
 
@@ -26,9 +26,8 @@ public class Player : Character, IPlayer
         _view.ShowHp(Data.Hp, Data.MaxHp);
     }
 
-    public override void ShowAllStatus()
+    protected override void ShowAllStatus()
     {
-        BattleResult.Instance.Hide();
         _view.ShowName(Data.Name);
         _view.ShowLevel(Data.Level);
         _view.ShowHp(Data.Hp, Data.MaxHp);
@@ -40,7 +39,7 @@ public class Player : Character, IPlayer
         if (target is IEnemy enemy)
         {
             enemy.IsAttacked = true;
-            BattleSounds.Instance.PlayAttack();
+            _soundProvider.PlayAttack();
             enemy.TakeDamage(damage);
         }
         else
@@ -58,13 +57,11 @@ public class Player : Character, IPlayer
     {
         if (Data.HasLeveledUp)
         {
-            _view.ShowLevelUp();
             _view.ShowLevel(Data.Level);
             Data.HasLeveledUp = false;
         }
 
         _view.ShowHp(Data.Hp, Data.MaxHp);
         _view.ShowSp(Data.Sp, Data.MaxSp);
-        BattleResult.Instance.Show(Data.NextExp);
     }
 }

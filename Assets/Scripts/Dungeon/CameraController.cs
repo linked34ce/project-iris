@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : SingletonMonoBehaviour<CameraController>
 {
+    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private SceneLoader _sceneLoader;
     public int StepsAfterEncount { get; private set; } = 3;
     public Direction Direction { get; private set; } = Direction.north;
     public Location Location { get; } = new();
@@ -18,7 +20,6 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const float HalfRotation = 180f;
     private const int MinStepsAfterEncount = 5;
     private const int DefaultSteps = 0;
-    private const float FadeDuration = 0.4f;
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";
 
@@ -117,11 +118,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             Status.IncrementFloor();
 
             string ordinal = Converter.ToOrdinal(Status.Floor);
-            Initiate.Fade(
-                $"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}",
-                Color.black,
-                FadeDuration
-            );
+            _sceneLoader.LoadScene($"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}");
         }
     }
 
@@ -146,7 +143,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             && UnityEngine.Random.value < Dungeon.EncountRate
         )
         {
-            UIStateManager.Instance.UIState = UIState.Battle;
+            _uiStateManager.UIState = UIState.Battle;
             ResetStepsAfterEncount();
         }
     }

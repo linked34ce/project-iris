@@ -12,9 +12,8 @@ public class PlayerView : MonoBehaviour, IPlayerView
     [SerializeField] private Slider _spBar;
     [SerializeField] private TMP_Text _spText;
 
-    [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
-
-    public void Awake() => _playerPortraitLoader.Initialize();
+    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private BattleResult _battleResult;
 
     public void ShowName(string name) => _nameText.SetText(name);
 
@@ -30,12 +29,5 @@ public class PlayerView : MonoBehaviour, IPlayerView
     {
         _spBar.value = (float)sp / maxSp;
         _spText.SetText($"{sp}/{maxSp}");
-    }
-
-    public async void ShowPortrait() => await _playerPortraitLoader.Create();
-
-    public void ShowLevelUp()
-    {
-        BattleResult.Instance.ShowLevelUp();
     }
 }

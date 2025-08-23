@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BattleSounds : SingletonMonoBehaviour<BattleSounds>
+public class BattleSoundProvider : MonoBehaviour, IBattleSoundProvider
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _attack;

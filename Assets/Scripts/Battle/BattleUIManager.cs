@@ -6,18 +6,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
+public class BattleUIManager : MonoBehaviour
 {
     [SerializeField] private Image _turnIndicator;
-    public Image TurnIndicator
-    {
-        get => _turnIndicator;
-        set => _turnIndicator = value;
-    }
-
     [SerializeField] private Player _player;
     [SerializeField] private EnemyLoader _enemyLoader;
+    [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
     [SerializeField] private CoroutineController _coroutineController;
+    [SerializeField] private CommandWindow _commandWindow;
+    [SerializeField] private UIStateManager _uiStateManager;
+    [SerializeField] private BattleResult _battleResult;
+    [SerializeField] private SceneLoader _sceneLoader;
+    [SerializeField] private GameObject _attackersPanel;
 
     public IEnemy Enemy { get; private set; }
 
@@ -29,10 +29,12 @@ public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
 
     private bool _isInitializing = false;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-        _player.Initialize();
+        _commandWindow.Hide();
+        _battleResult.Hide();
+        _attackersPanel.SetActive(false);
+        _turnIndicator.enabled = false;
     }
 
     async void OnEnable()
@@ -56,39 +58,50 @@ public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
 
     void Update()
     {
-        if (_isInitializing)
+        if (_isInitializing || FlowController is null || Enemy is null)
         {
             return;
         }
 
-        if (FlowController is null || Enemy is null)
+        if (FlowController.BattleState == BattleState.Victory
+         && !_resultController.BattleResult.IsShown)
         {
-            _resultController?.ConfirmResult();
-            return;
-        }
-
-        _resultController.ShowResult();
-
-        if (FlowController?.BattleState == BattleState.InBattle)
-        {
-            FlowController.EvaluateBattleState();
-            FlowController.PlayCommandSelectSound();
+            _commandWindow.Hide();
+            _resultController.ShowResult();
+            DisposeFlowController();
         }
     }
 
     private async Task Initialize()
     {
-        _enemyLoader.Initialize();
+        await _playerPortraitLoader.Create();
         Enemy = await _enemyLoader.Create();
+
+        _attackersPanel.SetActive(true);
+        _player.Initialize();
         Enemy.Initialize();
 
-        _player.ShowAllStatus();
-
         DisposeFlowController();
-        FlowController = new BattleFlowController(_player, Enemy, _coroutineController);
-        _resultController = new BattleResultController(_player, Enemy, _enemyLoader, FlowController);
+        FlowController = new BattleFlowController(
+            _player,
+            Enemy,
+            _coroutineController,
+            _sceneLoader
+        );
+        _resultController = new BattleResultController(
+            _player,
+            Enemy,
+            _enemyLoader,
+            _battleResult);
 
-        CommandWindow.Instance.ClearAllEvents();
+        _battleResult.Confirmed += () =>
+        {
+            _battleResult.Hide();
+            _turnIndicator.enabled = false;
+            _uiStateManager.UIState = UIState.Dungeon;
+        };
+
+        _commandWindow.ClearAllEvents();
         SubscribeCommandActions();
         SubscribeTurnEventHandlers();
 
@@ -102,7 +115,7 @@ public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
     }
 
     private void SubscribeCommandActions() =>
-        CommandWindow.Instance.SubscribeEachEvent(new Dictionary<Command, UnityAction>
+        _commandWindow.SubscribeEachEvent(new Dictionary<Command, UnityAction>
         {
             { Command.Attack, () => FlowController.PlayerAttack(4) },
             { Command.Skill, () => Debug.Log("SkillButton is selected") },
@@ -123,14 +136,14 @@ public class BattleUIManager : SingletonMonoBehaviour<BattleUIManager>
 
         _onPlayerTurnBeginHandler = () =>
         {
-            CommandWindow.Instance.Show();
-            TurnIndicator.enabled = true;
+            _commandWindow.Show();
+            _turnIndicator.enabled = true;
         };
 
         _onEnemyTurnBeginHandler = () =>
         {
-            CommandWindow.Instance.Hide();
-            TurnIndicator.enabled = false;
+            _commandWindow.Hide();
+            _turnIndicator.enabled = false;
         };
 
         FlowController.OnPlayerTurnBegin += _onPlayerTurnBeginHandler;

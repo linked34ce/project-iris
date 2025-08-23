@@ -39,7 +39,7 @@ public class Enemy : Character, IEnemy
         ShowAllStatus();
     }
 
-    public override void ShowAllStatus()
+    protected override void ShowAllStatus()
     {
         _view.ShowName(Data.Name);
         _view.ShowLevel(Data.Level);

@@ -8,6 +8,8 @@ public class BattleFlowController
     private readonly IPlayer _player;
     private readonly IEnemy _enemy;
     private readonly ICoroutineController _coroutineController;
+    private readonly WaitForSeconds _waitForSeconds = new(1f);
+    private readonly ISceneLoader _sceneLoader;
 
     private Turn _turn = Turn.None;
     public Turn Turn
@@ -41,7 +43,7 @@ public class BattleFlowController
                 _battleState = value;
                 if (_battleState == BattleState.GameOver)
                 {
-                    LoadGameOverScene();
+                    _sceneLoader.LoadScene(GameOverScene);
                 }
             }
         }
@@ -50,24 +52,24 @@ public class BattleFlowController
     public Action OnPlayerTurnBegin;
     public Action OnEnemyTurnBegin;
 
-    private const float FadeDuration = 0.4f;
     private const string GameOverScene = "Scenes/Menu/GameOver";
 
     public BattleFlowController(
         IPlayer player,
         IEnemy enemy,
-        ICoroutineController coroutineController
+        ICoroutineController coroutineController,
+        ISceneLoader sceneLoader
     )
     {
         _player = player;
         _enemy = enemy;
         _coroutineController = coroutineController;
+        _sceneLoader = sceneLoader;
     }
 
     public void Dispose()
     {
         _coroutineController?.Stop();
-        CommandWindow.Instance.ClearAllEvents();
 
         OnPlayerTurnBegin = null;
         OnEnemyTurnBegin = null;
@@ -82,7 +84,7 @@ public class BattleFlowController
         Turn = Turn.Player;
     }
 
-    public void EvaluateBattleState()
+    private void EvaluateBattleState()
     {
         if (_player.Data.IsAlive && _enemy.Data.IsAlive)
         {
@@ -98,16 +100,12 @@ public class BattleFlowController
         }
     }
 
-    public void PlayCommandSelectSound() => CommandWindow.Instance.PlayButtonSelect();
-
     private IEnumerator OnEnemyTurn()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return _waitForSeconds;
         EnemyAttack(5);
         _coroutineController.Stop();
     }
-
-    private void LoadGameOverScene() => Initiate.Fade(GameOverScene, Color.black, FadeDuration);
 
     public void PlayerAttack(int damage)
     {
@@ -117,11 +115,13 @@ public class BattleFlowController
             Turn = Turn.Enemy;
             _coroutineController.Begin(OnEnemyTurn());
         }
+        EvaluateBattleState();
     }
 
     private void EnemyAttack(int damage)
     {
         _enemy.Attack(_player, damage);
         Turn = Turn.Player;
+        EvaluateBattleState();
     }
 }

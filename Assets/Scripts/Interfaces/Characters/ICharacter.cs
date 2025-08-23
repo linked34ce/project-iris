@@ -1,1 +1,1 @@
-public interface ICharacter : IInitializable, IStatusShowable, IFighter { }
+public interface ICharacter : IInitializable, IFighter { }
