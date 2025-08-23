@@ -2,16 +2,17 @@ using System.Collections;
 
 using UnityEngine;
 
-public class DungeonSounds : SingletonMonoBehaviour<DungeonSounds>
+public class DungeonSoundProvider : MonoBehaviour, IDungeonSoundProvider
 {
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip[] _footsteps;
     [SerializeField] private AudioClip[] _turns;
     [SerializeField] private AudioClip[] _stairs;
+    [SerializeField] CoroutineController _coroutineController;
+    private readonly WaitForSeconds _waitForSeconds = new(0.4f);
 
-    private const float InitalVolumeScale = 1f;
+    private const float InitialVolumeScale = 1f;
     private const float DecayFactor = 0.7f;
-    private const float WaitTime = 0.4f;
 
     public void PlayWalk() => _audioSource.PlayOneShot(
         _footsteps[Random.Range(0, _footsteps.Length)]
@@ -23,7 +24,7 @@ public class DungeonSounds : SingletonMonoBehaviour<DungeonSounds>
 
     private IEnumerator DelayMethod()
     {
-        float volumeScale = InitalVolumeScale;
+        float volumeScale = InitialVolumeScale;
         for (int i = 0; i < _stairs.Length; i++)
         {
             if (i > 0)
@@ -31,9 +32,10 @@ public class DungeonSounds : SingletonMonoBehaviour<DungeonSounds>
                 volumeScale *= DecayFactor;
             }
             _audioSource.PlayOneShot(_stairs[i], volumeScale);
-            yield return new WaitForSeconds(WaitTime);
+            yield return _waitForSeconds;
         }
+        _coroutineController.Stop();
     }
 
-    public void PlayStairs() => StartCoroutine(DelayMethod());
+    public void PlayStairs() => _coroutineController.Begin(DelayMethod());
 }

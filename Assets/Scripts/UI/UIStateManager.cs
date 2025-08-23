@@ -5,6 +5,7 @@ public class UIStateManager : MonoBehaviour
     [SerializeField] private Canvas _dungeonUICanvas;
     [SerializeField] private Canvas _battleUICanvas;
     [SerializeField] private BattleUIManager _battleUIManager;
+    [SerializeField] private CameraController _cameraController;
 
     private UIState _uiState;
 
@@ -42,12 +43,12 @@ public class UIStateManager : MonoBehaviour
         _battleUIManager.enabled = false;
         _battleUICanvas.enabled = false;
         _dungeonUICanvas.enabled = true;
-        CameraController.Instance.enabled = true;
+        _cameraController.enabled = true;
     }
 
     public void EnableBattleUI()
     {
-        CameraController.Instance.enabled = false;
+        _cameraController.enabled = false;
         _dungeonUICanvas.enabled = false;
         _battleUICanvas.enabled = true;
         _battleUIManager.enabled = true;

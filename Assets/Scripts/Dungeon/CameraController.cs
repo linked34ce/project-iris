@@ -2,15 +2,16 @@ using System;
 
 using UnityEngine;
 
-public class CameraController : SingletonMonoBehaviour<CameraController>
+public class CameraController : MonoBehaviour
 {
     [SerializeField] private UIStateManager _uiStateManager;
     [SerializeField] private SceneLoader _sceneLoader;
-    public int StepsAfterEncount { get; private set; } = 3;
-    public Direction Direction { get; private set; } = Direction.north;
-    public Location Location { get; } = new();
-    public Dungeon Dungeon { get; } = new();
-    public bool HasGoneUpstairs { get; private set; } = false;
+    [SerializeField] private DungeonSoundProvider _soundProvider;
+    private int _stepsAfterEncount = 3;
+    private Direction _direction = Direction.north;
+    private readonly Location _location = new();
+    private readonly Dungeon _dungeon = new();
+    private bool _hasGoneUpstairs = false;
 
     private const float ZeroTranslation = 0f;
     private const float Step = 10f;
@@ -23,11 +24,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
     private const string NextFloorScenePrefix = "Scenes/Dungeons/TohoGakuenOldBuilding/";
     private const string NextFloorSceneSuffix = "Floor";
 
-    protected override void Awake()
-    {
-        base.Awake();
-        UnityEngine.Random.InitState(Environment.TickCount);
-    }
+    void Awake() => UnityEngine.Random.InitState(Environment.TickCount);
 
     void Update()
     {
@@ -52,17 +49,17 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
         }
     }
 
-    public void ForwardPressed()
+    private void ForwardPressed()
     {
-        Walls walls = Dungeon.Map[Location.Y][Location.X];
+        Walls walls = _dungeon.Map[_location.Y][_location.X];
 
-        switch (Direction)
+        switch (_direction)
         {
             case Direction.east:
                 switch (walls.East)
                 {
                     case Wall.air:
-                        Location.IncrementX();
+                        _location.X++;
                         StepForward();
                         break;
                     case Wall.stairs:
@@ -74,7 +71,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
                 switch (walls.South)
                 {
                     case Wall.air:
-                        Location.DecrementY();
+                        _location.Y--;
                         StepForward();
                         break;
                     case Wall.stairs:
@@ -86,7 +83,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
                 switch (walls.West)
                 {
                     case Wall.air:
-                        Location.DecrementX();
+                        _location.X--;
                         StepForward();
                         break;
                     case Wall.stairs:
@@ -98,7 +95,7 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
                 switch (walls.North)
                 {
                     case Wall.air:
-                        Location.IncrementY();
+                        _location.Y++;
                         StepForward();
                         break;
                     case Wall.stairs:
@@ -109,20 +106,20 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
         }
     }
 
-    public void GoUpstairs()
+    private void GoUpstairs()
     {
-        if (!HasGoneUpstairs)
+        if (!_hasGoneUpstairs)
         {
-            HasGoneUpstairs = true;
-            DungeonSounds.Instance.PlayStairs();
-            Status.IncrementFloor();
+            _hasGoneUpstairs = true;
+            _soundProvider.PlayStairs();
+            Status.Floor++;
 
             string ordinal = Converter.ToOrdinal(Status.Floor);
             _sceneLoader.LoadScene($"{NextFloorScenePrefix}{ordinal}{NextFloorSceneSuffix}");
         }
     }
 
-    public void StepForward()
+    private void StepForward()
     {
         transform.Translate(ZeroTranslation, ZeroTranslation, Step);
         transform.position = new Vector3(
@@ -130,76 +127,72 @@ public class CameraController : SingletonMonoBehaviour<CameraController>
             transform.position.y,
             (float)Math.Round(transform.position.z)
         );
-        DungeonSounds.Instance.PlayWalk();
+        _soundProvider.PlayWalk();
 
-        IncrementStepsAfterEncount();
+        _stepsAfterEncount++;
         Encount();
     }
 
-    public void Encount()
+    private void Encount()
     {
         if (
-            StepsAfterEncount >= MinStepsAfterEncount
-            && UnityEngine.Random.value < Dungeon.EncountRate
+            _stepsAfterEncount >= MinStepsAfterEncount
+            && UnityEngine.Random.value < _dungeon.EncountRate
         )
         {
+            _stepsAfterEncount = DefaultSteps;
             _uiStateManager.UIState = UIState.Battle;
-            ResetStepsAfterEncount();
         }
     }
 
-    public void IncrementStepsAfterEncount() => StepsAfterEncount++;
-
-    public void ResetStepsAfterEncount() => StepsAfterEncount = DefaultSteps;
-
-    public void TurnAround()
+    private void TurnAround()
     {
-        DungeonSounds.Instance.PlayTurn();
+        _soundProvider.PlayTurn();
 
         transform.Rotate(ZeroRotation, HalfRotation, ZeroRotation);
         transform.Translate(ZeroTranslation, ZeroTranslation, -Step);
 
-        Direction = Direction switch
+        _direction = _direction switch
         {
             Direction.east => Direction.west,
             Direction.south => Direction.north,
             Direction.west => Direction.east,
             Direction.north => Direction.south,
-            _ => Direction,
+            _ => _direction,
         };
     }
 
-    public void TurnLeft()
+    private void TurnLeft()
     {
-        DungeonSounds.Instance.PlayTurn();
+        _soundProvider.PlayTurn();
 
         transform.Rotate(ZeroRotation, -QuarterRotation, ZeroRotation);
         transform.Translate(HalfStep, ZeroTranslation, -HalfStep);
 
-        Direction = Direction switch
+        _direction = _direction switch
         {
             Direction.east => Direction.north,
             Direction.south => Direction.east,
             Direction.west => Direction.south,
             Direction.north => Direction.west,
-            _ => Direction,
+            _ => _direction,
         };
     }
 
-    public void TurnRight()
+    private void TurnRight()
     {
-        DungeonSounds.Instance.PlayTurn();
+        _soundProvider.PlayTurn();
 
         transform.Rotate(ZeroRotation, QuarterRotation, ZeroRotation);
         transform.Translate(-HalfStep, ZeroTranslation, -HalfStep);
 
-        Direction = Direction switch
+        _direction = _direction switch
         {
             Direction.east => Direction.south,
             Direction.south => Direction.west,
             Direction.west => Direction.north,
             Direction.north => Direction.east,
-            _ => Direction,
+            _ => _direction,
         };
     }
 

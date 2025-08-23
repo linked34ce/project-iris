@@ -19,7 +19,6 @@ public class CoroutineController : MonoBehaviour, ICoroutineController
             StopCoroutine(_currentCoroutine);
             _currentCoroutine = null;
         }
-
     }
 
     private IEnumerator WrapCoroutine(IEnumerator coroutine)

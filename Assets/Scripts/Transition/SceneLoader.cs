@@ -25,31 +25,25 @@ public class SceneLoader : MonoBehaviour, ISceneLoader
     [SerializeField] private Canvas _loadingCanvas;
     [SerializeField] private Slider _loadingBar;
     [SerializeField] private TMP_Text _loadingText;
+    [SerializeField] CoroutineController _coroutineController;
 
     private AsyncOperation _loadOperation;
 
-    void Awake()
-    {
-        _crossfadeCanvas.gameObject.SetActive(true);
-    }
+    void Awake() => _crossfadeCanvas.gameObject.SetActive(true);
 
-    public void LoadScene(string name)
-    {
-        StartCoroutine(LoadLevel(name));
-    }
+    public void LoadScene(string name) => _coroutineController.Begin(LoadLevel(name));
 
-    public void ReloadScene()
-    {
-        var acrtivesceneindex = SceneManager.GetActiveScene().name;
-        StartCoroutine(LoadLevel(acrtivesceneindex));
-    }
+    public void ReloadScene() =>
+        _coroutineController.Begin(
+            LoadLevel(SceneManager.GetActiveScene().name)
+        );
 
     private IEnumerator LoadLevel(string name)
     {
         yield return new WaitForSeconds(_delay);
         _transitionAnimation.SetTrigger("Start");
         yield return new WaitForSeconds(_transitionDuration);
-        StartCoroutine(LoadAsync(name));
+        _coroutineController.Begin(LoadAsync(name));
     }
 
     private IEnumerator LoadAsync(string name)
