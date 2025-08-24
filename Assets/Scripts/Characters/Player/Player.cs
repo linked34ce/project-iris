@@ -14,11 +14,9 @@ public class Player : Character, IPlayer
 
     public PlayerData Data { get; protected set; }
 
-    public override void Initialize()
-    {
-        Data = new PlayerData(_name, _level);
-        ShowAllStatus();
-    }
+    void Awake() => Data = new PlayerData(_name, _level);
+
+    public override void Initialize() => ShowAllStatus();
 
     public override void TakeDamage(int damage)
     {
