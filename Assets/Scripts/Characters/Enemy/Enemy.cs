@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Character
+public class Enemy : Character, IEnemy
 {
     [SerializeField] private int _hp;
     [SerializeField] private int _atk;
@@ -16,6 +16,7 @@ public class Enemy : Character
 
     public EnemyData Data { get; protected set; }
 
+    // should use trigger instead of bool
     public bool IsAttacked
     {
         get => _imageAnimator.GetBool("isAttacked");
@@ -39,7 +40,7 @@ public class Enemy : Character
         ShowAllStatus();
     }
 
-    public override void ShowAllStatus()
+    protected override void ShowAllStatus()
     {
         _view.ShowName(Data.Name);
         _view.ShowLevel(Data.Level);
@@ -53,9 +54,9 @@ public class Enemy : Character
         _view.ShowHp(Data.Hp, Data.MaxHp);
     }
 
-    public override void Attack(Character target, int damage)
+    public override void Attack(ICharacter target, int damage)
     {
-        if (target is Player player)
+        if (target is IPlayer player)
         {
             player.TakeDamage(damage);
         }

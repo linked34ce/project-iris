@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player : Character
+public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made
     [SerializeField] private string _role;
@@ -10,15 +10,13 @@ public class Player : Character
     [SerializeField] private int _sp;
 
     [SerializeField] private PlayerView _view;
+    [SerializeField] private BattleSoundProvider _soundProvider;
 
     public PlayerData Data { get; protected set; }
 
-    public override void Initialize()
-    {
-        Data = new PlayerData(_name, _level);
-        _view.ShowPortrait();
-        ShowAllStatus();
-    }
+    void Awake() => Data = new PlayerData(_name, _level);
+
+    public override void Initialize() => ShowAllStatus();
 
     public override void TakeDamage(int damage)
     {
@@ -26,21 +24,20 @@ public class Player : Character
         _view.ShowHp(Data.Hp, Data.MaxHp);
     }
 
-    public override void ShowAllStatus()
+    protected override void ShowAllStatus()
     {
-        BattleResult.Instance.Hide();
         _view.ShowName(Data.Name);
         _view.ShowLevel(Data.Level);
         _view.ShowHp(Data.Hp, Data.MaxHp);
         _view.ShowSp(Data.Sp, Data.MaxSp);
     }
 
-    public override void Attack(Character target, int damage)
+    public override void Attack(ICharacter target, int damage)
     {
-        if (target is Enemy enemy)
+        if (target is IEnemy enemy)
         {
             enemy.IsAttacked = true;
-            BattleSounds.Instance.PlayAttack();
+            _soundProvider.PlayAttack();
             enemy.TakeDamage(damage);
         }
         else
@@ -49,17 +46,20 @@ public class Player : Character
         }
     }
 
+    public void GainExp(IEnemy enemy)
+    {
+        Data.Exp += enemy.Data.DropExp;
+    }
+
     public void ShowResult()
     {
         if (Data.HasLeveledUp)
         {
-            _view.ShowLevelUp();
             _view.ShowLevel(Data.Level);
             Data.HasLeveledUp = false;
         }
 
         _view.ShowHp(Data.Hp, Data.MaxHp);
         _view.ShowSp(Data.Sp, Data.MaxSp);
-        BattleResult.Instance.Show(Data.NextExp);
     }
 }

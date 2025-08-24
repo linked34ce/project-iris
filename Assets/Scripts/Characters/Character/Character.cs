@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public abstract class Character : MonoBehaviour, IInitializable, IStatusShowable, IFighter
+public abstract class Character : MonoBehaviour, ICharacter
 {
     [SerializeField] protected string _name;
     [SerializeField] protected int _level;
 
-    public abstract void ShowAllStatus();
+    protected abstract void ShowAllStatus();
     public abstract void Initialize();
     public abstract void TakeDamage(int damage);
-    public abstract void Attack(Character character, int damage);
+    public abstract void Attack(ICharacter character, int damage);
 }
