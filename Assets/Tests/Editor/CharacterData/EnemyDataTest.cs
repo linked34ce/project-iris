@@ -3,7 +3,7 @@ using NUnit.Framework;
 public class EnemyDataTest
 {
     [Test]
-    public void EnemyDataTest_Initialize()
+    public void EnemyDataTest_Instantiate()
     {
         var enemyData = new EnemyData("Test", 1, 100, 10, 11, 12, 13, 14, 15, 20);
 

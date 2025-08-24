@@ -11,10 +11,11 @@ public class Enemy : Character, IEnemy
     private readonly int _luk;
     private readonly int _dropExp;
 
-    private readonly Animator _imageAnimator;
     private readonly IEnemyView _view;
 
     public EnemyData Data { get; protected set; }
+
+    private readonly IUnityLogger _logger;
 
     public Enemy(
         string name,
@@ -27,8 +28,8 @@ public class Enemy : Character, IEnemy
         int agi,
         int luk,
         int dropExp,
-        Animator imageAnimator,
-        IEnemyView view
+        IEnemyView view,
+        IUnityLogger logger
     ) : base(name, level)
     {
         _hp = hp;
@@ -39,14 +40,8 @@ public class Enemy : Character, IEnemy
         _agi = agi;
         _luk = luk;
         _dropExp = dropExp;
-        _imageAnimator = imageAnimator;
         _view = view;
-    }
-
-    public void OnAttacked() => _imageAnimator.SetTrigger("Trigger");
-
-    public override void Initialize()
-    {
+        _logger = logger;
         Data = new EnemyData(
             _name,
             _level,
@@ -59,8 +54,10 @@ public class Enemy : Character, IEnemy
             _luk,
             _dropExp
         );
-        ShowAllStatus();
     }
+
+
+    public override void Initialize() => ShowAllStatus();
 
     protected override void ShowAllStatus()
     {
@@ -84,7 +81,9 @@ public class Enemy : Character, IEnemy
         }
         else
         {
-            Debug.LogError("Target is not Player.");
+            _logger.Error("Target is not Player.");
         }
     }
+
+    public void OnAttacked() => _view.PlayOnAttackedAnimation();
 }

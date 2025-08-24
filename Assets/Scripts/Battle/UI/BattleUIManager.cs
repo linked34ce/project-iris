@@ -31,6 +31,8 @@ public class BattleUiManager : MonoBehaviour
 
     private bool _isInitializing = false;
 
+    private readonly Logger _logger = new();
+
     void Awake()
     {
         _commandWindow.Hide();
@@ -123,8 +125,8 @@ public class BattleUiManager : MonoBehaviour
         _commandWindow.SubscribeEachEvent(new Dictionary<Command, UnityAction>
         {
             { Command.Attack, () => _flowController.PlayerAttack(4) },
-            { Command.Skill, () => Debug.Log("SkillButton is selected") },
-            { Command.Item, () => Debug.Log("ItemButton is selected") }
+            { Command.Skill, () => _logger.Debug("SkillButton is selected") },
+            { Command.Item, () => _logger.Debug("ItemButton is selected") }
         });
 
     private void SubscribeTurnEventHandlers()

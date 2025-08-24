@@ -10,11 +10,11 @@ public class EnemyContainer : CharacterContainer
     [SerializeField] private int _agi;
     [SerializeField] private int _luk;
     [SerializeField] private int _dropExp;
-
-    [SerializeField] private Animator _imageAnimator;
     [SerializeField] private EnemyView _view;
 
     public IEnemy Enemy;
+
+    private readonly Logger _logger = new();
 
     public override void Initialize() =>
         Enemy = new Enemy(
@@ -28,7 +28,7 @@ public class EnemyContainer : CharacterContainer
             _agi,
             _luk,
             _dropExp,
-            _imageAnimator,
-            _view
+            _view,
+            _logger
         );
 }

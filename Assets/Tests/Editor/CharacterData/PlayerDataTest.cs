@@ -3,7 +3,7 @@ using NUnit.Framework;
 public class PlayerDataTest
 {
     [Test]
-    public void PlayerDataTest_Initialize()
+    public void PlayerDataTest_Instantiate()
     {
         var playerData = new PlayerData("Test", 1, "healer");
 

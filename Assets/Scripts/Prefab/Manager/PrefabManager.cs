@@ -12,6 +12,8 @@ public class PrefabManager
     private readonly string _address;
     private readonly Transform _transform;
 
+    private readonly Logger _logger = new();
+
     public PrefabManager(string address, Transform transform)
     {
         _address = address;
@@ -39,7 +41,7 @@ public class PrefabManager
     {
         if (_prefab == null)
         {
-            Debug.LogError("Prefab must be loaded before getting its component.");
+            _logger.Error("Prefab must be loaded before getting its component.");
             return default;
         }
 

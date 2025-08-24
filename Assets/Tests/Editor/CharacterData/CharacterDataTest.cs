@@ -18,7 +18,7 @@ public class CharcterDataTest
     }
 
     [Test]
-    public void CharacterDataTest_Initialize()
+    public void CharacterDataTest_Instantiate()
     {
         var characterData = new TestCharacterData("Test", 1, 100, 10, 11, 12, 13, 14, 15);
 

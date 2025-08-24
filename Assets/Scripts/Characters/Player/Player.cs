@@ -10,17 +10,21 @@ public class Player : Character, IPlayer
 
     public PlayerData Data { get; protected set; }
 
+    private readonly IUnityLogger _logger;
+
     public Player(
         string name,
         int level,
         string role,
         IPlayerView view,
-        IBattleSoundProvider soundProvider
+        IBattleSoundProvider soundProvider,
+        IUnityLogger logger
     ) : base(name, level)
     {
         _role = role;
         _view = view;
         _soundProvider = soundProvider;
+        _logger = logger;
         Data = new PlayerData(_name, _level, _role);
     }
 
@@ -50,7 +54,7 @@ public class Player : Character, IPlayer
         }
         else
         {
-            Debug.LogError("Target is not Enemy.");
+            _logger.Error("Target is not Enemy.");
         }
     }
 

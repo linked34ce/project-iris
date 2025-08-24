@@ -16,14 +16,16 @@ public class Select : MonoBehaviour
     [SerializeField] private SceneLoader _sceneLoader;
 
     private readonly Dungeons _dungeons = new();
-
     public string DungeonName => _dungeons.DisplayNames[Status.DungeonName];
+
+    private readonly Logger _logger = new();
+
     private const string DungeonScene = "Scenes/Dungeons/TohoGakuenOldBuilding/1stFloor";
 
     void OnEnable()
     {
         Button1Text.SetText($"{DungeonName}を探索する");
         Button1.onClick.AddListener(() => _sceneLoader.LoadScene(DungeonScene));
-        Button2.onClick.AddListener(() => Debug.Log("Button2 is selected"));
+        Button2.onClick.AddListener(() => _logger.Debug("Button2 is selected"));
     }
 }

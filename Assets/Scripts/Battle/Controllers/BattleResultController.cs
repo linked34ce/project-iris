@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class BattleResultController
 {
     private IPlayer _player;

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using UnityEngine.Video;
 
 public class EnemyView : MonoBehaviour, IEnemyView
 {
@@ -10,6 +11,7 @@ public class EnemyView : MonoBehaviour, IEnemyView
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private TMP_Text _levelText;
     [SerializeField] private RawImage _image;
+    [SerializeField] private Animator _imageAnimator;
 
     private const int MaxOpacity = 255;
 
@@ -31,4 +33,6 @@ public class EnemyView : MonoBehaviour, IEnemyView
         anchoredPosition.x = -width * (maxHp - hp) / maxHp;
         _hpBarFill.anchoredPosition = anchoredPosition;
     }
+
+    public void PlayOnAttackedAnimation() => _imageAnimator.SetTrigger("Trigger");
 }

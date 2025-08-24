@@ -26,9 +26,11 @@ public class UiStateManager : MonoBehaviour
                     EnableBattleUi();
                     break;
             }
-            Debug.Log($"UiState: {_uiState}");
+            _logger.Debug($"UiState: {_uiState}");
         }
     }
+
+    private readonly Logger _logger = new();
 
     void Awake()
     {
