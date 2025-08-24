@@ -15,7 +15,9 @@ public class Select : MonoBehaviour
     public Button Button2 => _button2;
     [SerializeField] private SceneLoader _sceneLoader;
 
-    public string DungeonName => Dungeons.DisplayNames[Status.DungeonName];
+    private readonly Dungeons _dungeons = new();
+
+    public string DungeonName => _dungeons.DisplayNames[Status.DungeonName];
     private const string DungeonScene = "Scenes/Dungeons/TohoGakuenOldBuilding/1stFloor";
 
     void OnEnable()

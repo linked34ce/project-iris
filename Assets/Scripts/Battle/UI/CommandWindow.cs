@@ -8,10 +8,7 @@ using UnityEngine.UI;
 public class CommandWindow : MonoBehaviour, ICommandWindow
 {
     [SerializeField] private Image _background;
-
     [SerializeField] private SerializableDictionary<Command, CommandButton> _commands;
-    public SerializableDictionary<Command, CommandButton> Commands => _commands;
-
     [SerializeField] private EventSystem _battleEventSystem;
 
     void OnEnable()
@@ -21,7 +18,7 @@ public class CommandWindow : MonoBehaviour, ICommandWindow
 
     public void SubscribeEachEvent(Dictionary<Command, UnityAction> commandActions)
     {
-        foreach (var command in Commands)
+        foreach (var command in _commands)
         {
             if (commandActions.TryGetValue(command.Key, out var action))
             {
@@ -36,7 +33,7 @@ public class CommandWindow : MonoBehaviour, ICommandWindow
 
     public void ClearAllEvents()
     {
-        foreach (var command in Commands.Values)
+        foreach (var command in _commands.Values)
         {
             command.ClearEvent();
         }
@@ -45,7 +42,7 @@ public class CommandWindow : MonoBehaviour, ICommandWindow
     public void Show()
     {
         _background.enabled = true;
-        foreach (var command in Commands.Values)
+        foreach (var command in _commands.Values)
         {
             command.ShowCommand();
         }
@@ -54,7 +51,7 @@ public class CommandWindow : MonoBehaviour, ICommandWindow
     public void Hide()
     {
         _background.enabled = false;
-        foreach (var command in Commands.Values)
+        foreach (var command in _commands.Values)
         {
             command.HideCommand();
         }

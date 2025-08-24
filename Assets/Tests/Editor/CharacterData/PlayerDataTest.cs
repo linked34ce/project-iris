@@ -5,7 +5,7 @@ public class PlayerDataTest
     [Test]
     public void PlayerDataTest_Initialize()
     {
-        var playerData = new PlayerData("Test", 1);
+        var playerData = new PlayerData("Test", 1, "healer");
 
         Assert.That(playerData, Is.Not.Null);
         Assert.That(playerData, Is.InstanceOf<CharacterData>());
@@ -13,6 +13,7 @@ public class PlayerDataTest
 
         Assert.That(playerData.Name, Is.EqualTo("Test"));
         Assert.That(playerData.Level, Is.EqualTo(1));
+        Assert.That(playerData.Role, Is.EqualTo("healer"));
 
         Assert.That(playerData.Hp, Is.EqualTo(21));
         Assert.That(playerData.MaxHp, Is.EqualTo(21));
@@ -34,7 +35,7 @@ public class PlayerDataTest
     [Test]
     public void PlayerDataTest_LevelUp()
     {
-        var playerData = new PlayerData("Test", 1)
+        var playerData = new PlayerData("Test", 1, "healer")
         {
             Exp = 10
         };
@@ -60,7 +61,7 @@ public class PlayerDataTest
     [Test]
     public void PlayerDataTest_LevelOverflow()
     {
-        var playerData = new PlayerData("Test", 1)
+        var playerData = new PlayerData("Test", 1, "healer")
         {
             Exp = 550
         };

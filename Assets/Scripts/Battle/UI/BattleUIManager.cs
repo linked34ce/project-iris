@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class BattleUiManager : MonoBehaviour
 {
     [SerializeField] private Image _turnIndicator;
-    [SerializeField] private Player _player;
     [SerializeField] private EnemyLoader _enemyLoader;
     [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
     [SerializeField] private CoroutineController _coroutineController;
@@ -19,9 +18,12 @@ public class BattleUiManager : MonoBehaviour
     [SerializeField] private SceneLoader _sceneLoader;
     [SerializeField] private GameObject _attackersPanel;
 
-    public IEnemy Enemy { get; private set; }
+    [SerializeField] private PlayerContainer _playerContainer;
 
-    public BattleFlowController FlowController { get; set; }
+    private IPlayer _player;
+    private IEnemy _enemy;
+
+    private BattleFlowController _flowController;
     private BattleResultController _resultController;
 
     private Action _onPlayerTurnBeginHandler;
@@ -35,6 +37,7 @@ public class BattleUiManager : MonoBehaviour
         _battleResult.Hide();
         _attackersPanel.SetActive(false);
         _turnIndicator.enabled = false;
+        _playerContainer.Initialize();
     }
 
     async void OnEnable()
@@ -58,12 +61,12 @@ public class BattleUiManager : MonoBehaviour
 
     void Update()
     {
-        if (_isInitializing || FlowController is null || Enemy is null)
+        if (_isInitializing || _flowController is null || _enemy is null)
         {
             return;
         }
 
-        if (FlowController.BattleState == BattleState.Victory
+        if (_flowController.BattleState == BattleState.Victory
          && !_resultController.BattleResult.IsShown)
         {
             _commandWindow.Hide();
@@ -74,25 +77,27 @@ public class BattleUiManager : MonoBehaviour
 
     private async Task Initialize()
     {
+        _player = _playerContainer.Player;
         await _playerPortraitLoader.Create();
-        Enemy = await _enemyLoader.Create();
+        _enemy = await _enemyLoader.Create();
 
         _attackersPanel.SetActive(true);
         _player.Initialize();
-        Enemy.Initialize();
+        _enemy.Initialize();
 
         DisposeFlowController();
-        FlowController = new BattleFlowController(
+        _flowController = new BattleFlowController(
             _player,
-            Enemy,
+            _enemy,
             _coroutineController,
             _sceneLoader
         );
         _resultController = new BattleResultController(
             _player,
-            Enemy,
+            _enemy,
             _enemyLoader,
-            _battleResult);
+            _battleResult
+        );
 
         _battleResult.Confirmed += () =>
         {
@@ -105,19 +110,19 @@ public class BattleUiManager : MonoBehaviour
         SubscribeCommandActions();
         SubscribeTurnEventHandlers();
 
-        FlowController.InitializeBattleState();
+        _flowController.InitializeBattleState();
     }
 
-    public void DisposeFlowController()
+    private void DisposeFlowController()
     {
-        FlowController?.Dispose();
-        FlowController = null;
+        _flowController?.Dispose();
+        _flowController = null;
     }
 
     private void SubscribeCommandActions() =>
         _commandWindow.SubscribeEachEvent(new Dictionary<Command, UnityAction>
         {
-            { Command.Attack, () => FlowController.PlayerAttack(4) },
+            { Command.Attack, () => _flowController.PlayerAttack(4) },
             { Command.Skill, () => Debug.Log("SkillButton is selected") },
             { Command.Item, () => Debug.Log("ItemButton is selected") }
         });
@@ -126,12 +131,12 @@ public class BattleUiManager : MonoBehaviour
     {
         if (_onPlayerTurnBeginHandler is not null)
         {
-            FlowController.OnPlayerTurnBegin -= _onPlayerTurnBeginHandler;
+            _flowController.OnPlayerTurnBegin -= _onPlayerTurnBeginHandler;
         }
 
         if (_onEnemyTurnBeginHandler is not null)
         {
-            FlowController.OnEnemyTurnBegin -= _onEnemyTurnBeginHandler;
+            _flowController.OnEnemyTurnBegin -= _onEnemyTurnBeginHandler;
         }
 
         _onPlayerTurnBeginHandler = () =>
@@ -146,7 +151,7 @@ public class BattleUiManager : MonoBehaviour
             _turnIndicator.enabled = false;
         };
 
-        FlowController.OnPlayerTurnBegin += _onPlayerTurnBeginHandler;
-        FlowController.OnEnemyTurnBegin += _onEnemyTurnBeginHandler;
+        _flowController.OnPlayerTurnBegin += _onPlayerTurnBeginHandler;
+        _flowController.OnEnemyTurnBegin += _onEnemyTurnBeginHandler;
     }
 }

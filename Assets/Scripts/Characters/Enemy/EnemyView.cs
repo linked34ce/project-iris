@@ -9,7 +9,6 @@ public class EnemyView : MonoBehaviour, IEnemyView
     [SerializeField] private RectTransform _hpBarFill;
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private TMP_Text _levelText;
-
     [SerializeField] private RawImage _image;
 
     private const int MaxOpacity = 255;

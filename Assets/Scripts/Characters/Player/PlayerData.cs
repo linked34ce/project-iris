@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerData : CharacterData
 {
+    public string Role { get; }
     private int _exp;
     public int Exp
     {
@@ -143,8 +144,9 @@ public class PlayerData : CharacterData
         {10, 9},
     };
 
-    public PlayerData(string name, int level) : base(name, level)
+    public PlayerData(string name, int level, string role) : base(name, level)
     {
+        Role = role;
         SetParametersBasedOnLevel();
     }
 

@@ -2,26 +2,48 @@ using UnityEngine;
 
 public class Enemy : Character, IEnemy
 {
-    [SerializeField] private int _hp;
-    [SerializeField] private int _atk;
-    [SerializeField] private int _mag;
-    [SerializeField] private int _def;
-    [SerializeField] private int _res;
-    [SerializeField] private int _agi;
-    [SerializeField] private int _luk;
-    [SerializeField] private int _dropExp;
+    private readonly int _hp;
+    private readonly int _atk;
+    private readonly int _mag;
+    private readonly int _def;
+    private readonly int _res;
+    private readonly int _agi;
+    private readonly int _luk;
+    private readonly int _dropExp;
 
-    [SerializeField] private Animator _imageAnimator;
-    [SerializeField] private EnemyView _view;
+    private readonly Animator _imageAnimator;
+    private readonly IEnemyView _view;
 
     public EnemyData Data { get; protected set; }
 
-    // should use trigger instead of bool
-    public bool IsAttacked
+    public Enemy(
+        string name,
+        int level,
+        int hp,
+        int atk,
+        int mag,
+        int def,
+        int res,
+        int agi,
+        int luk,
+        int dropExp,
+        Animator imageAnimator,
+        IEnemyView view
+    ) : base(name, level)
     {
-        get => _imageAnimator.GetBool("isAttacked");
-        set => _imageAnimator.SetBool("isAttacked", value);
+        _hp = hp;
+        _atk = atk;
+        _mag = mag;
+        _def = def;
+        _res = res;
+        _agi = agi;
+        _luk = luk;
+        _dropExp = dropExp;
+        _imageAnimator = imageAnimator;
+        _view = view;
     }
+
+    public void OnAttacked() => _imageAnimator.SetTrigger("Trigger");
 
     public override void Initialize()
     {

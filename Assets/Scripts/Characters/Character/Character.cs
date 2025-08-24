@@ -1,9 +1,13 @@
-using UnityEngine;
-
-public abstract class Character : MonoBehaviour, ICharacter
+public abstract class Character : ICharacter
 {
-    [SerializeField] protected string _name;
-    [SerializeField] protected int _level;
+    protected string _name;
+    protected int _level;
+
+    public Character(string name, int level)
+    {
+        _name = name;
+        _level = level;
+    }
 
     protected abstract void ShowAllStatus();
     public abstract void Initialize();

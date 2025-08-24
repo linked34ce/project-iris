@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class Dungeons
 {
-    public static Dictionary<string, Walls[][][]> Maps { get; } = new(){
+    public Dictionary<string, Walls[][][]> Maps { get; } = new(){
        {
             "TohoGakuen",
             new Walls[][][]{
@@ -276,11 +276,11 @@ public class Dungeons
         },
     };
 
-    public static Dictionary<string, float> EncountRates { get; } = new(){
+    public Dictionary<string, float> EncountRates { get; } = new(){
         {"TohoGakuen", 0.1f},
     };
 
-    public static Dictionary<string, int[][]> InitialPositions { get; } = new(){
+    public Dictionary<string, int[][]> InitialPositions { get; } = new(){
         {
             "TohoGakuen",
             new int[][]{
@@ -289,7 +289,7 @@ public class Dungeons
         }
     };
 
-    public static Dictionary<string, string> DisplayNames { get; } = new() {
+    public Dictionary<string, string> DisplayNames { get; } = new() {
         {"TohoGakuen", "桃鳳学園 旧校舎"},
     };
 }
