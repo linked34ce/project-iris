@@ -1,5 +1,8 @@
 using NUnit.Framework;
 
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class LocationTest
 {
     [Test]

@@ -27,8 +27,12 @@ jobs:
           testMode: editmode
           coverageOptions: >
             generateHtmlReport;
+            generateHtmlReportHistory;
+            generateAdditionalReports;
             generateBadgeReport;
-            assemblyFilters:${{ env.ASSEMBLY_FILTERS }}
+            generateAdditionalMetrics;
+            generateTestReferences;
+            assemblyFilters:${{ env.ASSEMBLY_FILTERS }};
           customParameters: >
             -logFile - -stackTraceLogType Full
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -77,13 +81,3 @@ jobs:
           name: coverage-report
           path: |
             **/CodeCoverage/**
-
-      - name: Upload Editor.log (always)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: editor-log
-          path: |
-            ~/.config/unity3d/Editor.log
-            ~/.local/share/unity3d/Editor/Editor.log
-            **/Editor.log

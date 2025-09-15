@@ -1,7 +1,10 @@
 using System.Collections;
+
 using NUnit.Framework;
+
 using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class NewTestScript
 {
     // A Test behaves as an ordinary method
