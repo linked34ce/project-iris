@@ -1,8 +1,10 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class Select : MonoBehaviour
 {
     [SerializeField] private Button _button1;
@@ -15,13 +17,17 @@ public class Select : MonoBehaviour
     public Button Button2 => _button2;
     [SerializeField] private SceneLoader _sceneLoader;
 
-    public string DungeonName => Dungeons.DisplayNames[Status.DungeonName];
+    private readonly Dungeons _dungeons = new();
+    public string DungeonName => _dungeons.DisplayNames[Status.DungeonName];
+
+    private readonly Logger _logger = new();
+
     private const string DungeonScene = "Scenes/Dungeons/TohoGakuenOldBuilding/1stFloor";
 
     void OnEnable()
     {
         Button1Text.SetText($"{DungeonName}を探索する");
         Button1.onClick.AddListener(() => _sceneLoader.LoadScene(DungeonScene));
-        Button2.onClick.AddListener(() => Debug.Log("Button2 is selected"));
+        Button2.onClick.AddListener(() => _logger.Debug("Button2 is selected"));
     }
 }

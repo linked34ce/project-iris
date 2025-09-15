@@ -1,7 +1,9 @@
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class CoroutineController : MonoBehaviour, ICoroutineController
 {
     private Coroutine _currentCoroutine;

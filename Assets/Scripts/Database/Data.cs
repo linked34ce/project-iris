@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public abstract class Data : ScriptableObject
 {
     [SerializeField] private string _name;

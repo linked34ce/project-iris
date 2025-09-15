@@ -4,8 +4,10 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class SceneLoader : MonoBehaviour, ISceneLoader
 {
     [SerializeField] private Animator _transitionAnimation;

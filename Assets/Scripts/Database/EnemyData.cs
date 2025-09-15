@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 [CreateAssetMenu(menuName = "ScriptableObject/Data/Status")]
 public class ScriptableEnemyData : Data
 {

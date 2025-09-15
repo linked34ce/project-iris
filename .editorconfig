@@ -5,6 +5,7 @@ root = true
 
 # EditorConfig options
 [Assets/Scripts/**/*.cs]
+[Assets/Tests/**/*.cs]
 indent_style = space
 indent_size = 4
 end_of_line = crlf

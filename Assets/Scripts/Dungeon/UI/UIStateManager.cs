@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class UiStateManager : MonoBehaviour
 {
     [SerializeField] private Canvas _dungeonUiCanvas;
@@ -26,9 +28,11 @@ public class UiStateManager : MonoBehaviour
                     EnableBattleUi();
                     break;
             }
-            Debug.Log($"UiState: {_uiState}");
+            _logger.Debug($"UiState: {_uiState}");
         }
     }
+
+    private readonly Logger _logger = new();
 
     void Awake()
     {

@@ -1,33 +1,30 @@
-using UnityEngine;
+using System.Threading.Tasks;
 
 public class BattleResultController
 {
     private IPlayer _player;
     private IEnemy _enemy;
-    private readonly EnemyLoader _enemyLoader;
-    private IBattleResult _battleResult;
+    private readonly IPrefabLoader<Task<IEnemy>> _enemyLoader;
+    private readonly IBattleResult _battleResult;
     public IBattleResult BattleResult => _battleResult;
 
     public BattleResultController(
         IPlayer player,
         IEnemy enemy,
-        EnemyLoader enemyLoader,
-        IBattleResult battleResultView
+        IPrefabLoader<Task<IEnemy>> enemyLoader,
+        IBattleResult battleResult
     )
     {
         _player = player;
         _enemy = enemy;
         _enemyLoader = enemyLoader;
-        _battleResult = battleResultView;
+        _battleResult = battleResult;
     }
 
     public void ShowResult()
     {
         _player.GainExp(_enemy);
-
         _enemyLoader.Destroy();
-        _enemy = null;
-
         _battleResult.Show(_player);
     }
 }

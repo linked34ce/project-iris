@@ -1,14 +1,16 @@
 using System.Threading.Tasks;
 
-public class EnemyLoader : PrefabLoader<Task<Enemy>>
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
+public class EnemyLoader : PrefabLoader<Task<IEnemy>>
 {
-    protected override void Awake() => PrefabManager = new PrefabManager(_address, _transform);
-
-
-    public override async Task<Enemy> Create()
+    public override async Task<IEnemy> Create()
     {
         await PrefabManager.LoadPrefab();
-        return PrefabManager.GetComponentFromPrefab<Enemy>();
+        var enemyContainer = PrefabManager.GetComponentFromPrefab<EnemyContainer>();
+        enemyContainer.Initialize();
+        return enemyContainer.Enemy;
     }
 
     public override void Destroy() => PrefabManager.DestroyPrefab();

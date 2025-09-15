@@ -2,29 +2,46 @@ using UnityEngine;
 
 public class Enemy : Character, IEnemy
 {
-    [SerializeField] private int _hp;
-    [SerializeField] private int _atk;
-    [SerializeField] private int _mag;
-    [SerializeField] private int _def;
-    [SerializeField] private int _res;
-    [SerializeField] private int _agi;
-    [SerializeField] private int _luk;
-    [SerializeField] private int _dropExp;
+    private readonly int _hp;
+    private readonly int _atk;
+    private readonly int _mag;
+    private readonly int _def;
+    private readonly int _res;
+    private readonly int _agi;
+    private readonly int _luk;
+    private readonly int _dropExp;
 
-    [SerializeField] private Animator _imageAnimator;
-    [SerializeField] private EnemyView _view;
+    private readonly IEnemyView _view;
 
     public EnemyData Data { get; protected set; }
 
-    // should use trigger instead of bool
-    public bool IsAttacked
-    {
-        get => _imageAnimator.GetBool("isAttacked");
-        set => _imageAnimator.SetBool("isAttacked", value);
-    }
+    private readonly IUnityLogger _logger;
 
-    public override void Initialize()
+    public Enemy(
+        string name,
+        int level,
+        int hp,
+        int atk,
+        int mag,
+        int def,
+        int res,
+        int agi,
+        int luk,
+        int dropExp,
+        IEnemyView view,
+        IUnityLogger logger
+    ) : base(name, level)
     {
+        _hp = hp;
+        _atk = atk;
+        _mag = mag;
+        _def = def;
+        _res = res;
+        _agi = agi;
+        _luk = luk;
+        _dropExp = dropExp;
+        _view = view;
+        _logger = logger;
         Data = new EnemyData(
             _name,
             _level,
@@ -37,8 +54,10 @@ public class Enemy : Character, IEnemy
             _luk,
             _dropExp
         );
-        ShowAllStatus();
     }
+
+
+    public override void Initialize() => ShowAllStatus();
 
     protected override void ShowAllStatus()
     {
@@ -62,7 +81,9 @@ public class Enemy : Character, IEnemy
         }
         else
         {
-            Debug.LogError("Target is not Player.");
+            _logger.Error("Target is not Player.");
         }
     }
+
+    public void OnAttacked() => _view.PlayOnAttackedAnimation();
 }

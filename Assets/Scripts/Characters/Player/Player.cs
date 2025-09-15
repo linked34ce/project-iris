@@ -1,20 +1,30 @@
-using UnityEngine;
-
 public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made
-    [SerializeField] private string _role;
+    private readonly string _role;
 
-    [SerializeField] private int _exp;
-
-    [SerializeField] private int _sp;
-
-    [SerializeField] private PlayerView _view;
-    [SerializeField] private BattleSoundProvider _soundProvider;
+    private readonly IPlayerView _view;
+    private readonly IBattleSoundProvider _soundProvider;
 
     public PlayerData Data { get; protected set; }
 
-    void Awake() => Data = new PlayerData(_name, _level);
+    private readonly IUnityLogger _logger;
+
+    public Player(
+        string name,
+        int level,
+        string role,
+        IPlayerView view,
+        IBattleSoundProvider soundProvider,
+        IUnityLogger logger
+    ) : base(name, level)
+    {
+        _role = role;
+        _view = view;
+        _soundProvider = soundProvider;
+        _logger = logger;
+        Data = new PlayerData(_name, _level, _role);
+    }
 
     public override void Initialize() => ShowAllStatus();
 
@@ -36,13 +46,13 @@ public class Player : Character, IPlayer
     {
         if (target is IEnemy enemy)
         {
-            enemy.IsAttacked = true;
+            enemy.OnAttacked();
             _soundProvider.PlayAttack();
             enemy.TakeDamage(damage);
         }
         else
         {
-            Debug.LogError("Target is not Enemy.");
+            _logger.Error("Target is not Enemy.");
         }
     }
 

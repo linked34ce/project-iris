@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-public class CharcterDataTest
+public class CharacterDataTest
 {
     private class TestCharacterData : CharacterData
     {
@@ -18,7 +18,8 @@ public class CharcterDataTest
     }
 
     [Test]
-    public void CharacterDataTest_Initialize()
+    [Category("CharacterData")]
+    public void Instantiate()
     {
         var characterData = new TestCharacterData("Test", 1, 100, 10, 11, 12, 13, 14, 15);
 
@@ -38,7 +39,8 @@ public class CharcterDataTest
     }
 
     [Test]
-    public void CharacterDataTest_ClampHp()
+    [Category("CharacterData")]
+    public void ClampHp()
     {
         var characterData = new TestCharacterData("Test", 1, 100, 10, 11, 12, 13, 14, 15)
         {
@@ -51,7 +53,8 @@ public class CharcterDataTest
     }
 
     [Test]
-    public void CharacterDataTest_Alive()
+    [Category("CharacterData")]
+    public void Alive()
     {
         var characterData = new TestCharacterData("Test", 1, 100, 10, 11, 12, 13, 14, 15)
         {
@@ -61,7 +64,8 @@ public class CharcterDataTest
     }
 
     [Test]
-    public void CharacterDataTest_TakeDamage()
+    [Category("CharacterData")]
+    public void TakeDamage()
     {
         var characterData = new TestCharacterData("Test", 1, 100, 10, 11, 12, 13, 14, 15);
         characterData.TakeDamage(30);

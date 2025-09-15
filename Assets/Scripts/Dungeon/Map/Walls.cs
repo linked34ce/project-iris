@@ -36,13 +36,4 @@ public class Walls
     private Wall ConvertIntToWall(int x) => Enum.IsDefined(typeof(Wall), x)
                                             ? (Wall)x
                                             : Wall.undefined;
-
-    public Wall GetWall(Direction direction) => direction switch
-    {
-        Direction.east => East,
-        Direction.south => South,
-        Direction.west => West,
-        Direction.north => North,
-        _ => Wall.undefined,
-    };
 }

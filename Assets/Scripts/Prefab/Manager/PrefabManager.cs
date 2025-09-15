@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class PrefabManager
 {
     private AsyncOperationHandle<GameObject> _handle;
@@ -11,6 +13,8 @@ public class PrefabManager
     private Component _component;
     private readonly string _address;
     private readonly Transform _transform;
+
+    private readonly Logger _logger = new();
 
     public PrefabManager(string address, Transform transform)
     {
@@ -39,7 +43,7 @@ public class PrefabManager
     {
         if (_prefab == null)
         {
-            Debug.LogError("Prefab must be loaded before getting its component.");
+            _logger.Error("Prefab must be loaded before getting its component.");
             return default;
         }
 

@@ -100,22 +100,23 @@ public class BattleFlowController
         }
     }
 
-    private IEnumerator OnEnemyTurn()
+    // use 'protected' accessor for unit testing
+    protected IEnumerator OnEnemyTurn()
     {
         yield return _waitForSeconds;
-        EnemyAttack(5);
+        if (_enemy.Data.IsAlive)
+        {
+            EnemyAttack(5);
+        }
         _coroutineController.Stop();
+        EvaluateBattleState();
     }
 
     public void PlayerAttack(int damage)
     {
         _player.Attack(_enemy, damage);
-        if (_enemy.Data.IsAlive)
-        {
-            Turn = Turn.Enemy;
-            _coroutineController.Begin(OnEnemyTurn());
-        }
-        EvaluateBattleState();
+        Turn = Turn.Enemy;
+        _coroutineController.Begin(OnEnemyTurn());
     }
 
     private void EnemyAttack(int damage)

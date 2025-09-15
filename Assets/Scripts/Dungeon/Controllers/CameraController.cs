@@ -1,7 +1,9 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private UiStateManager _uiStateManager;

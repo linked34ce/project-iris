@@ -5,6 +5,7 @@ public static class Converter
     public static string ToOrdinal(int num)
     {
         int lastTwoDigits = num % 100;
+
         if (11 <= lastTwoDigits && lastTwoDigits <= 13)
         {
             return $"{num}th";

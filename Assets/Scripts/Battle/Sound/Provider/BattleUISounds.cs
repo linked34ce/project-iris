@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class BattleUiSoundProvider : MonoBehaviour, IBattleUiSoundProvider
 {
     [SerializeField] private AudioSource _audioSource;

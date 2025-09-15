@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.TestTools;
 
 using TMPro;
 
+[ExcludeFromCoverage]
 public class PlayerView : MonoBehaviour, IPlayerView
 {
     [SerializeField] private TMP_Text _nameText;
