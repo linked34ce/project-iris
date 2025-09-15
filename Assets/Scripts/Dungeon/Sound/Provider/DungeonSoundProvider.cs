@@ -1,7 +1,9 @@
 using System.Collections;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class DungeonSoundProvider : MonoBehaviour, IDungeonSoundProvider
 {
     [SerializeField] private AudioSource _audioSource;

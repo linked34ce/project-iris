@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class GameOver : MonoBehaviour
 {
     [SerializeField] private Button _button1;

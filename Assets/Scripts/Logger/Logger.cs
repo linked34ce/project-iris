@@ -1,3 +1,6 @@
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class Logger : IUnityLogger
 {
     public void Debug(string messsage) => UnityEngine.Debug.Log(messsage);

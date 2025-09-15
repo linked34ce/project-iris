@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public abstract class PrefabLoader<T> : MonoBehaviour, IPrefabLoader<T>
 {
     public PrefabManager PrefabManager;

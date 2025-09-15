@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class UiStateManager : MonoBehaviour
 {
     [SerializeField] private Canvas _dungeonUiCanvas;

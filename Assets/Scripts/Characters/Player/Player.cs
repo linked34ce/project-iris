@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made

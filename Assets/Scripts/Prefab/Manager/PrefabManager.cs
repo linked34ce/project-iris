@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class PrefabManager
 {
     private AsyncOperationHandle<GameObject> _handle;

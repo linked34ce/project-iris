@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public abstract class CharacterContainer : MonoBehaviour, ICharacterContainer
 {
     [SerializeField] protected string _name;

@@ -1,5 +1,8 @@
 using System.Threading.Tasks;
 
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class EnemyLoader : PrefabLoader<Task<IEnemy>>
 {
     public override async Task<IEnemy> Create()

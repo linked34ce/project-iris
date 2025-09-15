@@ -1,8 +1,10 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class Select : MonoBehaviour
 {
     [SerializeField] private Button _button1;

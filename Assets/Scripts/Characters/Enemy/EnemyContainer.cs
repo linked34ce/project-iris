@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class EnemyContainer : CharacterContainer
 {
     [SerializeField] private int _hp;

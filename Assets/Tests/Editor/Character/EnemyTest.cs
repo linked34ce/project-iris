@@ -4,7 +4,8 @@ using Moq;
 public class EnemyTest
 {
     [Test]
-    public void EnemyTest_Instantiate()
+    [Category("Enemy")]
+    public void Instantiate()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();
@@ -45,7 +46,8 @@ public class EnemyTest
     }
 
     [Test]
-    public void EnemyTest_Initialize()
+    [Category("Enemy")]
+    public void Initialize()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();
@@ -74,7 +76,8 @@ public class EnemyTest
     }
 
     [Test]
-    public void EnemyTest_TakeDamage()
+    [Category("Enemy")]
+    public void TakeDamage()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();
@@ -101,7 +104,8 @@ public class EnemyTest
     }
 
     [Test]
-    public void EnemyTest_Attack()
+    [Category("Enemy")]
+    public void Attack()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();
@@ -129,7 +133,8 @@ public class EnemyTest
     }
 
     [Test]
-    public void EnemyTest_Attack_Exception()
+    [Category("Enemy")]
+    public void Attack_Exception()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();
@@ -158,7 +163,8 @@ public class EnemyTest
     }
 
     [Test]
-    public void EnemyTest_OnAttacked()
+    [Category("Enemy")]
+    public void OnAttacked()
     {
         var enemyViewMock = new Mock<IEnemyView>();
         var loggerMock = new Mock<IUnityLogger>();

@@ -100,7 +100,8 @@ public class BattleFlowController
         }
     }
 
-    private IEnumerator OnEnemyTurn()
+    // use 'protected' accessor for unit testing
+    protected IEnumerator OnEnemyTurn()
     {
         yield return _waitForSeconds;
         if (_enemy.Data.IsAlive)

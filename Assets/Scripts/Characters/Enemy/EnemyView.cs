@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.TestTools;
 
 using TMPro;
-using UnityEngine.Video;
 
+[ExcludeFromCoverage]
 public class EnemyView : MonoBehaviour, IEnemyView
 {
     [SerializeField] private RectTransform _hpBarBackground;

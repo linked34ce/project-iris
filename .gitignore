@@ -2,6 +2,7 @@
 *.csproj
 /Assets/*
 /Assets/Tests/Coverage/
+/Assets/Tests/Result/
 !/Assets/Scripts/
 !/Assets/Tests/
 /Build/

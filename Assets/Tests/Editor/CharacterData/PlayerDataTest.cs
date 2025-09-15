@@ -3,7 +3,8 @@ using NUnit.Framework;
 public class PlayerDataTest
 {
     [Test]
-    public void PlayerDataTest_Instantiate()
+    [Category("PlayerData")]
+    public void Instantiate()
     {
         var playerData = new PlayerData("Test", 1, "healer");
 
@@ -33,7 +34,8 @@ public class PlayerDataTest
     }
 
     [Test]
-    public void PlayerDataTest_LevelUp()
+    [Category("PlayerData")]
+    public void LevelUp()
     {
         var playerData = new PlayerData("Test", 1, "healer")
         {
@@ -59,7 +61,8 @@ public class PlayerDataTest
     }
 
     [Test]
-    public void PlayerDataTest_LevelOverflow()
+    [Category("PlayerData")]
+    public void LevelOverflow()
     {
         var playerData = new PlayerData("Test", 1, "healer")
         {

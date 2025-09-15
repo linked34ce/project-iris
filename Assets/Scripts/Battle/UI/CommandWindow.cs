@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class CommandWindow : MonoBehaviour, ICommandWindow
 {
     [SerializeField] private Image _background;

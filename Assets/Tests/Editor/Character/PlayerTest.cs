@@ -4,7 +4,8 @@ using Moq;
 public class PlayerTest
 {
     [Test]
-    public void PlayerTest_Instantiate()
+    [Category("Player")]
+    public void Instantiate()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -47,7 +48,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_Initialize()
+    [Category("Player")]
+    public void Initialize()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -71,7 +73,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_TakeDamage()
+    [Category("Player")]
+    public void TakeDamage()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -94,7 +97,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_Attack()
+    [Category("Player")]
+    public void Attack()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -118,10 +122,9 @@ public class PlayerTest
         enemyMock.Verify(x => x.TakeDamage(5), Times.Once);
     }
 
-    /* Implement Logger Class */
-
     [Test]
-    public void PlayerTest_Attack_Exception()
+    [Category("Player")]
+    public void Attack_Exception()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -146,7 +149,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_GainExp()
+    [Category("Player")]
+    public void GainExp()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -171,7 +175,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_ShowResult()
+    [Category("Player")]
+    public void ShowResult()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
@@ -195,7 +200,8 @@ public class PlayerTest
     }
 
     [Test]
-    public void PlayerTest_ShowResult_LevelUp()
+    [Category("Player")]
+    public void ShowResult_LevelUp()
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();

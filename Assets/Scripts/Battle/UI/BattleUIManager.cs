@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class BattleUiManager : MonoBehaviour
 {
     [SerializeField] private Image _turnIndicator;

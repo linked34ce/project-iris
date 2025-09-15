@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 [Serializable]
 public class SerializableDictionary<TKey, TValue> :
     Dictionary<TKey, TValue>,

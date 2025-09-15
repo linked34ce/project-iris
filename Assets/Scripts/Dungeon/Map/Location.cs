@@ -5,12 +5,7 @@ public class Location
 
     private readonly Dungeons _dungeons = new();
 
-    public Location()
-    {
-        int[] initialPosition = _dungeons.InitialPositions[Status.DungeonName][Status.Floor - 1];
-        X = initialPosition[0];
-        Y = initialPosition[1];
-    }
+    public Location() => ResetPosition();
 
     public void ResetPosition()
     {

@@ -2,8 +2,10 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.TestTools;
 using UnityEngine.UI;
 
+[ExcludeFromCoverage]
 public class CommandButton : MonoBehaviour, ICommandButton
 {
     [SerializeField] private Button _button;

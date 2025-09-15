@@ -1,7 +1,9 @@
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.TestTools;
 
+[ExcludeFromCoverage]
 public class DungeonUi : MonoBehaviour
 {
     [SerializeField] private TMP_Text _locationName;
