@@ -3,11 +3,11 @@
 /Assets/*
 /Assets/Tests/Coverage/
 /Assets/Tests/Result/
+!/Assets/Plugins/
 !/Assets/Scripts/
 !/Assets/Tests/
 /Build/
 /Library/
 /Logs/
-/ProjectSettings/
 /Temp/
 /UserSettings/

@@ -1,7 +1,11 @@
-using NUnit.Framework;
-using Moq;
 using System.Threading.Tasks;
 
+using NUnit.Framework;
+using Moq;
+
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class BattleResultControllerTest
 {
     [Test]

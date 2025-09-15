@@ -1,7 +1,11 @@
-using NUnit.Framework;
-using Moq;
 using System.Collections;
 
+using NUnit.Framework;
+using Moq;
+
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class BattleFlowControllerTest
 {
     private class TestBattleFlowController : BattleFlowController

@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+
 using NUnit.Framework;
 
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class DictionaryExtensionsTest
 {
     [Test]

@@ -1,6 +1,9 @@
 using NUnit.Framework;
 using Moq;
 
+using UnityEngine.TestTools;
+
+[ExcludeFromCoverage]
 public class PlayerTest
 {
     [Test]
