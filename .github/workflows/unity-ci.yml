@@ -28,8 +28,9 @@ jobs:
           coverageOptions: >
             generateHtmlReport;
             generateBadgeReport;
-            assemblyFilters:${{ env.ASSEMBLY_FILTERS }};
-            pathFilters:${{ env.PATH_FILTERS }}
+            assemblyFilters:${{ env.ASSEMBLY_FILTERS }}
+          customParameters: >
+            -logFile - -stackTraceLogType Full
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enforce coverage threshold
@@ -54,3 +55,13 @@ jobs:
           name: coverage-report
           path: |
             **/CodeCoverage/**
+
+      - name: Upload Editor.log (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor-log
+          path: |
+            ~/.config/unity3d/Editor.log
+            ~/.local/share/unity3d/Editor/Editor.log
+            **/Editor.log
