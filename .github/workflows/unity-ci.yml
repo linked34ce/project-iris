@@ -1,0 +1,56 @@
+name: Unity CI (EditMode + Coverage gate)
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test-editmode:
+    runs-on: ubuntu-latest
+
+    env:
+      UNITY_VERSION: 6000.2.1f1
+      COVERAGE_THRESHOLD: "90"
+      ASSEMBLY_FILTERS: "+ScriptsAssembly"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run EditMode Tests with Coverage
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          testMode: editmode
+          coverageOptions: >
+            generateHtmlReport;
+            generateBadgeReport;
+            assemblyFilters:${{ env.ASSEMBLY_FILTERS }};
+            pathFilters:${{ env.PATH_FILTERS }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enforce coverage threshold
+        shell: bash
+        run: |
+          set -euo pipefail
+          SUMMARY=$(find . -type f -path "*CodeCoverage*/**/Summary.xml" | head -n1)
+          if [[ -z "${SUMMARY}" ]]; then
+            echo "::error::Coverage Summary.xml not found"
+            exit 2
+          fi
+          LINE=$(grep -oP '(?<=<LineCoverageInfo percent=")[0-9.]+' "${SUMMARY}" | head -n1)
+          echo "Line coverage: ${LINE}% (threshold ${COVERAGE_THRESHOLD}%)"
+          awk -v l="${LINE}" -v t="${COVERAGE_THRESHOLD}" 'BEGIN{exit (l>=t)?0:1}' || {
+            echo "::error::Coverage ${LINE}% is below threshold ${COVERAGE_THRESHOLD}%"
+            exit 1
+          }
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            **/CodeCoverage/**
