@@ -37,12 +37,34 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SUMMARY=$(find . -type f -path "*CodeCoverage*/**/Summary.xml" | head -n1)
+
+          echo "== Locate Summary.xml =="
+          SUMMARY="$(find "$GITHUB_WORKSPACE" -type f -name 'Summary.xml' -path '*/CodeCoverage/*' | head -n1 || true)"
           if [[ -z "${SUMMARY}" ]]; then
             echo "::error::Coverage Summary.xml not found"
+            find "$GITHUB_WORKSPACE" -type f -pasth '*/CodeCoverage/*' | sed 's/^/  - /' || true
             exit 2
           fi
-          LINE=$(grep -oP '(?<=<LineCoverageInfo percent=")[0-9.]+' "${SUMMARY}" | head -n1)
+          echo "Summary.xml: ${SUMMARY}"
+
+          echo "== Assemblies included (from Summary.xml) =="
+
+          grep -oE '<Assembly name="[^"]+"' "$SUMMARY" | sed -E 's/.*name="([^"]+)".*/  - \1/' | sort -u || true
+
+          echo "== Parse line coverage =="
+
+          LINE="$(grep -oE '<Linecoverage>[0-9.]+</Linecoverage>' "$SUMMARY" | grep -oE '[0-9.]+' || true)"
+
+          if [[ -z "${LINE}" ]]; then
+            LINE="$(grep -oE 'LineCoverageInfo percent="([0-9.]+)"' "$SUMMARY" | grep -oE '[0-9.]+' || true)"
+          fi
+
+          if [[ -z "${LINE}" ]]; then
+            echo "::error::Failed to parse line coverage from Summary.xml"
+            sed -n '1,150p' "$SUMMARY" || true
+            exit 3
+          fi
+
           echo "Line coverage: ${LINE}% (threshold ${COVERAGE_THRESHOLD}%)"
           awk -v l="${LINE}" -v t="${COVERAGE_THRESHOLD}" 'BEGIN{exit (l>=t)?0:1}' || {
             echo "::error::Coverage ${LINE}% is below threshold ${COVERAGE_THRESHOLD}%"
