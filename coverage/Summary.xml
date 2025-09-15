@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CoverageReport scope="Summary">
   <Summary>
-    <Generatedon>09/15/2025 - 14:26:08</Generatedon>
+    <Generatedon>09/15/2025 - 15:07:05</Generatedon>
     <Parser>MultiReport (2x OpenCover)</Parser>
     <Assemblies>1</Assemblies>
     <Classes>15</Classes>
@@ -16,7 +16,7 @@
     <Coveredmethods>114</Coveredmethods>
     <Totalmethods>114</Totalmethods>
     <Methodcoverage>100</Methodcoverage>
-    <Tag>20_17736267900</Tag>
+    <Tag>22_17737527736</Tag>
   </Summary>
   <Coverage>
     <Assembly name="ScriptsAssembly" classes="15" coverage="100" coveredlines="325" coverablelines="325" totallines="1000" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="114" totalmethods="114" methodcoverage="100">
