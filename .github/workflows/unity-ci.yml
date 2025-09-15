@@ -3,6 +3,8 @@ name: Unity CI (EditMode + Coverage gate)
 on:
   pull_request:
     branches: [main, develop]
+  push:
+    branches: [develop]
 
 jobs:
   test-editmode:
@@ -15,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Run EditMode Tests with Coverage
         uses: game-ci/unity-test-runner@v4
@@ -37,30 +41,50 @@ jobs:
             -logFile - -stackTraceLogType Full
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate HTML & badge via ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.10
+        with:
+          reports: "${{ github.workspace }}/CodeCoverage/workspace-opencov/**/*.xml"
+          targetdir: "public/coverage"
+          reporttypes: "Html;Badges;XmlSummary"
+          assemblyfilters: "+ScriptsAssembly"
+          historydir: "public/coverage/History"
+          verbosity: "Info"
+
       - name: Enforce coverage threshold
         shell: bash
         run: |
           set -euo pipefail
 
           echo "== Locate Summary.xml =="
-          SUMMARY="$(find "$GITHUB_WORKSPACE" -type f -name 'Summary.xml' -path '*/CodeCoverage/*' | head -n1 || true)"
-          if [[ -z "${SUMMARY}" ]]; then
+          if [[ -f "public/coverage/Summary.xml" ]]; then
+            SUMMARY="public/coverage/Summary.xml"
+          else
+            SUMMARY="$(find "$GITHUB_WORKSPACE" -type f -name 'Summary.xml' -path '*/CodeCoverage/*' | head -n1 || true)"
+          fi
+
+          if [[ -z "${SUMMARY}" || ! -f "${SUMMARY}" ]]; then
             echo "::error::Coverage Summary.xml not found"
-            find "$GITHUB_WORKSPACE" -type f -pasth '*/CodeCoverage/*' | sed 's/^/  - /' || true
             exit 2
           fi
           echo "Summary.xml: ${SUMMARY}"
 
           echo "== Assemblies included (from Summary.xml) =="
+          grep -oE '<[Aa]ssembly name="[^"]+"' "$SUMMARY" | sed -E 's/.*name="([^"]+)".*/  - \1/' | sort -u || true
 
-          grep -oE '<Assembly name="[^"]+"' "$SUMMARY" | sed -E 's/.*name="([^"]+)".*/  - \1/' | sort -u || true
+          echo "== Parse line coverage (prefer ScriptsAssembly) =="
 
-          echo "== Parse line coverage =="
+          LINE=""
 
-          LINE="$(grep -oE '<Linecoverage>[0-9.]+</Linecoverage>' "$SUMMARY" | grep -oE '[0-9.]+' || true)"
+          LINE=$(grep -oE '<[Aa]ssembly name="ScriptsAssembly"[^>]*coverage="[0-9.]+"' "$SUMMARY" | \
+                sed -E 's/.*coverage="([0-9.]+)".*/\1/' | head -n1)
 
           if [[ -z "${LINE}" ]]; then
-            LINE="$(grep -oE 'LineCoverageInfo percent="([0-9.]+)"' "$SUMMARY" | grep -oE '[0-9.]+' || true)"
+            LINE=$(grep -oE '<Linecoverage>[0-9.]+' "$SUMMARY" | sed -E 's/.*<Linecoverage>([0-9.]+).*/\1/' | head -n1)
+          fi
+
+          if [[ -z "${LINE}" ]]; then
+            LINE=$(grep -oE 'linecoverage="[0-9.]+"' "$SUMMARY" | sed -E 's/.*linecoverage="([0-9.]+)".*/\1/' | head -n1)
           fi
 
           if [[ -z "${LINE}" ]]; then
@@ -75,9 +99,11 @@ jobs:
             exit 1
           }
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+      - name: Publish coverage to GitHub Pages
+        if: github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: coverage-report
-          path: |
-            **/CodeCoverage/**
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          commit_message: "docs: update coverage report & badge [skip ci]"
