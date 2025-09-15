@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2025-09-15_14-26-08" tag="20_17736267900">
+  <assembly name="ScriptsAssembly">
+    <class name="BattleFlowController" coveredlines="80" coverablelines="80" totallines="128" coveredbranches="0" totalbranches="0" coveredcodeelements="11" totalcodeelements="11" />
+    <class name="BattleResultController" coveredlines="13" coverablelines="13" totallines="30" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="Character" coveredlines="5" coverablelines="5" totallines="11" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CharacterData" coveredlines="37" coverablelines="37" totallines="68" coveredbranches="0" totalbranches="0" coveredcodeelements="25" totalcodeelements="25" />
+    <class name="Converter" coveredlines="11" coverablelines="11" totallines="22" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="DictionaryExtensions" coveredlines="1" coverablelines="1" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="Dungeon" coveredlines="10" coverablelines="10" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="Dungeons" coveredlines="4" coverablelines="4" totallines="293" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="Enemy" coveredlines="36" coverablelines="36" totallines="89" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="EnemyData" coveredlines="5" coverablelines="5" totallines="20" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="Location" coveredlines="9" coverablelines="9" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="Player" coveredlines="43" coverablelines="43" totallines="75" coveredbranches="0" totalbranches="0" coveredcodeelements="9" totalcodeelements="9" />
+    <class name="PlayerData" coveredlines="50" coverablelines="50" totallines="177" coveredbranches="0" totalbranches="0" coveredcodeelements="22" totalcodeelements="22" />
+    <class name="Status" coveredlines="2" coverablelines="2" totallines="5" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="Walls" coveredlines="19" coverablelines="19" totallines="37" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+  </assembly>
+</coverage>

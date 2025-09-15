@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoverageReport scope="Summary">
+  <Summary>
+    <Generatedon>09/15/2025 - 14:26:08</Generatedon>
+    <Parser>MultiReport (2x OpenCover)</Parser>
+    <Assemblies>1</Assemblies>
+    <Classes>15</Classes>
+    <Files>15</Files>
+    <Coveredlines>325</Coveredlines>
+    <Uncoveredlines>0</Uncoveredlines>
+    <Coverablelines>325</Coverablelines>
+    <Totallines>1000</Totallines>
+    <Linecoverage>100</Linecoverage>
+    <Coveredbranches>0</Coveredbranches>
+    <Totalbranches>0</Totalbranches>
+    <Coveredmethods>114</Coveredmethods>
+    <Totalmethods>114</Totalmethods>
+    <Methodcoverage>100</Methodcoverage>
+    <Tag>20_17736267900</Tag>
+  </Summary>
+  <Coverage>
+    <Assembly name="ScriptsAssembly" classes="15" coverage="100" coveredlines="325" coverablelines="325" totallines="1000" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="114" totalmethods="114" methodcoverage="100">
+      <Class name="BattleFlowController" coverage="100" coveredlines="80" coverablelines="80" totallines="128" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="11" totalmethods="11" methodcoverage="100" />
+      <Class name="BattleResultController" coverage="100" coveredlines="13" coverablelines="13" totallines="30" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="3" methodcoverage="100" />
+      <Class name="Character" coverage="100" coveredlines="5" coverablelines="5" totallines="11" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="1" totalmethods="1" methodcoverage="100" />
+      <Class name="CharacterData" coverage="100" coveredlines="37" coverablelines="37" totallines="68" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="25" totalmethods="25" methodcoverage="100" />
+      <Class name="Converter" coverage="100" coveredlines="11" coverablelines="11" totallines="22" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="1" totalmethods="1" methodcoverage="100" />
+      <Class name="DictionaryExtensions" coverage="100" coveredlines="1" coverablelines="1" totallines="15" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="1" totalmethods="1" methodcoverage="100" />
+      <Class name="Dungeon" coverage="100" coveredlines="10" coverablelines="10" totallines="14" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
+      <Class name="Dungeons" coverage="100" coveredlines="4" coverablelines="4" totallines="293" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="5" methodcoverage="100" />
+      <Class name="Enemy" coverage="100" coveredlines="36" coverablelines="36" totallines="89" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="8" totalmethods="8" methodcoverage="100" />
+      <Class name="EnemyData" coverage="100" coveredlines="5" coverablelines="5" totallines="20" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="3" totalmethods="3" methodcoverage="100" />
+      <Class name="Location" coverage="100" coveredlines="9" coverablelines="9" totallines="16" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="6" totalmethods="6" methodcoverage="100" />
+      <Class name="Player" coverage="100" coveredlines="43" coverablelines="43" totallines="75" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="9" totalmethods="9" methodcoverage="100" />
+      <Class name="PlayerData" coverage="100" coveredlines="50" coverablelines="50" totallines="177" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="22" totalmethods="22" methodcoverage="100" />
+      <Class name="Status" coverage="100" coveredlines="2" coverablelines="2" totallines="5" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="5" totalmethods="5" methodcoverage="100" />
+      <Class name="Walls" coverage="100" coveredlines="19" coverablelines="19" totallines="37" branchcoverage="" coveredbranches="0" totalbranches="0" coveredmethods="7" totalmethods="7" methodcoverage="100" />
+    </Assembly>
+  </Coverage>
+</CoverageReport>
