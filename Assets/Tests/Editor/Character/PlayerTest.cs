@@ -12,6 +12,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -20,6 +21,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -56,6 +58,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -64,6 +67,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -81,6 +85,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -89,6 +94,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
         player.Data.Hp = 20;
@@ -105,6 +111,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -113,6 +120,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -122,6 +130,7 @@ public class PlayerTest
 
         enemyMock.Verify(x => x.OnAttacked(), Times.Once);
         soundProviderMock.Verify(x => x.PlayAttack(), Times.Once);
+        effectControllerMock.Verify(x => x.Play(), Times.Once);
         enemyMock.Verify(x => x.TakeDamage(5), Times.Once);
     }
 
@@ -131,6 +140,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -139,6 +149,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -147,6 +158,7 @@ public class PlayerTest
         player.Attack(characterMock.Object, 5);
 
         soundProviderMock.Verify(x => x.PlayAttack(), Times.Never);
+        effectControllerMock.Verify(x => x.Play(), Times.Never);
         characterMock.Verify(x => x.TakeDamage(5), Times.Never);
         loggerMock.Verify(x => x.Error("Target is not Enemy."), Times.Once);
     }
@@ -157,6 +169,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -165,6 +178,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -183,6 +197,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -191,6 +206,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
 
@@ -208,6 +224,7 @@ public class PlayerTest
     {
         var playerViewMock = new Mock<IPlayerView>();
         var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var player = new Player(
@@ -216,6 +233,7 @@ public class PlayerTest
             "healer",
             playerViewMock.Object,
             soundProviderMock.Object,
+            effectControllerMock.Object,
             loggerMock.Object
         );
         player.Data.Level = 2;

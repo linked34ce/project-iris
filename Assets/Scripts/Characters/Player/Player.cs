@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made
@@ -5,6 +7,7 @@ public class Player : Character, IPlayer
 
     private readonly IPlayerView _view;
     private readonly IBattleSoundProvider _soundProvider;
+    private readonly IBattleEffectController _effectController;
 
     public PlayerData Data { get; protected set; }
 
@@ -16,12 +19,14 @@ public class Player : Character, IPlayer
         string role,
         IPlayerView view,
         IBattleSoundProvider soundProvider,
+        IBattleEffectController effectController,
         IUnityLogger logger
     ) : base(name, level)
     {
         _role = role;
         _view = view;
         _soundProvider = soundProvider;
+        _effectController = effectController;
         _logger = logger;
         Data = new PlayerData(_name, _level, _role);
     }
@@ -48,6 +53,7 @@ public class Player : Character, IPlayer
         {
             enemy.OnAttacked();
             _soundProvider.PlayAttack();
+            _effectController.Play();
             enemy.TakeDamage(damage);
         }
         else
