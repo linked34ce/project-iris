@@ -16,9 +16,16 @@ public class BattleFlowControllerTest
         public TestBattleFlowController(
             IPlayer player,
             IEnemy enemy,
-            ICoroutineController coroutineController,
+            ICoroutineController enemyCoroutineController,
+            ICoroutineController playerCoroutineController,
             ISceneLoader sceneLoader
-        ) : base(player, enemy, coroutineController, sceneLoader)
+        ) : base(
+            player,
+            enemy,
+            enemyCoroutineController,
+            playerCoroutineController,
+            sceneLoader
+        )
         {
             OnPlayerTurnBegin = () => IsOnPlayerTurnBeginCalled = true;
             OnEnemyTurnBegin = () => IsOnEnemyTurnBeginCalled = true;
@@ -36,6 +43,13 @@ public class BattleFlowControllerTest
             enumerator.MoveNext();
             enumerator.MoveNext();
         }
+
+        public void CallOnPlayerTurn()
+        {
+            var enumerator = OnPlayerTurn();
+            enumerator.MoveNext();
+            enumerator.MoveNext();
+        }
     }
 
     [Test]
@@ -44,13 +58,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new BattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
@@ -69,13 +85,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new BattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         )
         {
@@ -91,13 +109,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new BattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         )
         {
@@ -113,13 +133,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new BattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         )
         {
@@ -139,13 +161,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
@@ -154,7 +178,8 @@ public class BattleFlowControllerTest
 
         flowController.Dispose();
 
-        coroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
 
         Assert.That(flowController.Turn, Is.EqualTo(Turn.None));
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.None));
@@ -170,13 +195,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
@@ -194,13 +221,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
@@ -210,7 +239,10 @@ public class BattleFlowControllerTest
         Assert.That(flowController.Turn, Is.EqualTo(Turn.Enemy));
         Assert.That(flowController.IsOnPlayerTurnBeginCalled, Is.False);
         Assert.That(flowController.IsOnEnemyTurnBeginCalled, Is.True);
-        coroutineControllerMock.Verify(x => x.Begin(It.IsAny<IEnumerator>()), Times.Once);
+        enemyTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Once
+        );
     }
 
     [Test]
@@ -219,13 +251,15 @@ public class BattleFlowControllerTest
     {
         var playerMock = new Mock<IPlayer>();
         var enemyMock = new Mock<IEnemy>();
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
@@ -238,7 +272,10 @@ public class BattleFlowControllerTest
         Assert.That(flowController.Turn, Is.EqualTo(Turn.Enemy));
         Assert.That(flowController.IsOnPlayerTurnBeginCalled, Is.False);
         Assert.That(flowController.IsOnEnemyTurnBeginCalled, Is.False);
-        coroutineControllerMock.Verify(x => x.Begin(It.IsAny<IEnumerator>()), Times.Exactly(2));
+        enemyTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Exactly(2)
+        );
     }
 
     [Test]
@@ -253,21 +290,27 @@ public class BattleFlowControllerTest
         var testEnemyData = new EnemyData("Test", 1, 100, 10, 11, 12, 13, 14, 15, 20);
         enemyMock.SetupGet(x => x.Data).Returns(testEnemyData);
 
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
         flowController.CallOnEnemyTurn();
 
         enemyMock.Verify(x => x.Attack(playerMock.Object, 5), Times.Once);
-        coroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Once
+        );
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.InBattle));
+        enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
     }
 
     [Test]
@@ -285,21 +328,27 @@ public class BattleFlowControllerTest
         var testEnemyData = new EnemyData("Test", 1, 100, 10, 11, 12, 13, 14, 15, 20);
         enemyMock.SetupGet(x => x.Data).Returns(testEnemyData);
 
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
         flowController.CallOnEnemyTurn();
 
         enemyMock.Verify(x => x.Attack(playerMock.Object, 5), Times.Once);
-        coroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Never
+        );
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.GameOver));
+        enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
     }
 
     [Test]
@@ -318,21 +367,27 @@ public class BattleFlowControllerTest
         };
         enemyMock.SetupGet(x => x.Data).Returns(testEnemyData);
 
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
         flowController.CallOnEnemyTurn();
 
         enemyMock.Verify(x => x.Attack(playerMock.Object, 5), Times.Never);
-        coroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Never
+        );
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.Victory));
+        enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
     }
 
     [Test]
@@ -354,20 +409,57 @@ public class BattleFlowControllerTest
         };
         enemyMock.SetupGet(x => x.Data).Returns(testEnemyData);
 
-        var coroutineControllerMock = new Mock<ICoroutineController>();
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
         var sceneLoaderMock = new Mock<ISceneLoader>();
 
         var flowController = new TestBattleFlowController(
             playerMock.Object,
             enemyMock.Object,
-            coroutineControllerMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
             sceneLoaderMock.Object
         );
 
         flowController.CallOnEnemyTurn();
 
         enemyMock.Verify(x => x.Attack(playerMock.Object, 5), Times.Never);
-        coroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(
+            x => x.Begin(It.IsAny<IEnumerator>()),
+            Times.Never
+        );
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.GameOver));
+        enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+    }
+
+    [Test]
+    [Category("BattleFlowController")]
+    public void OnPlayerTurn()
+    {
+        var playerMock = new Mock<IPlayer>();
+        var testPlayerData = new PlayerData("Test", 1, "healer");
+        playerMock.SetupGet(x => x.Data).Returns(testPlayerData);
+
+        var enemyMock = new Mock<IEnemy>();
+        var testEnemyData = new EnemyData("Test", 1, 100, 10, 11, 12, 13, 14, 15, 20);
+        enemyMock.SetupGet(x => x.Data).Returns(testEnemyData);
+
+        var enemyTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var playerTurnCoroutineControllerMock = new Mock<ICoroutineController>();
+        var sceneLoaderMock = new Mock<ISceneLoader>();
+
+        var flowController = new TestBattleFlowController(
+            playerMock.Object,
+            enemyMock.Object,
+            enemyTurnCoroutineControllerMock.Object,
+            playerTurnCoroutineControllerMock.Object,
+            sceneLoaderMock.Object
+        );
+
+        flowController.CallOnPlayerTurn();
+
+        Assert.That(flowController.Turn, Is.EqualTo(Turn.Player));
+        Assert.That(flowController.BattleState, Is.EqualTo(BattleState.InBattle));
+        playerTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
     }
 }

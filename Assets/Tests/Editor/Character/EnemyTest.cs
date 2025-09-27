@@ -11,6 +11,7 @@ public class EnemyTest
     public void Instantiate()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -25,6 +26,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 
@@ -53,6 +55,7 @@ public class EnemyTest
     public void Initialize()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -67,6 +70,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 
@@ -83,6 +87,7 @@ public class EnemyTest
     public void TakeDamage()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -97,6 +102,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 
@@ -111,6 +117,7 @@ public class EnemyTest
     public void Attack()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -125,6 +132,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 
@@ -132,7 +140,9 @@ public class EnemyTest
 
         enemy.Attack(playerMock.Object, 5);
 
+        playerMock.Verify(x => x.OnAttacked(), Times.Once);
         playerMock.Verify(x => x.TakeDamage(5), Times.Once);
+        soundProviderMock.Verify(x => x.PlayAttack(), Times.Once);
     }
 
     [Test]
@@ -140,6 +150,7 @@ public class EnemyTest
     public void Attack_Exception()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -154,6 +165,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 
@@ -170,6 +182,7 @@ public class EnemyTest
     public void OnAttacked()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -184,6 +197,7 @@ public class EnemyTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 

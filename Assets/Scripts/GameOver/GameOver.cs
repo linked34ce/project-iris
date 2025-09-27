@@ -13,7 +13,7 @@ public class GameOver : MonoBehaviour
 
     private const string TitleSceneName = "Scenes/Menu/BeforeEnteringDungeon";
 
-    void OnEnable()
+    void Awake()
     {
         _button1.onClick.AddListener(() => _logger.Debug("Button1 is selected"));
         _button2.onClick.AddListener(() => _sceneLoader.LoadScene(TitleSceneName));

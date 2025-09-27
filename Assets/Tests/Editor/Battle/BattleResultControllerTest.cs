@@ -35,6 +35,7 @@ public class BattleResultControllerTest
     public void ShowResult()
     {
         var enemyViewMock = new Mock<IEnemyView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
         var loggerMock = new Mock<IUnityLogger>();
 
         var enemy = new Enemy(
@@ -49,6 +50,7 @@ public class BattleResultControllerTest
             15,
             20,
             enemyViewMock.Object,
+            soundProviderMock.Object,
             loggerMock.Object
         );
 

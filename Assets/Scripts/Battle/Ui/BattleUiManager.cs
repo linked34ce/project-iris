@@ -13,7 +13,8 @@ public class BattleUiManager : MonoBehaviour
     [SerializeField] private Image _turnIndicator;
     [SerializeField] private EnemyLoader _enemyLoader;
     [SerializeField] private PlayerPortraitLoader _playerPortraitLoader;
-    [SerializeField] private CoroutineController _coroutineController;
+    [SerializeField] private CoroutineController _enemyTurnCoroutineController;
+    [SerializeField] private CoroutineController _playerTurnCoroutineController;
     [SerializeField] private CommandWindow _commandWindow;
     [SerializeField] private UiStateManager _uiStateManager;
     [SerializeField] private BattleResult _battleResult;
@@ -63,6 +64,8 @@ public class BattleUiManager : MonoBehaviour
         }
     }
 
+    void OnDisable() => _battleResult.Confirmed -= ReturnToDungeon;
+
     void Update()
     {
         if (_isInitializing || _flowController is null || _enemy is null)
@@ -79,6 +82,13 @@ public class BattleUiManager : MonoBehaviour
         }
     }
 
+    private void ReturnToDungeon()
+    {
+        _battleResult.Hide();
+        _turnIndicator.enabled = false;
+        _uiStateManager.UiState = UiState.Dungeon;
+    }
+
     private async Task Initialize()
     {
         _player = _playerContainer.Player;
@@ -93,7 +103,8 @@ public class BattleUiManager : MonoBehaviour
         _flowController = new BattleFlowController(
             _player,
             _enemy,
-            _coroutineController,
+            _enemyTurnCoroutineController,
+            _playerTurnCoroutineController,
             _sceneLoader
         );
         _resultController = new BattleResultController(
@@ -103,12 +114,7 @@ public class BattleUiManager : MonoBehaviour
             _battleResult
         );
 
-        _battleResult.Confirmed += () =>
-        {
-            _battleResult.Hide();
-            _turnIndicator.enabled = false;
-            _uiStateManager.UiState = UiState.Dungeon;
-        };
+        _battleResult.Confirmed += ReturnToDungeon;
 
         _commandWindow.ClearAllEvents();
         SubscribeCommandActions();

@@ -8,6 +8,7 @@ public class PlayerContainer : CharacterContainer
 
     [SerializeField] private PlayerView _view;
     [SerializeField] private BattleSoundProvider _soundProvider;
+    [SerializeField] private BattleEffectController _effectController;
 
     public IPlayer Player;
 
@@ -20,6 +21,7 @@ public class PlayerContainer : CharacterContainer
             _role,
             _view,
             _soundProvider,
+            _effectController,
             _logger
         );
 }
