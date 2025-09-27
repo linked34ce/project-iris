@@ -24,7 +24,7 @@ public class Select : MonoBehaviour
 
     private const string DungeonScene = "Scenes/Dungeons/TohoGakuenOldBuilding/1stFloor";
 
-    void OnEnable()
+    void Awake()
     {
         Button1Text.SetText($"{DungeonName}を探索する");
         Button1.onClick.AddListener(() => _sceneLoader.LoadScene(DungeonScene));

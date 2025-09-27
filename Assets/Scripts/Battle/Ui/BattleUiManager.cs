@@ -64,6 +64,8 @@ public class BattleUiManager : MonoBehaviour
         }
     }
 
+    void OnDisable() => _battleResult.Confirmed -= ReturnToDungeon;
+
     void Update()
     {
         if (_isInitializing || _flowController is null || _enemy is null)
@@ -78,6 +80,13 @@ public class BattleUiManager : MonoBehaviour
             _resultController.ShowResult();
             DisposeFlowController();
         }
+    }
+
+    private void ReturnToDungeon()
+    {
+        _battleResult.Hide();
+        _turnIndicator.enabled = false;
+        _uiStateManager.UiState = UiState.Dungeon;
     }
 
     private async Task Initialize()
@@ -105,12 +114,7 @@ public class BattleUiManager : MonoBehaviour
             _battleResult
         );
 
-        _battleResult.Confirmed += () =>
-        {
-            _battleResult.Hide();
-            _turnIndicator.enabled = false;
-            _uiStateManager.UiState = UiState.Dungeon;
-        };
+        _battleResult.Confirmed += ReturnToDungeon;
 
         _commandWindow.ClearAllEvents();
         SubscribeCommandActions();

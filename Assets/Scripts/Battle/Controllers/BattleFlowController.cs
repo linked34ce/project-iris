@@ -73,6 +73,7 @@ public class BattleFlowController
     public void Dispose()
     {
         _enemyTurnCoroutineController?.Stop();
+        _playerTurnCoroutineController?.Stop();
 
         OnPlayerTurnBegin = null;
         OnEnemyTurnBegin = null;

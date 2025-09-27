@@ -179,6 +179,7 @@ public class BattleFlowControllerTest
         flowController.Dispose();
 
         enemyTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
+        playerTurnCoroutineControllerMock.Verify(x => x.Stop(), Times.Once);
 
         Assert.That(flowController.Turn, Is.EqualTo(Turn.None));
         Assert.That(flowController.BattleState, Is.EqualTo(BattleState.None));
