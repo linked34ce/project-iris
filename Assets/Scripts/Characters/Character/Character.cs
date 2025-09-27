@@ -13,4 +13,5 @@ public abstract class Character : ICharacter
     public abstract void Initialize();
     public abstract void TakeDamage(int damage);
     public abstract void Attack(ICharacter character, int damage);
+    public abstract void OnAttacked();
 }

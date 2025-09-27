@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Player : Character, IPlayer
 {
     // this property should be deleted when class for each role is made
@@ -61,6 +59,8 @@ public class Player : Character, IPlayer
             _logger.Error("Target is not Enemy.");
         }
     }
+
+    public override void OnAttacked() => _view.PlayOnAttackedAnimation();
 
     public void GainExp(IEnemy enemy)
     {

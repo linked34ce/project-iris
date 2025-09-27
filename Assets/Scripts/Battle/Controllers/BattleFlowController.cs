@@ -7,7 +7,8 @@ public class BattleFlowController
 {
     private readonly IPlayer _player;
     private readonly IEnemy _enemy;
-    private readonly ICoroutineController _coroutineController;
+    private readonly ICoroutineController _enemyTurnCoroutineController;
+    private readonly ICoroutineController _playerTurnCoroutineController;
     private readonly WaitForSeconds _waitForSeconds = new(1f);
     private readonly ISceneLoader _sceneLoader;
 
@@ -57,19 +58,21 @@ public class BattleFlowController
     public BattleFlowController(
         IPlayer player,
         IEnemy enemy,
-        ICoroutineController coroutineController,
+        ICoroutineController enemyTurnCoroutineController,
+        ICoroutineController playerTurnCoroutineController,
         ISceneLoader sceneLoader
     )
     {
         _player = player;
         _enemy = enemy;
-        _coroutineController = coroutineController;
+        _enemyTurnCoroutineController = enemyTurnCoroutineController;
+        _playerTurnCoroutineController = playerTurnCoroutineController;
         _sceneLoader = sceneLoader;
     }
 
     public void Dispose()
     {
-        _coroutineController?.Stop();
+        _enemyTurnCoroutineController?.Stop();
 
         OnPlayerTurnBegin = null;
         OnEnemyTurnBegin = null;
@@ -108,21 +111,32 @@ public class BattleFlowController
         {
             EnemyAttack(5);
         }
-        _coroutineController.Stop();
         EvaluateBattleState();
+        _enemyTurnCoroutineController.Stop();
+    }
+
+    // use 'protected' accessor for unit testing
+    protected IEnumerator OnPlayerTurn()
+    {
+        yield return _waitForSeconds;
+        Turn = Turn.Player;
+        EvaluateBattleState();
+        _playerTurnCoroutineController.Stop();
     }
 
     public void PlayerAttack(int damage)
     {
         _player.Attack(_enemy, damage);
         Turn = Turn.Enemy;
-        _coroutineController.Begin(OnEnemyTurn());
+        _enemyTurnCoroutineController.Begin(OnEnemyTurn());
     }
 
     private void EnemyAttack(int damage)
     {
         _enemy.Attack(_player, damage);
-        Turn = Turn.Player;
-        EvaluateBattleState();
+        if (_player.Data.IsAlive)
+        {
+            _playerTurnCoroutineController.Begin(OnPlayerTurn());
+        }
     }
 }

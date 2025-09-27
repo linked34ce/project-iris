@@ -35,5 +35,6 @@ public class EnemyView : MonoBehaviour, IEnemyView
         _hpBarFill.anchoredPosition = anchoredPosition;
     }
 
-    public void PlayOnAttackedAnimation() => _imageAnimator.SetTrigger("Trigger");
+    public void PlayOnAttackedAnimation()
+      => _imageAnimator.SetTrigger(AnimationTrigger.EnemyAttacked);
 }

@@ -165,6 +165,30 @@ public class PlayerTest
 
     [Test]
     [Category("Player")]
+    public void OnAttacked()
+    {
+        var playerViewMock = new Mock<IPlayerView>();
+        var soundProviderMock = new Mock<IBattleSoundProvider>();
+        var effectControllerMock = new Mock<IBattleEffectController>();
+        var loggerMock = new Mock<IUnityLogger>();
+
+        var player = new Player(
+            "Test",
+            1,
+            "healer",
+            playerViewMock.Object,
+            soundProviderMock.Object,
+            effectControllerMock.Object,
+            loggerMock.Object
+        );
+
+        player.OnAttacked();
+
+        playerViewMock.Verify(x => x.PlayOnAttackedAnimation(), Times.Once);
+    }
+
+    [Test]
+    [Category("Player")]
     public void GainExp()
     {
         var playerViewMock = new Mock<IPlayerView>();

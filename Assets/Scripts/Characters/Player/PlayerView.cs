@@ -13,6 +13,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
     [SerializeField] private TMP_Text _hpText;
     [SerializeField] private Slider _spBar;
     [SerializeField] private TMP_Text _spText;
+    [SerializeField] private Animator _battleUiAnimator;
 
     [SerializeField] private UiStateManager _uiStateManager;
     [SerializeField] private BattleResult _battleResult;
@@ -32,4 +33,7 @@ public class PlayerView : MonoBehaviour, IPlayerView
         _spBar.value = (float)sp / maxSp;
         _spText.SetText($"{sp}/{maxSp}");
     }
+
+    public void PlayOnAttackedAnimation()
+      => _battleUiAnimator.SetTrigger(AnimationTrigger.PlayerAttacked);
 }

@@ -13,6 +13,7 @@ public class EnemyContainer : CharacterContainer
     [SerializeField] private int _luk;
     [SerializeField] private int _dropExp;
     [SerializeField] private EnemyView _view;
+    [SerializeField] private BattleSoundProvider _soundProvider;
 
     public IEnemy Enemy;
 
@@ -31,6 +32,7 @@ public class EnemyContainer : CharacterContainer
             _luk,
             _dropExp,
             _view,
+            _soundProvider,
             _logger
         );
 }

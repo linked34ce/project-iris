@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Enemy : Character, IEnemy
 {
     private readonly int _hp;
@@ -12,6 +10,7 @@ public class Enemy : Character, IEnemy
     private readonly int _dropExp;
 
     private readonly IEnemyView _view;
+    private readonly IBattleSoundProvider _soundProvider;
 
     public EnemyData Data { get; protected set; }
 
@@ -29,6 +28,7 @@ public class Enemy : Character, IEnemy
         int luk,
         int dropExp,
         IEnemyView view,
+        IBattleSoundProvider soundProvider,
         IUnityLogger logger
     ) : base(name, level)
     {
@@ -41,6 +41,7 @@ public class Enemy : Character, IEnemy
         _luk = luk;
         _dropExp = dropExp;
         _view = view;
+        _soundProvider = soundProvider;
         _logger = logger;
         Data = new EnemyData(
             _name,
@@ -77,6 +78,8 @@ public class Enemy : Character, IEnemy
     {
         if (target is IPlayer player)
         {
+            player.OnAttacked();
+            _soundProvider.PlayAttack();
             player.TakeDamage(damage);
         }
         else
@@ -85,5 +88,5 @@ public class Enemy : Character, IEnemy
         }
     }
 
-    public void OnAttacked() => _view.PlayOnAttackedAnimation();
+    public override void OnAttacked() => _view.PlayOnAttackedAnimation();
 }
